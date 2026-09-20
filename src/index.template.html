@@ -179,7 +179,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
     <button data-tab="settings" type="button">Settings</button>
   </nav>
 </div></div>
-<div class="basis"><div class="wrap">Every score comes from three things you control: <b>the thesis</b> (Settings), <b>the portfolio</b> (Portfolio) and <b>the fund plan</b> (Fund plan). Nothing else.</div></div>
+<div class="basis"><div class="wrap">Scores use only <b>the thesis</b>, <b>the portfolio</b> and <b>the fund plan</b>. All three are editable.</div></div>
 
 <main class="wrap">
 
@@ -187,7 +187,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 <section id="tab-scan">
   <div class="hero">
     <h1>Would <em>Kalaari</em> back this startup?</h1>
-    <p>Paste the company's website. The details are read from the site, then scored against the thesis, the portfolio and the fund plan.</p>
+    <p>Paste a website. Details are read from it and scored.</p>
     <form class="urlrow" id="urlform">
       <input type="text" id="url" placeholder="company website, e.g. digantara.co.in" autocomplete="off" spellcheck="false">
       <button class="btn" id="go" type="submit">Scan</button>
@@ -197,7 +197,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
   </div>
 
   <div class="card" id="batch" hidden style="margin-top:18px">
-    <div class="ch"><h3>Scan a list</h3><small>One website per line. Each is read and scored; add the keepers to the pipeline.</small></div>
+    <div class="ch"><h3>Scan a list</h3><small>One website per line.</small></div>
     <div class="form">
       <textarea id="batchUrls" placeholder="nudgebee.com&#10;chara.tech&#10;https://articulussurgical.com" style="min-height:90px"></textarea>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn small" id="batchRun" type="button">Scan all</button><button class="btn ghost small" id="batchAddAll" type="button">Add all to pipeline</button><span class="count" id="batchStatus"></span></div>
@@ -235,7 +235,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 
 <!-- ================= PIPELINE ================= -->
 <section id="tab-pipeline" hidden>
-  <div class="sec-head"><div><h2>Pipeline</h2><p>Deals you have scored and kept. Status, owner and notes are yours to edit; open any row to re-score it.</p></div>
+  <div class="sec-head"><div><h2>Pipeline</h2><p>Deals you kept. Edit status, owner and notes inline.</p></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost small" id="pipeExport" type="button">Export CSV</button><button class="btn danger small" id="pipeClearPassed" type="button">Remove passed</button></div></div>
   <div class="toolbar"><label class="f">Status<select id="pipeFilter"><option value="">All</option></select></label><label class="f">Sort<select id="pipeSort"><option value="score">Score</option><option value="updated">Last updated</option><option value="name">Name</option></select></label><span class="spacer"></span><span class="count" id="pipeCountText"></span></div>
   <div class="tablewrap" id="pipeTable"></div>
@@ -243,8 +243,8 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 
 <!-- ================= FUND PLAN ================= -->
 <section id="tab-plan" hidden>
-  <div class="sec-head"><div><h2>Fund plan</h2><p>Set the fund's targets once. The dashboard shows deployment against them, and the Scan tab scores whether a new deal fills a gap (Plan fit).</p></div></div>
-  <div class="guide">The numbers below are illustrative defaults; replace them with the fund's own. Companies in the fund window (start to end year) count as deployed. Cheque sizes are taken from the Portfolio tab where entered, otherwise estimated from the per-stage cheque below and marked <b>est.</b></div>
+  <div class="sec-head"><div><h2>Fund plan</h2><p>Enter the fund's targets. Scan uses them for Plan fit.</p></div></div>
+  <div class="guide">Pre-filled: Fund IV, $200M (Reliance via Jio Platforms, 2021), window 2021–2026, CXXO $10M a year. Everything else is blank until you set it. Cheques not entered on the Portfolio tab are estimated from the per-stage figures and marked <b>est.</b></div>
   <div class="two" style="align-items:start">
     <div class="card form">
       <div class="ch"><h3>Fund</h3></div>
@@ -261,7 +261,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
         <label class="f">Reserves for follow-ons (%)<input type="number" min="0" max="90" step="1" data-cfg="plan.reservePct"></label>
         <label class="f">CXXO budget per year (USD M)<input type="number" min="0" step="0.5" data-cfg="plan.cxxoPerYearUsdM"></label>
       </div>
-      <div class="ch" style="margin-top:6px"><h3>Typical first cheque by stage (USD M)</h3><small>used to estimate deployment where a cheque is not entered</small></div>
+      <div class="ch" style="margin-top:6px"><h3>Typical first cheque by stage (USD M)</h3><small>seed and Series A from third-party averages; others are placeholders</small></div>
       <div class="three" id="chequeGrid"></div>
     </div>
     <div class="card form">
@@ -278,7 +278,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 
 <!-- ================= PORTFOLIO ================= -->
 <section id="tab-portfolio" hidden>
-  <div class="sec-head"><div><h2>Portfolio</h2><p>What the scanner compares against. Correct anything, add companies, enter actual cheques, or import your own list. Edits stay in this browser until you export them.</p></div>
+  <div class="sec-head"><div><h2>Portfolio</h2><p>What the scanner compares against. Edit, add, enter cheques, or import a CSV.</p></div>
     <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="pfAdd" type="button">Add company</button><button class="btn ghost small" id="pfImport" type="button">Import CSV</button><input type="file" id="pfFile" accept=".csv,text/csv" hidden><button class="btn ghost small" id="pfExportCsv" type="button">Export CSV</button><button class="btn ghost small" id="pfExportJson" type="button">Export JSON</button></div></div>
   <div class="card form" id="pfEditor" hidden style="margin-bottom:14px"></div>
   <div class="toolbar">
@@ -293,11 +293,11 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 
 <!-- ================= SETTINGS ================= -->
 <section id="tab-settings" hidden>
-  <div class="sec-head"><div><h2>Settings</h2><p>Everything the score depends on. Changes apply immediately and are kept in this browser; export or share a link to give the team the same setup.</p></div></div>
+  <div class="sec-head"><div><h2>Settings</h2><p>Changes apply immediately. Share a link to give the team the same setup.</p></div></div>
   <div class="settings">
     <div class="card">
       <div class="ch"><h3>Weights</h3><small id="wSum"></small></div>
-      <p class="small muted">Points available per check. Any check can be set to 0 to switch it off. The score is always shown out of 100.</p>
+      <p class="small muted">Points per check. 0 switches a check off. Score is always out of 100.</p>
       <div class="wgrid" id="weights"></div>
       <div><button class="btn ghost small" id="wReset" type="button">Reset weights</button></div>
     </div>
@@ -343,7 +343,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
         <button class="btn ghost small" id="wsImport" type="button">Import workspace</button><input type="file" id="wsFile" accept=".json,application/json" hidden>
         <button class="btn ghost small" id="wsShare" type="button">Copy share link</button>
       </div>
-      <p class="small muted">The share link carries thesis, weights, sectors, routing and fund plan (not the pipeline or portfolio edits). Anyone who opens it gets the same setup.</p>
+      <p class="small muted">Share link: thesis, weights, sectors, routing, fund plan. Export: everything, including pipeline and portfolio edits.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn danger small" id="wsResetCfg" type="button">Reset settings</button>
         <button class="btn danger small" id="wsResetPf" type="button">Discard portfolio edits</button>
@@ -354,7 +354,7 @@ footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px
 </section>
 </main>
 
-<footer><div class="wrap">A triage aid, not the investment committee. Base portfolio data compiled September 2026 from kalaari.com and press; website reading uses public pages only. Your settings, edits and pipeline live in this browser until you export them.</div></footer>
+<footer><div class="wrap">Triage aid, not the investment committee. Portfolio data: kalaari.com and press, September 2026. Settings, edits and pipeline stay in this browser until exported.</div></footer>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -392,10 +392,10 @@ const DEFAULT_CFG={
     verdict:{strong:75,plausible:55}
   },
   weights:{stage:18,cheque:14,sector:14,geo:9,pattern:13,adjacency:9,conflict:9,precedent:4,allocation:6,capacity:4},
-  plan:{name:'Fund IV',sizeUsdM:200,startYear:2021,endYear:2026,targetCompanies:50,reservePct:40,cxxoPerYearUsdM:10,
+  plan:{name:'Fund IV',sizeUsdM:200,startYear:2021,endYear:2026,targetCompanies:0,reservePct:0,cxxoPerYearUsdM:10,
     cheque:{'Pre-seed':1,'Seed':2.2,'Pre-Series A':3,'Series A':4.9,'Series B':5,'Later':5},
-    sectorTargets:{'AI & SaaS':25,'DeepTech & Climate':20,'Consumer & D2C':15,'FinTech':10,'Gaming & Media':10,'HealthTech':10,'B2B Commerce & Logistics':5,'EdTech & HR':5},
-    stageTargets:{'Pre-seed':25,'Seed':50,'Series A':25,'Series B':0}},
+    sectorTargets:{},
+    stageTargets:{}},
   routing:{'AI & SaaS':'Jayraj Bharat Patel, then Sampath P','Gaming & Media':'Harshit Kumar','Consumer & D2C':'Pranav Koshal; Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy for sales-tech','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy','EdTech & HR':'Sampath P or Kiran Vasireddy'},
   ui:{tab:'scan'}
 };
@@ -438,7 +438,7 @@ function score(i){
   const hard=near.find(a=>a.same&&a.c.status==='Active'&&a.s>=5&&a.shared.length>=2);const soft=!hard&&near.find(a=>a.same&&a.c.status==='Active'&&(a.s>=3||a.shared.length>=2));add('portfolio','conflict','Conflict',hard?0:soft?.5:1,hard?'fail':soft?'part':'pass',hard?`${hard.c.name} (active, ${hard.c.stage} ${hard.c.year}) looks like a direct competitor; shares ${hard.shared.slice(0,3).join(', ')}`:soft?`${soft.c.name} is adjacent and active; check overlap before the meeting`:'No active portfolio company competes directly');
   const prec=cos.find(c=>c.sector===i.sector&&c.stage===i.stage);const usual=mostCommon(cos.filter(c=>c.sector===i.sector).map(c=>c.stage));add('portfolio','precedent','Precedent',prec?1:.4,prec?'pass':'part',prec?`Entered ${i.sector} at ${i.stage} before: ${prec.name} (${prec.year})`:`No ${i.stage} entry in ${i.sector}${usual?'; usual entry is '+usual:''}`);
   const tgt=+(P.sectorTargets||{})[i.sector]||0;const after=pc((ps.bySector[i.sector]||0)+1,ps.n+1);let alf,alc,ale;if(!tgt){alf=.5;alc='part';ale=`No ${P.name} target set for ${i.sector}`;}else{const r=after/tgt;if(r<=.9){alf=1;alc='pass';ale=`Fills a gap: ${i.sector} would be ${after}% of ${P.name} vs ${tgt}% target`;}else if(r<=1.1){alf=.7;alc='pass';ale=`On target: ${i.sector} would be ${after}% vs ${tgt}%`;}else if(r<=1.3){alf=.4;alc='part';ale=`Slightly overweight: ${after}% vs ${tgt}% target`;}else{alf=.15;alc='fail';ale=`Overweight: ${i.sector} would be ${after}% vs ${tgt}% target`;}}add('plan','allocation','Allocation',alf,alc,ale);
-  const chq=+P.cheque[i.stage]||+P.cheque.Seed||2;let cf2,cc2,ce2;if(ps.slotsLeft<=0){cf2=0;cc2='fail';ce2=`${P.name} is at its ${P.targetCompanies}-company target`;}else if(ps.capitalLeft<chq){cf2=.3;cc2='part';ce2=`Only ${fmtM(Math.max(0,ps.capitalLeft))} of initial capital left (est.)`;}else{cf2=1;cc2='pass';ce2=`${ps.slotsLeft} slots and ${fmtM(ps.capitalLeft)} initial capital left (est.)`;}add('plan','capacity','Capacity',cf2,cc2,ce2);
+  const chq=+P.cheque[i.stage]||+P.cheque.Seed||2;let cf2,cc2,ce2;if(!(+P.targetCompanies>0)){cf2=.5;cc2='part';ce2=`No company target set for ${P.name}`;}else if(ps.slotsLeft<=0){cf2=0;cc2='fail';ce2=`${P.name} is at its ${P.targetCompanies}-company target`;}else if(ps.capitalLeft<chq){cf2=.3;cc2='part';ce2=`Only ${fmtM(Math.max(0,ps.capitalLeft))} of initial capital left (est.)`;}else{cf2=1;cc2='pass';ce2=`${ps.slotsLeft} slots and ${fmtM(ps.capitalLeft)} initial capital left (est.)`;}add('plan','capacity','Capacity',cf2,cc2,ce2);
   const total=checks.reduce((a,c)=>a+c.pts,0),max=checks.reduce((a,c)=>a+c.max,0);const sc=max?Math.round(100*total/max):0;
   const v=T.verdict;const verdict=sc>=+v.strong?['strong','Strong fit. Worth a partner meeting.']:sc>=+v.plausible?['mid','Plausible. Screen on founder-market fit and speed to value.']:['weak','Weak fit against the stated filter.'];
   const groups=Object.keys(GROUPS).map(g=>({g,l:GROUPS[g],pts:Math.round(checks.filter(c=>c.group===g).reduce((a,c)=>a+c.pts,0)*10)/10,max:checks.filter(c=>c.group===g).reduce((a,c)=>a+c.max,0)})).filter(x=>x.max>0);
@@ -511,10 +511,11 @@ const svgNS='http://www.w3.org/2000/svg';const sv=(t,a={})=>{const e=document.cr
 function pairBars(c,rows){const W=560,rowH=36,padL=170,padR=60,H=rows.length*rowH+6,max=Math.max(...rows.map(r=>Math.max(r.target,r.actual)),1);const s=sv('svg',{viewBox:`0 0 ${W} ${H}`});const inner=W-padL-padR;rows.forEach((r,i)=>{const y=i*rowH+4;const lab=sv('text',{x:padL-8,y:y+16,'text-anchor':'end'});lab.textContent=r.label;s.append(lab);const wt=Math.max(1,r.target/max*inner),wa=Math.max(1,r.actual/max*inner);s.append(sv('rect',{x:padL,y:y,width:wt,height:10,rx:2,fill:'var(--s1)'}));s.append(sv('rect',{x:padL,y:y+13,width:wa,height:10,rx:2,fill:'var(--s2)'}));const t1=sv('text',{class:'v',x:padL+wt+5,y:y+9});t1.textContent=r.target+'%';s.append(t1);const t2=sv('text',{class:'v',x:padL+wa+5,y:y+22});t2.textContent=r.actual+'%'+(r.n!=null?' ('+r.n+')':'');s.append(t2);});c.append(s);c.append(el('div',{class:'legend'},el('span',{},el('i',{style:'background:var(--s1)'}),'Target'),el('span',{},el('i',{style:'background:var(--s2)'}),'Actual (count in brackets)')));}
 function yearBars(c,years,counts,pace){const W=560,H=200,padL=30,padB=24,padT=14,n=years.length||1,bw=(W-padL-8)/n,max=Math.max(...years.map(y=>counts[y]||0),Math.ceil(pace),1);const s=sv('svg',{viewBox:`0 0 ${W} ${H}`});const yOf=v=>padT+(H-padT-padB)*(1-v/max);for(let g=0;g<=max;g+=Math.max(1,Math.ceil(max/4))){s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(g),y2:yOf(g),stroke:'var(--grid)'}));const t=sv('text',{class:'ax',x:padL-6,y:yOf(g)+4,'text-anchor':'end'});t.textContent=g;s.append(t);}years.forEach((yr,i)=>{const v=counts[yr]||0;const x=padL+i*bw+3;s.append(sv('rect',{x,y:yOf(v),width:Math.max(2,bw-6),height:Math.max(0,yOf(0)-yOf(v)),rx:2,fill:'var(--s1)'}));if(v){const t=sv('text',{class:'v',x:x+(bw-6)/2,y:yOf(v)-4,'text-anchor':'middle'});t.textContent=v;s.append(t);}const t=sv('text',{class:'ax',x:x+(bw-6)/2,y:H-8,'text-anchor':'middle'});t.textContent=yr;s.append(t);});if(pace>0){s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(pace),y2:yOf(pace),stroke:'var(--accent)','stroke-width':'2'}));const t=sv('text',{class:'v',x:padL+4,y:yOf(pace)-5,'text-anchor':'start',fill:'var(--accent-ink)'});t.textContent='target pace '+(Math.round(pace*10)/10)+' per year';s.append(t);}s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(0),y2:yOf(0),stroke:'var(--axis)'}));c.append(s);c.append(el('div',{class:'legend'},el('span',{},el('i',{style:'background:var(--s1)'}),'New companies per year'),el('span',{},el('i',{style:'background:var(--accent)'}),'Target pace')));}
 function renderPlanDash(){const cos=portfolio();const ps=planStats(cos);const P=cfg.plan;const tiles=$('#planTiles');tiles.innerHTML='';
-  tiles.append(el('div',{class:'tile'},el('b',{},ps.n+' / '+P.targetCompanies),el('span',{},'companies in the fund window'),el('span',{class:'sub'},ps.slotsLeft>0?ps.slotsLeft+' slots left':'target reached')),
+  const hasT=+P.targetCompanies>0;
+  tiles.append(el('div',{class:'tile'},el('b',{},ps.n+(hasT?' / '+P.targetCompanies:'')),el('span',{},'companies in the fund window'),el('span',{class:'sub'},!hasT?'no company target set':ps.slotsLeft>0?ps.slotsLeft+' slots left':'target reached')),
     el('div',{class:'tile'},el('b',{},fmtM(ps.deployed)),el('span',{},'initial capital deployed'+(ps.estCount?' (est. for '+ps.estCount+')':'')),el('span',{class:'sub'},'of '+fmtM(ps.initialAlloc)+' initial allocation')),
     el('div',{class:'tile'},el('b',{},fmtM(Math.max(0,ps.capitalLeft))),el('span',{},'initial capital left (est.)'),el('span',{class:'sub'},'reserves held: '+fmtM(ps.reserve))),
-    el('div',{class:'tile'},el('b',{},Math.round(ps.pace*10)/10+' / yr'),el('span',{},'pace so far'),el('span',{class:'sub'},'target '+(Math.round(ps.targetPace*10)/10)+' / yr over '+ps.years.length+' years')));
+    el('div',{class:'tile'},el('b',{},Math.round(ps.pace*10)/10+' / yr'),el('span',{},'pace so far'),el('span',{class:'sub'},hasT?'target '+(Math.round(ps.targetPace*10)/10)+' / yr over '+ps.years.length+' years':ps.years.length+'-year window')));
   const ch=$('#planCharts');ch.innerHTML='';
   const srows=cfg.sectors.map(s=>({label:s,target:+P.sectorTargets[s]||0,actual:pc(ps.bySector[s]||0,ps.n),n:ps.bySector[s]||0})).sort((a,b)=>b.target-a.target||b.actual-a.actual);
   chartCard(ch,'Sector mix vs target','% of companies in the fund window',c=>pairBars(c,srows),{head:['Sector','Target %','Actual %','Companies'],rows:srows.map(r=>[r.label,r.target,r.actual,r.n])});
@@ -523,8 +524,9 @@ function renderPlanDash(){const cos=portfolio();const ps=planStats(cos);const P=
   chartCard(ch,'Pacing','new companies per year against the target pace',c=>yearBars(c,ps.years,ps.byYear,ps.targetPace),{head:['Year','Companies'],rows:ps.years.map(y=>[y,ps.byYear[y]||0])});
   const cx=ps.era.filter(c=>c.program==='CXXO');const cxrows=ps.years.map(y=>({y,n:cx.filter(c=>c.year===y).length,usd:cx.filter(c=>c.year===y).reduce((a,c)=>a+chequeOf(c).v,0)}));
   chartCard(ch,'CXXO deployment','women founder-CEO companies per year (est. capital)',c=>{const t=el('div',{class:'small',style:'color:var(--ink-2)'});cxrows.forEach(r=>t.append(el('div',{style:'display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:4px 0'},el('span',{},String(r.y)),el('span',{class:'mono'},r.n+(r.n===1?' company · ':' companies · ')+fmtM(r.usd)+' of '+fmtM(P.cxxoPerYearUsdM)))));c.append(t);},{head:['Year','CXXO companies','Est. capital'],rows:cxrows.map(r=>[r.y,r.n,fmtM(r.usd)])});
-  const under=srows.filter(r=>r.target&&r.actual<r.target-5),over=srows.filter(r=>r.target&&r.actual>r.target+5);const g=$('#planGaps');g.innerHTML='';
-  g.append(el('div',{class:'callout'+(under.length||over.length?'':' ok')},el('b',{},'Read: '),under.length?`under target in ${under.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',over.length?`over target in ${over.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',(!under.length&&!over.length)?'Every sector is within 5 points of its target. ':'',`Deals in under-target sectors earn full Allocation points on the Scan tab; over-target sectors lose them.`));}
+  const anyT=srows.some(r=>r.target>0);const under=srows.filter(r=>r.target&&r.actual<r.target-5),over=srows.filter(r=>r.target&&r.actual>r.target+5);const g=$('#planGaps');g.innerHTML='';
+  if(!anyT){g.append(el('div',{class:'callout'},'No sector targets set. Enter them above; until then Allocation scores as neutral.'));return;}
+  g.append(el('div',{class:'callout'+(under.length||over.length?'':' ok')},under.length?`Under target: ${under.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',over.length?`Over target: ${over.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',(!under.length&&!over.length)?'All sectors within 5 points of target. ':''));}
 
 /* ---------- portfolio tab ---------- */
 let editing=null;

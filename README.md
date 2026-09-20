@@ -39,9 +39,9 @@ because Kalaari says "potential over pedigree" and backs pre-traction teams. Cha
 
 ## Using it inside portfolio planning
 
-1. **Set the plan once** (Fund plan tab): fund size, window, target count, reserves, typical cheques, sector and
-   stage targets. The shipped values are illustrative defaults, not Kalaari's actual plan. Share the settings link
-   with the team so everyone scores against the same plan.
+1. **Set the plan once** (Fund plan tab). Pre-filled from public sources: Fund IV, $200M committed by Reliance via
+   Jio Platforms (2021), CXXO $10M a year. Target count, reserves and sector/stage targets ship blank; nothing is
+   invented. Share the settings link so everyone scores against the same plan.
 2. **Keep the portfolio honest** (Portfolio tab): enter actual cheques for fund-window companies so "capital
    deployed" stops being an estimate; add companies the base data missed; fix sectors.
 3. **Triage inbound with Scan**: the Plan fit group tells you whether a deal fills a gap or deepens an overweight;
@@ -87,7 +87,11 @@ vercel.json                static output from public/, function timeout for api/
 - Base data compiled September 2026 from kalaari.com page metadata surfaced through search plus press coverage.
   91 of Kalaari's 160+ companies are traced; missing ones are mostly older Fund I–II positions.
 - Per-company cheques are not public. The dashboard estimates them from the per-stage cheque in Fund plan and
-  marks them "est." until you enter actuals.
+  marks them "est." until you enter actuals. Seed ($2.2M) and Series A ($4.9M) averages come from a third-party
+  investor profile; pre-seed and Series B figures are placeholders.
+- Fund sizes in `data/kalaari.json` carry a `confidence` field. Fund II (~$150M, 2012) and Fund IV ($200M
+  Reliance commitment, 2021) are reported by sources read during research; Fund I and Fund III sizes are marked
+  unverified and left null.
 - Founder ages in the data file are `reported` only where a dated public source states one; otherwise `estimated`.
 - The extractor and scoring are triage aids. They do not replace diligence.
 
