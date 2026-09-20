@@ -1,5 +1,5 @@
 <title>Kalaari Decoded</title>
-<meta name="description" content="Paste a startup's website and see how it scores against Kalaari Capital's public investment thesis and 91-company portfolio.">
+<meta name="description" content="Deal-fit scanner and fund-plan workbench for Kalaari Capital: score any startup against an editable thesis, the portfolio and the fund plan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -8,7 +8,8 @@
   --paper:#f6f4ee; --paper-2:#efece3; --card:#fbfaf6; --ink:#191c24; --ink-2:#4a4f5c; --muted:#6e7280;
   --line:#dcd8cc; --line-2:#c9c4b5; --indigo:#2b3a67; --indigo-soft:#e3e7f3; --accent:#d9821a; --accent-ink:#9a5a0c; --accent-soft:#fbead4;
   --good-ink:#006300; --good-soft:#e3f3e3; --crit:#b32f2f; --crit-soft:#f8e3e3;
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948; --s9:#898781;
+  --grid:#e4e1d6; --axis:#c3bfb1;
   --display:"Familjen Grotesk",ui-sans-serif,system-ui,sans-serif; --body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){
@@ -17,7 +18,8 @@
     --paper:#15171c; --paper-2:#1b1e25; --card:#1d2028; --ink:#ece9df; --ink-2:#c3c2b7; --muted:#9aa0ad;
     --line:#2b2f3a; --line-2:#3a3f4d; --indigo:#a9b6e6; --indigo-soft:#252b42; --accent:#f0a03c; --accent-ink:#f5b968; --accent-soft:#3a2a12;
     --good-ink:#5fd35f; --good-soft:#1c2e1c; --crit:#f08080; --crit-soft:#3a1c1c;
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s9:#898781;
+    --grid:#262a33; --axis:#3a3f4d;
   }
 }
 :root[data-theme="dark"]{
@@ -25,305 +27,562 @@
   --paper:#15171c; --paper-2:#1b1e25; --card:#1d2028; --ink:#ece9df; --ink-2:#c3c2b7; --muted:#9aa0ad;
   --line:#2b2f3a; --line-2:#3a3f4d; --indigo:#a9b6e6; --indigo-soft:#252b42; --accent:#f0a03c; --accent-ink:#f5b968; --accent-soft:#3a2a12;
   --good-ink:#5fd35f; --good-soft:#1c2e1c; --crit:#f08080; --crit-soft:#3a1c1c;
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767; --s9:#898781;
+  --grid:#262a33; --axis:#3a3f4d;
 }
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin:0}
 a{color:var(--indigo)}
 h1,h2,h3{font-family:var(--display);letter-spacing:-.01em;text-wrap:balance;margin:0}
+h2{font-size:1.5rem;font-weight:600}
 h3{font-size:1rem;font-weight:600}
 p{margin:0}
 .mono{font-family:var(--mono)}
 .muted{color:var(--muted)}
-.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
-.top{border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:54px;flex-wrap:wrap;padding-block:6px}
-.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px}
+.small{font-size:.85rem}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+.top{border-bottom:1px solid var(--line);background:var(--paper);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.top .wrap{display:flex;align-items:center;gap:18px;min-height:54px;flex-wrap:wrap;padding-block:6px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px;white-space:nowrap}
 .brand i{display:inline-block;width:11px;height:11px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
-.basis{font-size:.82rem;color:var(--muted)}
+nav.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+nav.tabs button{font:inherit;font-size:.92rem;background:none;border:0;color:var(--ink-2);padding:8px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{background:var(--paper-2);color:var(--ink)}
+nav.tabs button.on{background:var(--indigo);color:#fff}
+.pill{display:inline-block;min-width:18px;padding:0 6px;border-radius:999px;background:var(--accent);color:#1a1205;font-family:var(--mono);font-size:.7rem;line-height:18px;text-align:center;margin-left:4px;vertical-align:1px}
+nav.tabs button.on .pill{background:#fff;color:var(--indigo)}
+.basis{font-size:.8rem;color:var(--muted);padding-block:8px;border-bottom:1px solid var(--line)}
 .basis b{color:var(--ink-2);font-weight:600}
+main section{padding-block:24px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.sec-head p{color:var(--muted);font-size:.9rem;max-width:70ch}
 /* hero */
-.hero{padding-block:40px 16px;text-align:center}
-.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.05}
+.hero{padding-block:34px 10px;text-align:center}
+.hero h1{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:700;line-height:1.05}
 .hero h1 em{font-style:normal;color:var(--accent)}
-.hero p{color:var(--ink-2);font-size:1.05rem;max-width:52ch;margin:10px auto 0}
-.urlrow{display:flex;gap:8px;max-width:640px;margin:22px auto 0}
+.hero p{color:var(--ink-2);font-size:1.02rem;max-width:56ch;margin:10px auto 0}
+.urlrow{display:flex;gap:8px;max-width:640px;margin:20px auto 0}
 .urlrow input{flex:1;font:inherit;font-size:1.05rem;padding:12px 14px;border:1px solid var(--line-2);border-radius:8px;background:var(--card);color:var(--ink);min-width:0}
-.btn{font:inherit;font-weight:600;background:var(--accent);color:#1a1205;border:0;border-radius:8px;padding:12px 18px;cursor:pointer;white-space:nowrap}
+.btn{font:inherit;font-weight:600;background:var(--accent);color:#1a1205;border:0;border-radius:8px;padding:11px 16px;cursor:pointer;white-space:nowrap}
 .btn:disabled{opacity:.6;cursor:progress}
-.btn.ghost{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-weight:400;padding:8px 12px;border-radius:6px;font-size:.9rem}
-.btn.small{padding:8px 12px;font-size:.9rem;border-radius:6px}
+.btn.ghost{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-weight:400}
+.btn.small{padding:7px 11px;font-size:.88rem;border-radius:6px}
+.btn.danger{background:transparent;border:1px solid var(--crit);color:var(--crit);font-weight:400}
 select:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .try{font-size:.85rem;color:var(--muted);margin-top:10px}
-.try button{font:inherit;font-size:.85rem;background:none;border:0;color:var(--indigo);cursor:pointer;text-decoration:underline;padding:0 4px}
+.try button{font:inherit;font-size:.85rem;background:none;border:0;color:var(--indigo);cursor:pointer;text-decoration:underline;padding:0 3px}
 .msg{max-width:640px;margin:10px auto 0;font-size:.9rem;padding:8px 12px;border-radius:6px;background:var(--paper-2);color:var(--ink-2);text-align:left}
 .msg.err{background:var(--crit-soft);color:var(--crit)}
 .msg.ok{background:var(--good-soft);color:var(--good-ink)}
-/* workspace */
-.work{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;margin-top:26px;align-items:start}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
-.ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+/* cards & forms */
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 .ch small{color:var(--muted);font-size:.8rem}
 .form{display:grid;gap:10px}
-.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form label{display:grid;gap:3px;font-size:.72rem;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;min-width:0}
-.form label.inline{grid-template-columns:auto 1fr;align-items:center;text-transform:none;font-family:var(--body);font-size:.92rem;color:var(--ink);letter-spacing:0}
-select,input[type=text],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:6px;padding:7px 10px;width:100%;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+label.f{display:grid;gap:3px;font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;min-width:0}
+label.f span.h{font-family:var(--body);text-transform:none;letter-spacing:0;font-size:.78rem;color:var(--muted)}
+label.inline{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:8px;font-size:.92rem;color:var(--ink)}
+select,input[type=text],input[type=number],input[type=url],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:6px;padding:7px 10px;width:100%;min-width:0}
+input[type=number]{font-variant-numeric:tabular-nums}
 textarea{min-height:64px;resize:vertical}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
-.founders{font-size:.88rem;color:var(--ink-2)}
-.founders span{color:var(--muted)}
-/* result */
-.result{position:sticky;top:12px}
+.founders{font-size:.86rem;color:var(--ink-2)}
+.work{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;margin-top:22px;align-items:start}
+.result{position:sticky;top:68px}
 .score{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
-.score .big{font-family:var(--display);font-size:3.6rem;font-weight:700;line-height:1}
+.score .big{font-family:var(--display);font-size:3.4rem;font-weight:700;line-height:1}
 .score .big small{font-size:1rem;color:var(--muted);font-family:var(--body);font-weight:400}
-.verdict{font-weight:600;font-size:1.02rem}
+.verdict{font-weight:600;font-size:1rem}
 .verdict.strong{color:var(--good-ink)} .verdict.mid{color:var(--accent-ink)} .verdict.weak{color:var(--crit)}
-.route{font-size:.9rem;color:var(--ink-2);margin-top:2px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
-.part h3{display:flex;justify-content:space-between;align-items:baseline;font-size:.95rem}
-.part h3 span{font-family:var(--mono);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.part .bar{height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden;margin:6px 0 10px}
+.route{font-size:.88rem;color:var(--ink-2);margin-top:2px}
+.sum{font-family:var(--mono);font-size:.76rem;color:var(--muted);margin-top:4px}
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
+.part h3{display:flex;justify-content:space-between;align-items:baseline;font-size:.92rem}
+.part h3 span{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.part .bar{height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden;margin:6px 0 8px}
 .part .bar i{display:block;height:100%;background:var(--indigo)}
-.part.pf .bar i{background:var(--accent)}
-.chk{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:start;font-size:.88rem;padding:5px 0;border-top:1px solid var(--line)}
+.part.pf .bar i{background:var(--accent)} .part.pl .bar i{background:var(--s3)}
+.chk{display:grid;grid-template-columns:16px 1fr auto;gap:7px;align-items:start;font-size:.86rem;padding:5px 0;border-top:1px solid var(--line)}
 .chk .ic{font-family:var(--mono);font-weight:600;text-align:center}
 .chk.pass .ic{color:var(--good-ink)} .chk.part .ic{color:var(--accent-ink)} .chk.fail .ic{color:var(--crit)}
-.chk b{font-weight:600}
-.chk .ev{color:var(--muted);font-size:.82rem;display:block}
-.chk .n{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chk .ev{color:var(--muted);font-size:.8rem;display:block}
+.chk .n{font-family:var(--mono);font-size:.76rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .near{margin-top:14px}
-.near .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.88rem;padding:6px 10px;border:1px solid var(--line);border-left:4px solid var(--sc,var(--line-2));border-radius:6px;background:var(--paper);margin-top:6px}
-.near .row span{color:var(--muted);font-size:.8rem}
+.near .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.86rem;padding:6px 10px;border:1px solid var(--line);border-left:4px solid var(--sc,var(--line-2));border-radius:6px;background:var(--paper);margin-top:6px}
+.near .row span{color:var(--muted);font-size:.78rem}
 .near .row.conflict{border-color:var(--crit);border-left-color:var(--crit)}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.tag{font-size:.78rem;padding:3px 9px;border-radius:999px;background:var(--indigo-soft);color:var(--indigo);font-weight:600}
+.tag{font-size:.76rem;padding:3px 9px;border-radius:999px;background:var(--indigo-soft);color:var(--indigo);font-weight:600}
 .tag.cx{background:var(--accent-soft);color:var(--accent-ink)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
-.toast{font-size:.8rem;color:var(--good-ink)}
-.shortlist{font-size:.86rem;margin-top:10px}
-.shortlist ul{padding-left:18px;margin:4px 0 0}
-.tog{font:inherit;font-size:.76rem;background:transparent;border:1px solid var(--line-2);color:var(--ink-2);border-radius:5px;padding:2px 7px;cursor:pointer;margin-left:6px}
-/* basis section */
-section{padding-block:34px;border-top:1px solid var(--line);margin-top:34px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.two-col h3{margin-bottom:6px}
-.two-col p{font-size:.92rem;color:var(--ink-2)}
-.two-col .card{border-top:3px solid var(--indigo)}
-.two-col .card.pf{border-top-color:var(--accent)}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.88rem;margin-top:10px}
-.kv dt{color:var(--muted);font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:8px;font-size:.88rem;opacity:0;transition:opacity .15s;pointer-events:none;z-index:50}
+.toast.on{opacity:1}
+/* tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0;white-space:nowrap}
+td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+td input,td select{padding:4px 6px;font-size:.84rem}
+td .est{color:var(--muted);font-size:.72rem}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:12px}
+.toolbar label.f{min-width:120px}
+.toolbar .spacer{flex:1}
+.count{font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+/* tiles & charts */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tile b{display:block;font-family:var(--display);font-size:1.5rem;font-weight:600;line-height:1.1}
+.tile span{font-size:.78rem;color:var(--muted)}
+.tile .sub{display:block;font-size:.8rem;color:var(--ink-2);margin-top:2px}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.chart .tbl{display:none}.chart.astable svg,.chart.astable .legend{display:none}.chart.astable .tbl{display:block}
+.tog{font:inherit;font-size:.74rem;background:transparent;border:1px solid var(--line-2);color:var(--ink-2);border-radius:5px;padding:2px 7px;cursor:pointer}
+text{font-family:var(--body);fill:var(--ink-2);font-size:12px}
+text.v{font-family:var(--mono);font-size:11px;fill:var(--ink)}
+text.ax{fill:var(--muted);font-size:11px}
+.callout{border-left:3px solid var(--accent);padding:10px 14px;background:var(--accent-soft);border-radius:0 8px 8px 0;font-size:.92rem;margin-top:14px}
+.callout.ok{border-color:var(--good-ink);background:var(--good-soft)}
+.guide{font-size:.9rem;color:var(--ink-2);background:var(--paper-2);border-radius:8px;padding:10px 14px;margin-bottom:14px}
+/* settings */
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.settings .card{display:grid;gap:10px;align-content:start}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.wgrid label.f span.h{font-size:.74rem}
+.rowlist{display:grid;gap:6px}
+.rowlist .r{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.rowlist .r input[type=text]{padding:5px 8px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.86rem}
+.kv dt{color:var(--muted);font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
 .kv dd{margin:0;color:var(--ink-2)}
-details.ref{margin-top:14px}
-details.ref summary{cursor:pointer;color:var(--indigo);font-size:.92rem}
-.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:12px 0}
-.filters label{font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;gap:4px}
-.filters select,.filters input{width:auto;min-width:140px}
-.count{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
-.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;font-size:.86rem;background:var(--card)}
-th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
-td.num{font-variant-numeric:tabular-nums;text-align:right}
-footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line)}
-@media (max-width:860px){.work,.split,.two-col{grid-template-columns:1fr}.result{position:static}}
-@media (max-width:560px){.form .two,.checks{grid-template-columns:1fr}.urlrow{flex-direction:column}.chk{grid-template-columns:18px 1fr}.chk .n{grid-column:2}}
+.status-ok{color:var(--good-ink)} .status-off{color:var(--accent-ink)}
+footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line);margin-top:20px}
+@media (max-width:900px){.work,.settings,.charts{grid-template-columns:1fr}.result{position:static}.three{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.two,.three,.checks{grid-template-columns:1fr}.urlrow{flex-direction:column}.chk{grid-template-columns:16px 1fr}.chk .n{grid-column:2}nav.tabs{margin-left:0;width:100%}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="top"><div class="wrap">
   <div class="brand"><i></i>Kalaari Decoded</div>
-  <div class="basis">Scored against <b>Kalaari's investment thesis</b> and <b><span id="nCo"></span> portfolio companies</b>, nothing else.</div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="scan" class="on" type="button">Scan</button>
+    <button data-tab="pipeline" type="button">Pipeline<span class="pill" id="pipeCount" hidden></span></button>
+    <button data-tab="plan" type="button">Fund plan</button>
+    <button data-tab="portfolio" type="button">Portfolio</button>
+    <button data-tab="settings" type="button">Settings</button>
+  </nav>
 </div></div>
+<div class="basis"><div class="wrap">Every score comes from three things you control: <b>the thesis</b> (Settings), <b>the portfolio</b> (Portfolio) and <b>the fund plan</b> (Fund plan). Nothing else.</div></div>
 
 <main class="wrap">
-<div class="hero">
-  <h1>Would <em>Kalaari</em> back this startup?</h1>
-  <p>Paste the company's website. Details are pulled from the site, then scored against what Kalaari says it invests in and what it has actually backed.</p>
-  <form class="urlrow" id="urlform">
-    <input type="text" id="url" placeholder="company website, e.g. digantara.co.in" autocomplete="off" spellcheck="false">
-    <button class="btn" id="go" type="submit">Scan</button>
-  </form>
-  <div class="try">Try: <button type="button" data-u="https://www.nudgebee.com">nudgebee.com</button> · <button type="button" data-u="https://articulussurgical.com">articulussurgical.com</button> · <button type="button" data-u="https://www.chara.tech">chara.tech</button> · or <button type="button" id="manual">fill in the details yourself</button></div>
-  <div class="msg" id="msg" hidden></div>
-</div>
 
-<div class="work" id="work">
-  <div class="card">
-    <div class="ch"><h3>Company details</h3><small id="srcnote">Edit anything; the score updates live.</small></div>
+<!-- ================= SCAN ================= -->
+<section id="tab-scan">
+  <div class="hero">
+    <h1>Would <em>Kalaari</em> back this startup?</h1>
+    <p>Paste the company's website. The details are read from the site, then scored against the thesis, the portfolio and the fund plan.</p>
+    <form class="urlrow" id="urlform">
+      <input type="text" id="url" placeholder="company website, e.g. digantara.co.in" autocomplete="off" spellcheck="false">
+      <button class="btn" id="go" type="submit">Scan</button>
+    </form>
+    <div class="try">Try: <button type="button" data-u="https://www.nudgebee.com">nudgebee.com</button> · <button type="button" data-u="https://articulussurgical.com">articulussurgical.com</button> · <button type="button" data-u="https://www.chara.tech">chara.tech</button> · <button type="button" id="manual">enter details by hand</button> · <button type="button" id="batchToggle">scan a list</button></div>
+    <div class="msg" id="msg" hidden></div>
+  </div>
+
+  <div class="card" id="batch" hidden style="margin-top:18px">
+    <div class="ch"><h3>Scan a list</h3><small>One website per line. Each is read and scored; add the keepers to the pipeline.</small></div>
     <div class="form">
-      <label>Company<input type="text" id="sName"></label>
-      <label>What it does<textarea id="sDesc"></textarea></label>
-      <div class="two">
-        <label>Sector<select id="sSector"></select></label>
-        <label>Round being raised<select id="sStage"><option>Pre-seed</option><option>Seed</option><option>Series A</option><option>Series B</option><option>Later</option></select></label>
-      </div>
-      <div class="two">
-        <label>Round size (USD millions)<input type="number" id="sSize" min="0" step="0.1" placeholder="unknown"></label>
-        <label>Headquarters<select id="sGeo"><option value="india">India</option><option value="global">Global from India</option><option value="other">Outside India</option></select></label>
-      </div>
-      <label>Founders<select id="sFounder"><option value="first">First-time founders</option><option value="repeat">Repeat founders</option><option value="operator">Senior operators from big companies</option><option value="unknown">Unknown</option></select></label>
-      <div class="founders" id="sFounders"></div>
-      <div class="checks">
-        <label class="inline"><input type="checkbox" id="sAI"> AI-native product</label>
-        <label class="inline"><input type="checkbox" id="sIndia"> Customers mainly in India</label>
-        <label class="inline"><input type="checkbox" id="sWomen"> Woman founder-CEO</label>
-        <label class="inline"><input type="checkbox" id="sTraction"> Has paying customers</label>
-      </div>
+      <textarea id="batchUrls" placeholder="nudgebee.com&#10;chara.tech&#10;https://articulussurgical.com" style="min-height:90px"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn small" id="batchRun" type="button">Scan all</button><button class="btn ghost small" id="batchAddAll" type="button">Add all to pipeline</button><span class="count" id="batchStatus"></span></div>
+      <div class="tablewrap" id="batchTable" hidden></div>
     </div>
   </div>
-  <div class="card result" id="out"></div>
-</div>
 
-<section id="basis">
-  <div class="two-col">
+  <div class="work" id="work">
     <div class="card">
-      <h3>Thesis · 60 points</h3>
-      <p>What Kalaari says it invests in, taken from kalaari.com, its "Why we invested" notes and Vani Kola's 2025 talks.</p>
-      <dl class="kv">
-        <dt>Stage</dt><dd>Pre-seed to Series A, first institutional cheque · 20 pts</dd>
-        <dt>Cheque</dt><dd>$0.5M–5M first cheque (avg $2.2M seed, $4.9M Series A) · 15 pts</dd>
-        <dt>Sectors</dt><dd>Vertical AI, DeepTech &amp; SpaceTech, SaaS, gaming &amp; creators, consumer, fintech, climate, healthtech · 15 pts</dd>
-        <dt>Geography</dt><dd>India-first; Bengaluru office; India-only LP · 10 pts</dd>
-        <dt>Founders</dt><dd>"Potential over pedigree." First-time founders welcome; women founder-CEOs via CXXO · tags, not points</dd>
-      </dl>
+      <div class="ch"><h3>Company details</h3><small id="srcnote">Edit anything; the score updates live.</small></div>
+      <div class="form">
+        <label class="f">Company<input type="text" id="sName"></label>
+        <label class="f">What it does<textarea id="sDesc"></textarea></label>
+        <div class="two">
+          <label class="f">Sector<select id="sSector"></select></label>
+          <label class="f">Round being raised<select id="sStage"><option>Pre-seed</option><option>Seed</option><option>Series A</option><option>Series B</option><option>Later</option></select></label>
+        </div>
+        <div class="two">
+          <label class="f">Round size (USD millions)<input type="number" id="sSize" min="0" step="0.1" placeholder="unknown"></label>
+          <label class="f">Headquarters<select id="sGeo"><option value="india">India</option><option value="global">Global from India</option><option value="other">Outside India</option></select></label>
+        </div>
+        <label class="f">Founders<select id="sFounder"><option value="first">First-time founders</option><option value="repeat">Repeat founders</option><option value="operator">Senior operators from big companies</option><option value="unknown">Unknown</option></select></label>
+        <div class="founders" id="sFounders"></div>
+        <div class="checks">
+          <label class="inline"><input type="checkbox" id="sAI"> AI-native product</label>
+          <label class="inline"><input type="checkbox" id="sIndia"> Customers mainly in India</label>
+          <label class="inline"><input type="checkbox" id="sWomen"> Woman founder-CEO</label>
+          <label class="inline"><input type="checkbox" id="sTraction"> Has paying customers</label>
+        </div>
+      </div>
     </div>
-    <div class="card pf">
-      <h3>Portfolio · 40 points</h3>
-      <p>What Kalaari has actually backed: <span id="nCo2"></span> companies with sector, entry stage, year, status and founders.</p>
-      <dl class="kv">
-        <dt>Pattern</dt><dd>How many companies in this sector Kalaari has backed since 2020 · 15 pts</dd>
-        <dt>Adjacency</dt><dd>How close the nearest portfolio company is (shared keywords) · 10 pts</dd>
-        <dt>Conflict</dt><dd>Full points unless an active portfolio company looks like a direct competitor · 10 pts</dd>
-        <dt>Precedent</dt><dd>Whether Kalaari has entered this sector at this stage before · 5 pts</dd>
-      </dl>
+    <div class="card result" id="out"></div>
+  </div>
+</section>
+
+<!-- ================= PIPELINE ================= -->
+<section id="tab-pipeline" hidden>
+  <div class="sec-head"><div><h2>Pipeline</h2><p>Deals you have scored and kept. Status, owner and notes are yours to edit; open any row to re-score it.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost small" id="pipeExport" type="button">Export CSV</button><button class="btn danger small" id="pipeClearPassed" type="button">Remove passed</button></div></div>
+  <div class="toolbar"><label class="f">Status<select id="pipeFilter"><option value="">All</option></select></label><label class="f">Sort<select id="pipeSort"><option value="score">Score</option><option value="updated">Last updated</option><option value="name">Name</option></select></label><span class="spacer"></span><span class="count" id="pipeCountText"></span></div>
+  <div class="tablewrap" id="pipeTable"></div>
+</section>
+
+<!-- ================= FUND PLAN ================= -->
+<section id="tab-plan" hidden>
+  <div class="sec-head"><div><h2>Fund plan</h2><p>Set the fund's targets once. The dashboard shows deployment against them, and the Scan tab scores whether a new deal fills a gap (Plan fit).</p></div></div>
+  <div class="guide">The numbers below are illustrative defaults; replace them with the fund's own. Companies in the fund window (start to end year) count as deployed. Cheque sizes are taken from the Portfolio tab where entered, otherwise estimated from the per-stage cheque below and marked <b>est.</b></div>
+  <div class="two" style="align-items:start">
+    <div class="card form">
+      <div class="ch"><h3>Fund</h3></div>
+      <div class="two">
+        <label class="f">Fund name<input type="text" data-cfg="plan.name"></label>
+        <label class="f">Fund size (USD M)<input type="number" min="0" step="1" data-cfg="plan.sizeUsdM"></label>
+      </div>
+      <div class="three">
+        <label class="f">First year<input type="number" min="2000" max="2100" step="1" data-cfg="plan.startYear"></label>
+        <label class="f">Last year<input type="number" min="2000" max="2100" step="1" data-cfg="plan.endYear"></label>
+        <label class="f">Target companies<input type="number" min="1" step="1" data-cfg="plan.targetCompanies"></label>
+      </div>
+      <div class="two">
+        <label class="f">Reserves for follow-ons (%)<input type="number" min="0" max="90" step="1" data-cfg="plan.reservePct"></label>
+        <label class="f">CXXO budget per year (USD M)<input type="number" min="0" step="0.5" data-cfg="plan.cxxoPerYearUsdM"></label>
+      </div>
+      <div class="ch" style="margin-top:6px"><h3>Typical first cheque by stage (USD M)</h3><small>used to estimate deployment where a cheque is not entered</small></div>
+      <div class="three" id="chequeGrid"></div>
+    </div>
+    <div class="card form">
+      <div class="ch"><h3>Sector targets (% of companies)</h3><small id="sectorSum"></small></div>
+      <div class="two" id="sectorTargets"></div>
+      <div class="ch" style="margin-top:6px"><h3>Stage targets (% of companies)</h3><small id="stageSum"></small></div>
+      <div class="three" id="stageTargets"></div>
     </div>
   </div>
-  <details class="ref">
-    <summary>See the portfolio the scanner compares against</summary>
-    <div class="filters">
-      <label>Search<input type="text" id="q" placeholder="name, tag, founder, city"></label>
-      <label>Sector<select id="fSector"><option value="">All</option></select></label>
-      <label>Status<select id="fStatus"><option value="">All</option></select></label>
-      <span class="count" id="count"></span>
+  <div class="tiles" id="planTiles"></div>
+  <div class="charts" id="planCharts"></div>
+  <div id="planGaps"></div>
+</section>
+
+<!-- ================= PORTFOLIO ================= -->
+<section id="tab-portfolio" hidden>
+  <div class="sec-head"><div><h2>Portfolio</h2><p>What the scanner compares against. Correct anything, add companies, enter actual cheques, or import your own list. Edits stay in this browser until you export them.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="pfAdd" type="button">Add company</button><button class="btn ghost small" id="pfImport" type="button">Import CSV</button><input type="file" id="pfFile" accept=".csv,text/csv" hidden><button class="btn ghost small" id="pfExportCsv" type="button">Export CSV</button><button class="btn ghost small" id="pfExportJson" type="button">Export JSON</button></div></div>
+  <div class="card form" id="pfEditor" hidden style="margin-bottom:14px"></div>
+  <div class="toolbar">
+    <label class="f">Search<input type="text" id="pfQ" placeholder="name, tag, founder, city"></label>
+    <label class="f">Sector<select id="pfSector"><option value="">All</option></select></label>
+    <label class="f">Status<select id="pfStatus"><option value="">All</option></select></label>
+    <label class="f">Window<select id="pfEra"><option value="">All years</option><option value="fund">Fund window</option><option value="before">Before fund</option></select></label>
+    <span class="spacer"></span><span class="count" id="pfCount"></span>
+  </div>
+  <div class="tablewrap" id="pfTable"></div>
+</section>
+
+<!-- ================= SETTINGS ================= -->
+<section id="tab-settings" hidden>
+  <div class="sec-head"><div><h2>Settings</h2><p>Everything the score depends on. Changes apply immediately and are kept in this browser; export or share a link to give the team the same setup.</p></div></div>
+  <div class="settings">
+    <div class="card">
+      <div class="ch"><h3>Weights</h3><small id="wSum"></small></div>
+      <p class="small muted">Points available per check. Any check can be set to 0 to switch it off. The score is always shown out of 100.</p>
+      <div class="wgrid" id="weights"></div>
+      <div><button class="btn ghost small" id="wReset" type="button">Reset weights</button></div>
     </div>
-    <div class="tablewrap" id="table"></div>
-  </details>
+    <div class="card">
+      <div class="ch"><h3>Thesis rules</h3><small>what "fit" means</small></div>
+      <div><span class="small muted">Focus sectors (full sector points)</span><div class="checks" id="focusSectors" style="margin-top:6px"></div></div>
+      <label class="f">Sector points outside focus (%)<input type="number" min="0" max="100" step="5" data-cfg="thesis.nonFocusPct"></label>
+      <div><span class="small muted">Stage points (% of stage weight)</span><div class="three" id="stagePct" style="margin-top:6px"></div></div>
+      <div><span class="small muted">First cheque (USD M)</span><div class="three" style="margin-top:6px">
+        <label class="f">Min<input type="number" min="0" step="0.1" data-cfg="thesis.cheque.min"></label>
+        <label class="f">Max<input type="number" min="0" step="0.1" data-cfg="thesis.cheque.max"></label>
+        <label class="f">Stretch to<input type="number" min="0" step="0.1" data-cfg="thesis.cheque.stretch"></label>
+        <label class="f">Too big above<input type="number" min="0" step="0.1" data-cfg="thesis.cheque.tooBig"></label>
+        <label class="f">Unknown size (%)<input type="number" min="0" max="100" step="5" data-cfg="thesis.cheque.unknownPct"></label>
+      </div></div>
+      <div><span class="small muted">Geography points (%)</span><div class="three" style="margin-top:6px">
+        <label class="f">India<input type="number" min="0" max="100" step="5" data-cfg="thesis.geoPct.india"></label>
+        <label class="f">Global from India<input type="number" min="0" max="100" step="5" data-cfg="thesis.geoPct.global"></label>
+        <label class="f">Outside India<input type="number" min="0" max="100" step="5" data-cfg="thesis.geoPct.other"></label>
+      </div></div>
+      <div><span class="small muted">Verdict thresholds (score out of 100)</span><div class="two" style="margin-top:6px">
+        <label class="f">Strong fit from<input type="number" min="0" max="100" step="1" data-cfg="thesis.verdict.strong"></label>
+        <label class="f">Plausible from<input type="number" min="0" max="100" step="1" data-cfg="thesis.verdict.plausible"></label>
+      </div></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Sectors</h3><small>rename or add; a sector in use cannot be removed</small></div>
+      <div class="rowlist" id="sectorList"></div>
+      <div style="display:flex;gap:8px"><input type="text" id="newSector" placeholder="New sector name"><button class="btn ghost small" id="addSector" type="button">Add</button></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Routing</h3><small>who sees a deal first, by sector</small></div>
+      <div class="rowlist" id="routing"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Website reading</h3></div>
+      <div id="extractStatus" class="small">Checking…</div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3>Workspace</h3><small>settings, portfolio edits and pipeline</small></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn small" id="wsExport" type="button">Export workspace</button>
+        <button class="btn ghost small" id="wsImport" type="button">Import workspace</button><input type="file" id="wsFile" accept=".json,application/json" hidden>
+        <button class="btn ghost small" id="wsShare" type="button">Copy share link</button>
+      </div>
+      <p class="small muted">The share link carries thesis, weights, sectors, routing and fund plan (not the pipeline or portfolio edits). Anyone who opens it gets the same setup.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn danger small" id="wsResetCfg" type="button">Reset settings</button>
+        <button class="btn danger small" id="wsResetPf" type="button">Discard portfolio edits</button>
+        <button class="btn danger small" id="wsClearPipe" type="button">Clear pipeline</button>
+      </div>
+    </div>
+  </div>
 </section>
 </main>
 
-<footer><div class="wrap">A triage aid, not Kalaari's investment committee. Portfolio data compiled September 2026 from kalaari.com and press; website extraction reads only public pages. Shortlist is saved in this browser only.</div></footer>
+<footer><div class="wrap">A triage aid, not the investment committee. Base portfolio data compiled September 2026 from kalaari.com and press; website reading uses public pages only. Your settings, edits and pipeline live in this browser until you export them.</div></footer>
+<div class="toast" id="toast"></div>
 
 <script>
 const D = /*__DATA__*/{}/*__END__*/;
-const $ = (s, r=document) => r.querySelector(s);
-const el = (t, a={}, ...k) => { const e=document.createElement(t); for(const [x,y] of Object.entries(a)){ if(x==='class') e.className=y; else if(x.startsWith('on')) e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} for(const c of k){ if(c==null) continue; e.append(c.nodeType?c:document.createTextNode(c)); } return e; };
-const SLOT = {}; D.sectors.forEach((s,i)=>SLOT[s]='var(--s'+(i+1)+')');
-const C = D.companies;
-const F4 = C.filter(c=>c.year>=2020);
-const statusText = c => c.outcome || c.status;
-$('#nCo').textContent=C.length; $('#nCo2').textContent=C.length;
-D.sectors.forEach(s=>$('#sSector').append(el('option',{},s)));
+/* ---------- utils ---------- */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const el=(t,a={},...k)=>{const e=document.createElement(t);for(const[x,y]of Object.entries(a)){if(x==='class')e.className=y;else if(x.startsWith('on'))e.addEventListener(x.slice(2),y);else if(y!==false&&y!=null)e.setAttribute(x,y===true?'':y);}for(const c of k){if(c==null)continue;e.append(c.nodeType?c:document.createTextNode(c));}return e;};
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+const clone=o=>JSON.parse(JSON.stringify(o));
+const isObj=o=>o&&typeof o==='object'&&!Array.isArray(o);
+function deepMerge(base,over){if(!isObj(base))return over===undefined?base:over;const out={...base};if(isObj(over))for(const k of Object.keys(over)){out[k]=isObj(base[k])?deepMerge(base[k],over[k]):(over[k]===undefined?base[k]:over[k]);}return out;}
+const getPath=(o,p)=>p.split('.').reduce((a,k)=>a==null?undefined:a[k],o);
+const setPath=(o,p,v)=>{const ks=p.split('.');let a=o;for(let i=0;i<ks.length-1;i++){if(!isObj(a[ks[i]]))a[ks[i]]={};a=a[ks[i]];}a[ks[ks.length-1]]=v;};
+const fmtM=v=>'$'+(Math.round((+v||0)*10)/10)+'M';
+const pc=(a,b)=>b?Math.round(100*a/b):0;
+const today=()=>new Date().toISOString().slice(0,10);
+const mostCommon=arr=>{const m={};arr.forEach(x=>m[x]=(m[x]||0)+1);return Object.keys(m).sort((a,b)=>m[b]-m[a])[0];};
+function download(name,text,type='text/plain'){const b=new Blob([text],{type});const u=URL.createObjectURL(b);const a=el('a',{href:u,download:name});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}
+function toCSV(rows,cols){const esc=v=>{v=v==null?'':String(v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};return [cols.join(','),...rows.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\n');}
+function parseCSV(text){const rows=[];let row=[],cell='',q=false;for(let i=0;i<text.length;i++){const ch=text[i];if(q){if(ch==='"'){if(text[i+1]==='"'){cell+='"';i++;}else q=false;}else cell+=ch;}else if(ch==='"')q=true;else if(ch===','){row.push(cell);cell='';}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&text[i+1]==='\n')i++;row.push(cell);rows.push(row);row=[];cell='';}else cell+=ch;}if(cell!==''||row.length){row.push(cell);rows.push(row);}return rows.filter(r=>r.some(c=>c!==''));}
+let toastT;function toast(t){const x=$('#toast');x.textContent=t;x.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>x.classList.remove('on'),2200);}
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true;}catch(e){const ta=el('textarea',{style:'position:fixed;left:-9999px'},t);document.body.append(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e2){}ta.remove();return ok;}}
 
-const FOCUS = {'AI & SaaS':'vertical AI and SaaS','DeepTech & Climate':'DeepTech, SpaceTech and climate','Gaming & Media':'gaming and the creator economy','Consumer & D2C':'consumer and D2C','FinTech':'fintech','HealthTech':'healthtech'};
-const ROUTE={'AI & SaaS':'Jayraj Bharat Patel (AI-driven software), then Sampath P','Gaming & Media':'Harshit Kumar (gaming, SMB-tech)','Consumer & D2C':'Pranav Koshal; Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy for sales-tech and distribution','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy (logistics, revenue ops)','EdTech & HR':'Sampath P or Kiran Vasireddy (upskilling)'};
-const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services','your','our','you','are','can','all','more','new','one','best','via','through','every','any','get','use','used','how','what','who','also','has','have','small','large','big','top','fast','faster','better','across','between','without','within','over','under','out','than','then','them','they','its','operators','customers','users','business','businesses','companies','india\'s','keywords']);
-const tok = s => new Set((String(s).toLowerCase().match(/[a-z][a-z0-9+\-]{2,}/g)||[]).filter(t=>!STOP.has(t)));
+/* ---------- config & state ---------- */
+const DEFAULT_CFG={
+  version:1,
+  sectors:[...D.sectors],
+  sectorRenames:{},
+  thesis:{
+    focusSectors:['AI & SaaS','DeepTech & Climate','Gaming & Media','Consumer & D2C','FinTech','HealthTech'],
+    nonFocusPct:45,
+    stagePct:{'Pre-seed':100,'Seed':100,'Series A':85,'Series B':30,'Later':0},
+    cheque:{min:0.5,max:5,stretch:6,tooBig:12,unknownPct:65},
+    geoPct:{india:100,global:80,other:20},
+    verdict:{strong:75,plausible:55}
+  },
+  weights:{stage:18,cheque:14,sector:14,geo:9,pattern:13,adjacency:9,conflict:9,precedent:4,allocation:6,capacity:4},
+  plan:{name:'Fund IV',sizeUsdM:200,startYear:2021,endYear:2026,targetCompanies:50,reservePct:40,cxxoPerYearUsdM:10,
+    cheque:{'Pre-seed':1,'Seed':2.2,'Pre-Series A':3,'Series A':4.9,'Series B':5,'Later':5},
+    sectorTargets:{'AI & SaaS':25,'DeepTech & Climate':20,'Consumer & D2C':15,'FinTech':10,'Gaming & Media':10,'HealthTech':10,'B2B Commerce & Logistics':5,'EdTech & HR':5},
+    stageTargets:{'Pre-seed':25,'Seed':50,'Series A':25,'Series B':0}},
+  routing:{'AI & SaaS':'Jayraj Bharat Patel, then Sampath P','Gaming & Media':'Harshit Kumar','Consumer & D2C':'Pranav Koshal; Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy for sales-tech','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy','EdTech & HR':'Sampath P or Kiran Vasireddy'},
+  ui:{tab:'scan'}
+};
+const WEIGHT_META=[['stage','Stage','thesis'],['cheque','Cheque','thesis'],['sector','Sector','thesis'],['geo','Geography','thesis'],['pattern','Pattern','portfolio'],['adjacency','Adjacency','portfolio'],['conflict','Conflict','portfolio'],['precedent','Precedent','portfolio'],['allocation','Allocation','plan'],['capacity','Capacity','plan']];
+const GROUPS={thesis:'Thesis fit',portfolio:'Portfolio fit',plan:'Plan fit'};
+const STATUSES=['New','Screening','Partner meeting','IC','Invested','Passed'];
+const STAGES=['Pre-seed','Seed','Pre-Series A','Series A','Series B','Later'];
+let cfg=deepMerge(DEFAULT_CFG,LS.get('kd.cfg.v1',{}));
+let ov=Object.assign({added:[],edited:{},removed:[]},LS.get('kd.portfolio.v1',{}));
+let pipeline=LS.get('kd.pipeline.v1',[]);
+const saveCfg=()=>LS.set('kd.cfg.v1',cfg), saveOv=()=>LS.set('kd.portfolio.v1',ov), savePipe=()=>LS.set('kd.pipeline.v1',pipeline);
 
-/* ---------- state ---------- */
-let founders=[]; let source='manual'; let evidence=[];
-function read(){ return {name:$('#sName').value.trim()||'This company', desc:$('#sDesc').value, sector:$('#sSector').value, stage:$('#sStage').value, size:parseFloat($('#sSize').value)||0, geo:$('#sGeo').value, founder:$('#sFounder').value, ai:$('#sAI').checked, india:$('#sIndia').checked, women:$('#sWomen').checked, traction:$('#sTraction').checked}; }
-function fill(c){
-  $('#sName').value=c.name||''; $('#sDesc').value=c.desc||''; $('#sSector').value=c.sector||D.sectors[0]; $('#sStage').value=c.stage||'Seed'; $('#sSize').value=c.size!=null&&c.size>0?c.size:''; $('#sGeo').value=c.geo||'india'; $('#sFounder').value=c.founder||'unknown'; $('#sAI').checked=!!c.ai; $('#sIndia').checked=!!c.india; $('#sWomen').checked=!!c.women; $('#sTraction').checked=!!c.traction;
-  founders=c.founders||[]; const fb=$('#sFounders'); fb.innerHTML=''; if(founders.length){ fb.append('Named on site: '); founders.forEach((f,i)=>fb.append(el('span',{},(i?', ':'')+f.name+(f.role?' ('+f.role+')':'')))); }
-  run();
-}
+/* shared settings via ?cfg= */
+(function(){try{const m=location.search.match(/[?&]cfg=([^&]+)/);if(!m)return;const j=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));cfg=deepMerge(DEFAULT_CFG,j);saveCfg();history.replaceState(null,'',location.pathname);setTimeout(()=>toast('Shared settings applied'),300);}catch(e){}})();
+
+/* ---------- portfolio ---------- */
+function portfolio(){const removed=new Set(ov.removed);const rn=cfg.sectorRenames||{};const out=[];for(const b of D.companies){if(removed.has(b.id))continue;out.push(Object.assign({},b,ov.edited[b.id]||{}));}for(const a of ov.added){if(!removed.has(a.id))out.push(Object.assign({},a));}return out.map(c=>{c.sector=rn[c.sector]||c.sector;c.tags=Array.isArray(c.tags)?c.tags:[];c.founders=Array.isArray(c.founders)?c.founders:[];c.year=+c.year||0;return c;});}
+function slot(sector){const i=cfg.sectors.indexOf(sector);return i>=0&&i<8?'var(--s'+(i+1)+')':'var(--s9)';}
+const statusText=c=>c.outcome||c.status||'';
+const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services','your','our','you','are','can','all','more','new','one','best','via','through','every','any','get','use','used','how','what','who','also','has','have','small','large','big','top','fast','faster','better','between','without','within','over','under','out','than','then','them','they','its','operators','customers','users','business','businesses','companies','keywords','example','across','end','full','stack']);
+const tok=s=>new Set((String(s).toLowerCase().match(/[a-z][a-z0-9+\-]{2,}/g)||[]).filter(t=>!STOP.has(t)));
+function buildIndex(cos){const docs=cos.map(c=>({c,t:tok(c.desc+' '+c.tags.join(' ')+' '+c.name)}));const df={};docs.forEach(d=>d.t.forEach(t=>df[t]=(df[t]||0)+1));const N=docs.length||1;const w=t=>Math.log((N+1)/((df[t]||0)+1))+0.5;return{docs,w};}
+function nearest(i,idx,k=4){const tk=tok(i.desc+' '+i.name);const era=+cfg.plan.startYear;return idx.docs.map(d=>{const shared=[...tk].filter(t=>d.t.has(t)).map(t=>[t,idx.w(t)]).sort((a,b)=>b[1]-a[1]);const s=shared.reduce((a,x)=>a+x[1],0);return{c:d.c,shared:shared.map(x=>x[0]),s,same:d.c.sector===i.sector};}).filter(a=>a.s>0||a.same).sort((a,b)=>(b.s+(b.same?1:0)+(b.c.year>=era?.3:0))-(a.s+(a.same?1:0)+(a.c.year>=era?.3:0))).slice(0,k);}
+
+/* ---------- plan stats ---------- */
+function chequeOf(c){if(c.cheque!=null&&c.cheque!==''&&!isNaN(+c.cheque))return{v:+c.cheque,est:false};const v=+cfg.plan.cheque[c.stage];return{v:isNaN(v)?(+cfg.plan.cheque.Seed||2):v,est:true};}
+function planStats(cos){const P=cfg.plan;const era=cos.filter(c=>c.year>=+P.startYear&&c.year<=+P.endYear);const n=era.length;const bySector={},byStage={},byYear={};let deployed=0,estCount=0;era.forEach(c=>{bySector[c.sector]=(bySector[c.sector]||0)+1;byStage[c.stage]=(byStage[c.stage]||0)+1;byYear[c.year]=(byYear[c.year]||0)+1;const q=chequeOf(c);deployed+=q.v;if(q.est)estCount++;});const size=+P.sizeUsdM||0,res=(+P.reservePct||0)/100;const initialAlloc=size*(1-res);const years=[];for(let y=+P.startYear;y<=+P.endYear;y++)years.push(y);const nowY=new Date().getFullYear();const elapsed=Math.max(1,Math.min(nowY,+P.endYear)-+P.startYear+1);return{era,n,bySector,byStage,byYear,deployed,estCount,initialAlloc,reserve:size*res,capitalLeft:initialAlloc-deployed,slotsLeft:(+P.targetCompanies||0)-n,targetPace:years.length?(+P.targetCompanies||0)/years.length:0,pace:n/elapsed,years,elapsed};}
 
 /* ---------- scoring ---------- */
 function score(i){
-  const T=[], P=[], tags=[];
-  // Thesis 60
-  const st={'Pre-seed':20,'Seed':20,'Series A':17,'Series B':6,'Later':0}[i.stage]; T.push(['Stage',st,20, st>=17?'pass':st>0?'part':'fail', st>=17?`${i.stage} is where Kalaari enters (pre-seed to Series A, first institutional cheque)`:`Kalaari enters at pre-seed to Series A; ${i.stage} is follow-on territory`]);
-  let cs, cl, ce; if(i.size<=0){cs=10;cl='part';ce='Round size unknown; Kalaari\'s first cheque is $0.5–5M';} else if(i.size<0.5){cs=10;cl='part';ce=`$${i.size}M is below the usual $0.5–5M first cheque; possible as a CXXO or angel-style ticket`;} else if(i.size<=6){cs=15;cl='pass';ce=`$${i.size}M sits inside the $0.5–5M first-cheque band (avg $2.2M seed, $4.9M Series A)`;} else if(i.size<=12){cs=8;cl='part';ce=`$${i.size}M is above the $5M first cheque; needs a co-lead`;} else {cs=2;cl='fail';ce=`$${i.size}M is far above Kalaari's cheque size`;} T.push(['Cheque',cs,15,cl,ce]);
-  const inF=!!FOCUS[i.sector]; T.push(['Sector',inF?15:7,15,inF?'pass':'part',inF?`${i.sector} is a named Fund IV focus (${FOCUS[i.sector]})`:`${i.sector} is not a named Fund IV focus; Kalaari has backed it before but leads with AI, DeepTech, SaaS, gaming, consumer, fintech`]);
-  const g={india:[10,'pass','India HQ: matches Kalaari\'s India-first mandate'],global:[8,'pass','India-based, global customers: fits "global from India" SaaS and DeepTech'],other:[2,'fail','Outside India: Kalaari is India-first with an India-only LP']}[i.geo]; T.push(['Geography',g[0],10,g[1],g[2]]);
-  // Portfolio 40
-  const same=F4.filter(c=>c.sector===i.sector); const n=same.length; const ps=n>=6?15:n>=3?12:n>=1?8:3; P.push(['Pattern',ps,15,n>=3?'pass':n>=1?'part':'fail',n?`Kalaari backed ${n} ${i.sector} compan${n===1?'y':'ies'} since 2020: ${same.slice(0,3).map(c=>c.name).join(', ')}${n>3?'…':''}`:`No ${i.sector} deal since 2020 in the traced portfolio`]);
-  const tk=tok(i.desc+' '+i.name);
-  const near=C.map(c=>{const ct=tok(c.desc+' '+c.tags.join(' ')+' '+c.name); const hits=[...tk].filter(t=>ct.has(t)); return {c,hits,s:hits.length*3+(c.sector===i.sector?2:0)+(c.year>=2020?1:0)};}).filter(a=>a.hits.length||a.c.sector===i.sector).sort((a,b)=>b.s-a.s).slice(0,4);
-  const best=near[0]; const bh=best?best.hits.length:0; const as=bh>=3?10:bh===2?7:bh===1?4:0; P.push(['Adjacency',as,10,bh>=2?'pass':bh===1?'part':'fail',best&&bh?`Closest: ${best.c.name} (shares ${best.hits.slice(0,4).join(', ')}); Kalaari knows this space`:'No portfolio company shares this product language; a new lane for Kalaari']);
-  const conflict=near.find(a=>a.c.status==='Active'&&a.c.sector===i.sector&&a.hits.length>=3); const soft=!conflict&&near.find(a=>a.c.status==='Active'&&a.c.sector===i.sector&&a.hits.length===2);
-  P.push(['Conflict',conflict?0:soft?5:10,10,conflict?'fail':soft?'part':'pass',conflict?`${conflict.c.name} (active, ${conflict.c.stage} ${conflict.c.year}) looks like a direct competitor; expect a pass unless the wedge is clearly different`:soft?`${soft.c.name} is adjacent and active; check for overlap before the meeting`:'No active portfolio company competes directly']);
-  const prec=same.find(c=>c.stage===i.stage)||C.find(c=>c.sector===i.sector&&c.stage===i.stage); P.push(['Precedent',prec?5:2,5,prec?'pass':'part',prec?`Kalaari has entered ${i.sector} at ${i.stage} before: ${prec.c?prec.c.name:prec.name} (${prec.year})`:`No ${i.stage} entry in ${i.sector} on record; Kalaari usually enters this sector at ${mode(C.filter(c=>c.sector===i.sector).map(c=>c.stage))||'seed'}`]);
-  if(i.women) tags.push(['cx','CXXO eligible: $10M a year for women founder-CEOs']); if(i.ai) tags.push(['','AI-native: matches the 2024–26 vertical-AI tilt']); if(i.founder==='first') tags.push(['','First-time founders: no penalty, "potential over pedigree"']); if(i.founder==='repeat') tags.push(['','Repeat founders']); if(i.traction) tags.push(['','Paying customers: noted, not scored']); if(i.india) tags.push(['','India-scale wedge']);
-  const t=T.reduce((a,x)=>a+x[1],0), p=P.reduce((a,x)=>a+x[1],0), total=t+p;
-  const verdict=total>=75?['strong','Strong fit. Worth a partner meeting.']:total>=55?['mid','Plausible. Screen on founder-market fit and speed to value.']:['weak','Weak fit against the stated filter.'];
-  return {i,T,P,t,p,total,near,tags,verdict};
+  const cos=portfolio();const T=cfg.thesis,W=cfg.weights,P=cfg.plan;const ps=planStats(cos);const idx=buildIndex(cos);
+  const checks=[];const add=(group,key,label,frac,cls,ev)=>{const max=+W[key]||0;if(max<=0)return;checks.push({group,key,label,pts:Math.round(max*Math.max(0,Math.min(1,frac))*10)/10,max,cls,ev});};
+  const entry=Object.entries(T.stagePct).filter(([k,v])=>+v>=80).map(([k])=>k).join(', ')||'none';
+  const sp=(+T.stagePct[i.stage]||0)/100;add('thesis','stage','Stage',sp,sp>=.8?'pass':sp>0?'part':'fail',sp>=.8?`${i.stage} is an entry stage (${entry})`:sp>0?`${i.stage} is late for a first cheque; entry stages are ${entry}`:`${i.stage} is outside the entry stages (${entry})`);
+  const C=T.cheque;let cf,cc,ce;if(!(i.size>0)){cf=(+C.unknownPct||0)/100;cc='part';ce=`Round size unknown; first cheque is ${fmtM(C.min)}–${fmtM(C.max)}`;}else if(i.size<+C.min){cf=.65;cc='part';ce=`${fmtM(i.size)} is below the ${fmtM(C.min)} floor; possible as a CXXO or angel-style ticket`;}else if(i.size<=+C.max){cf=1;cc='pass';ce=`${fmtM(i.size)} sits inside the ${fmtM(C.min)}–${fmtM(C.max)} first-cheque band`;}else if(i.size<=+C.stretch){cf=.85;cc='pass';ce=`${fmtM(i.size)} is just above the band; fine with a co-investor`;}else if(i.size<=+C.tooBig){cf=.5;cc='part';ce=`${fmtM(i.size)} needs a co-lead; the cheque tops out near ${fmtM(C.max)}`;}else{cf=.1;cc='fail';ce=`${fmtM(i.size)} is far above the cheque size`;}add('thesis','cheque','Cheque',cf,cc,ce);
+  const inF=(T.focusSectors||[]).includes(i.sector);add('thesis','sector','Sector',inF?1:(+T.nonFocusPct||0)/100,inF?'pass':'part',inF?`${i.sector} is a focus sector`:`${i.sector} is outside the focus list (${(T.focusSectors||[]).join(', ')||'none set'})`);
+  const gf=(+T.geoPct[i.geo]||0)/100;add('thesis','geo','Geography',gf,gf>=.8?'pass':gf>=.4?'part':'fail',{india:'India HQ: matches the India-first mandate',global:'India-based with global customers',other:'Outside India: outside the mandate'}[i.geo]||'');
+  const same=ps.era.filter(c=>c.sector===i.sector);const n=same.length;add('portfolio','pattern','Pattern',n>=6?1:n>=3?.8:n>=1?.5:.2,n>=3?'pass':n>=1?'part':'fail',n?`${n} ${i.sector} deal${n>1?'s':''} since ${P.startYear}: ${same.slice(0,3).map(c=>c.name).join(', ')}${n>3?'…':''}`:`No ${i.sector} deal since ${P.startYear}`);
+  const near=nearest(i,idx);const best=near.find(a=>a.s>0);const bs=best?best.s:0,bn=best?best.shared.length:0;const af=bs>=5&&bn>=2?1:bs>=3?.7:bs>=1.5?.4:bs>0?.2:0;add('portfolio','adjacency','Adjacency',af,af>=.7?'pass':af>0?'part':'fail',best?`Closest: ${best.c.name} (shares ${best.shared.slice(0,4).join(', ')})`:'No portfolio company uses this product language; a new lane');
+  const hard=near.find(a=>a.same&&a.c.status==='Active'&&a.s>=5&&a.shared.length>=2);const soft=!hard&&near.find(a=>a.same&&a.c.status==='Active'&&(a.s>=3||a.shared.length>=2));add('portfolio','conflict','Conflict',hard?0:soft?.5:1,hard?'fail':soft?'part':'pass',hard?`${hard.c.name} (active, ${hard.c.stage} ${hard.c.year}) looks like a direct competitor; shares ${hard.shared.slice(0,3).join(', ')}`:soft?`${soft.c.name} is adjacent and active; check overlap before the meeting`:'No active portfolio company competes directly');
+  const prec=cos.find(c=>c.sector===i.sector&&c.stage===i.stage);const usual=mostCommon(cos.filter(c=>c.sector===i.sector).map(c=>c.stage));add('portfolio','precedent','Precedent',prec?1:.4,prec?'pass':'part',prec?`Entered ${i.sector} at ${i.stage} before: ${prec.name} (${prec.year})`:`No ${i.stage} entry in ${i.sector}${usual?'; usual entry is '+usual:''}`);
+  const tgt=+(P.sectorTargets||{})[i.sector]||0;const after=pc((ps.bySector[i.sector]||0)+1,ps.n+1);let alf,alc,ale;if(!tgt){alf=.5;alc='part';ale=`No ${P.name} target set for ${i.sector}`;}else{const r=after/tgt;if(r<=.9){alf=1;alc='pass';ale=`Fills a gap: ${i.sector} would be ${after}% of ${P.name} vs ${tgt}% target`;}else if(r<=1.1){alf=.7;alc='pass';ale=`On target: ${i.sector} would be ${after}% vs ${tgt}%`;}else if(r<=1.3){alf=.4;alc='part';ale=`Slightly overweight: ${after}% vs ${tgt}% target`;}else{alf=.15;alc='fail';ale=`Overweight: ${i.sector} would be ${after}% vs ${tgt}% target`;}}add('plan','allocation','Allocation',alf,alc,ale);
+  const chq=+P.cheque[i.stage]||+P.cheque.Seed||2;let cf2,cc2,ce2;if(ps.slotsLeft<=0){cf2=0;cc2='fail';ce2=`${P.name} is at its ${P.targetCompanies}-company target`;}else if(ps.capitalLeft<chq){cf2=.3;cc2='part';ce2=`Only ${fmtM(Math.max(0,ps.capitalLeft))} of initial capital left (est.)`;}else{cf2=1;cc2='pass';ce2=`${ps.slotsLeft} slots and ${fmtM(ps.capitalLeft)} initial capital left (est.)`;}add('plan','capacity','Capacity',cf2,cc2,ce2);
+  const total=checks.reduce((a,c)=>a+c.pts,0),max=checks.reduce((a,c)=>a+c.max,0);const sc=max?Math.round(100*total/max):0;
+  const v=T.verdict;const verdict=sc>=+v.strong?['strong','Strong fit. Worth a partner meeting.']:sc>=+v.plausible?['mid','Plausible. Screen on founder-market fit and speed to value.']:['weak','Weak fit against the stated filter.'];
+  const groups=Object.keys(GROUPS).map(g=>({g,l:GROUPS[g],pts:Math.round(checks.filter(c=>c.group===g).reduce((a,c)=>a+c.pts,0)*10)/10,max:checks.filter(c=>c.group===g).reduce((a,c)=>a+c.max,0)})).filter(x=>x.max>0);
+  const tags=[];if(i.women)tags.push(['cx','CXXO eligible: woman founder-CEO']);if(i.ai)tags.push(['','AI-native']);if(i.founder==='first')tags.push(['','First-time founders: no penalty']);if(i.founder==='repeat')tags.push(['','Repeat founders']);if(i.founder==='operator')tags.push(['','Operator founders']);if(i.traction)tags.push(['','Paying customers']);if(i.india)tags.push(['','India-scale wedge']);
+  return{i,checks,groups,total:Math.round(total*10)/10,max,score:sc,verdict,near,tags,route:cfg.routing[i.sector]||'Investment team',hard:!!hard};
 }
-function mode(arr){ const m={}; arr.forEach(x=>m[x]=(m[x]||0)+1); return Object.keys(m).sort((a,b)=>m[b]-m[a])[0]; }
-function part(title,items,sub,cls){
-  const box=el('div',{class:'part '+cls}); box.append(el('h3',{},title,el('span',{},sub)));
-  box.append(el('div',{class:'bar'},el('i',{style:'width:'+(100*items.reduce((a,x)=>a+x[1],0)/items.reduce((a,x)=>a+x[2],0))+'%'})));
-  items.forEach(x=>box.append(el('div',{class:'chk '+x[3]},el('span',{class:'ic'},x[3]==='pass'?'✓':x[3]==='part'?'~':'✗'),el('span',{},el('b',{},x[0]),el('span',{class:'ev'},x[4])),el('span',{class:'n'},x[1]+'/'+x[2]))));
-  return box;
-}
-function render(r){
-  const out=$('#out'); out.innerHTML='';
-  out.append(el('div',{class:'score'},el('div',{class:'big'},String(r.total),el('small',{},' / 100')),el('div',{},el('div',{class:'verdict '+r.verdict[0]},r.verdict[1]),el('div',{class:'route'},'Route to: '+(ROUTE[r.i.sector]||'Investment team')))),
-    el('div',{class:'split'},part('Thesis fit',r.T,r.t+' / 60','th'),part('Portfolio fit',r.P,r.p+' / 40','pf')));
-  if(r.near.length){ const n=el('div',{class:'near'},el('h3',{},'Closest portfolio companies')); r.near.forEach(a=>n.append(el('div',{class:'row'+(a.c.status==='Active'&&a.c.sector===r.i.sector&&a.hits.length>=3?' conflict':''),style:'--sc:'+SLOT[a.c.sector]},el('span',{},el('b',{},a.c.name),' · '+a.c.sector),el('span',{},a.c.stage+' '+a.c.year+' · '+statusText(a.c)+(a.hits.length?' · shares '+a.hits.slice(0,3).join(', '):'')+(a.c.founders.length?' · '+a.c.founders[0].name:''))))); out.append(n); }
-  if(r.tags.length) out.append(el('div',{class:'tags'},...r.tags.map(t=>el('span',{class:'tag '+t[0]},t[1]))));
-  if(evidence.length) out.append(el('details',{style:'margin-top:12px;font-size:.85rem'},el('summary',{class:'muted',style:'cursor:pointer'},'Evidence read from the website'),el('ul',{style:'padding-left:18px;margin:6px 0 0;color:var(--ink-2)'},...evidence.map(e=>el('li',{},e)))));
-  const act=el('div',{class:'actions'},el('button',{class:'btn small',type:'button',onclick:()=>{const l=loadShort(); l.unshift({name:r.i.name,sector:r.i.sector,stage:r.i.stage,total:r.total,when:new Date().toISOString().slice(0,10)}); saveShort(l); render(r); flash('Saved');}},'Add to shortlist'),el('button',{class:'btn ghost',type:'button',onclick:()=>copy(memo(r))},'Copy memo'),el('span',{class:'toast',id:'toast'}));
-  out.append(act); renderShortlist(out,r);
-}
-function memo(r){ const L=[`${r.i.name} — Kalaari fit ${r.total}/100 (thesis ${r.t}/60, portfolio ${r.p}/40). ${r.verdict[1]}`,`${r.i.sector} · ${r.i.stage} · ${r.i.size?'$'+r.i.size+'M':'round size unknown'} · ${ {india:'India',global:'Global from India',other:'Outside India'}[r.i.geo] }`,'Route to: '+(ROUTE[r.i.sector]||'Investment team'),'',...r.T.map(x=>`Thesis · ${x[0]} ${x[1]}/${x[2]}: ${x[4]}`),...r.P.map(x=>`Portfolio · ${x[0]} ${x[1]}/${x[2]}: ${x[4]}`),'',r.near.length?'Closest: '+r.near.map(a=>`${a.c.name} (${a.c.stage} ${a.c.year}, ${statusText(a.c)})`).join('; '):'',founders.length?'Founders: '+founders.map(f=>f.name).join(', '):'','Pitch: '+r.i.desc.trim()]; return L.filter(x=>x!==undefined).join('\n'); }
-function flash(t){ const x=$('#toast'); if(!x) return; x.textContent=t; setTimeout(()=>{ if(x.textContent===t) x.textContent=''; },2200); }
-async function copy(t){ try{ await navigator.clipboard.writeText(t); flash('Memo copied'); }catch(e){ const ta=el('textarea',{style:'position:fixed;left:-9999px'},t); document.body.append(ta); ta.select(); try{ document.execCommand('copy'); flash('Memo copied'); }catch(e2){ flash('Copy blocked'); } ta.remove(); } }
-function loadShort(){ try{ return JSON.parse(localStorage.getItem('kalaari.shortlist')||'[]'); }catch(e){ return []; } }
-function saveShort(l){ try{ localStorage.setItem('kalaari.shortlist',JSON.stringify(l.slice(0,30))); }catch(e){} }
-function renderShortlist(out,r){ const l=loadShort(); if(!l.length) return; const box=el('div',{class:'shortlist'},el('b',{},'Shortlist')); const ul=el('ul'); l.forEach((s,i)=>{ const rm=el('button',{class:'tog',type:'button',onclick:()=>{const n=loadShort(); n.splice(i,1); saveShort(n); render(r);}},'remove'); ul.append(el('li',{},`${s.name} · ${s.sector} · ${s.stage} · `,el('b',{},s.total+'/100'),' · '+s.when,rm)); }); box.append(ul); out.append(box); }
-let last=null;
-function run(){ last=score(read()); render(last); }
-['#sName','#sDesc','#sSector','#sStage','#sSize','#sGeo','#sFounder','#sAI','#sIndia','#sWomen','#sTraction'].forEach(s=>{ $(s).addEventListener('input',run); $(s).addEventListener('change',run); });
 
-/* ---------- website extraction ---------- */
-function msg(t,cls){ const m=$('#msg'); m.hidden=!t; m.className='msg'+(cls?' '+cls:''); m.textContent=t||''; }
-async function scan(url){
-  url=url.trim(); if(!url) return; $('#url').value=url;
-  const go=$('#go'); go.disabled=true; go.textContent='Reading site…'; msg('Reading '+url.replace(/^https?:\/\//,'')+' …');
-  try{
-    const r=await fetch('/api/extract?url='+encodeURIComponent(url));
-    if(r.status===404){ msg('Website extraction runs on the deployed app (Vercel). Here you can fill in the details yourself.','err'); return; }
-    const j=await r.json();
-    if(!j.ok){ msg(j.error||'Could not read that site.','err'); return; }
-    const c=j.company; evidence=c.evidence||[]; source=j.mode;
-    fill({name:c.name, desc:c.oneLiner+(c.keywords&&c.keywords.length?' Keywords: '+c.keywords.join(', ')+'.':''), sector:c.sector, stage:c.stageGuess&&c.stageGuess!=='unknown'?c.stageGuess:'Seed', size:c.roundSizeUsdM, geo:c.geo, founder:c.founderProfile||'unknown', ai:c.aiNative, india:c.indiaMarket, women:c.womenLed, traction:c.hasTraction, founders:c.founders||[]});
-    $('#srcnote').textContent=(j.mode==='claude'?'Extracted by Claude from ':'Extracted from ')+j.pagesRead.length+' page'+(j.pagesRead.length>1?'s':'')+'. Edit anything.';
-    msg((j.mode==='claude'?'Read the site with Claude. ':'Read the site (keyword extraction; add ANTHROPIC_API_KEY on Vercel for Claude-quality extraction). ')+(j.warning||'')+'Check the round and stage: sites rarely state them.','ok');
+/* ---------- scan tab ---------- */
+let founders=[],evidence=[],scanUrl='',last=null;
+function fillSectorSelect(sel,val){sel.innerHTML='';cfg.sectors.forEach(s=>sel.append(el('option',{},s)));if(val&&cfg.sectors.includes(val))sel.value=val;}
+function read(){return{name:$('#sName').value.trim()||'This company',desc:$('#sDesc').value,sector:$('#sSector').value,stage:$('#sStage').value,size:parseFloat($('#sSize').value)||0,geo:$('#sGeo').value,founder:$('#sFounder').value,ai:$('#sAI').checked,india:$('#sIndia').checked,women:$('#sWomen').checked,traction:$('#sTraction').checked};}
+function fill(c){fillSectorSelect($('#sSector'),c.sector||cfg.sectors[0]);$('#sName').value=c.name||'';$('#sDesc').value=c.desc||'';$('#sStage').value=STAGES.includes(c.stage)&&c.stage!=='Pre-Series A'?c.stage:'Seed';$('#sSize').value=c.size!=null&&c.size>0?c.size:'';$('#sGeo').value=c.geo||'india';$('#sFounder').value=c.founder||'unknown';$('#sAI').checked=!!c.ai;$('#sIndia').checked=!!c.india;$('#sWomen').checked=!!c.women;$('#sTraction').checked=!!c.traction;founders=c.founders||[];const fb=$('#sFounders');fb.innerHTML='';if(founders.length){fb.append('Named on site: '+founders.map(f=>f.name+(f.role?' ('+f.role+')':'')).join(', '));}run();}
+function part(g){const box=el('div',{class:'part '+(g.g==='portfolio'?'pf':g.g==='plan'?'pl':'th')});box.append(el('h3',{},g.l,el('span',{},g.pts+' / '+g.max)));box.append(el('div',{class:'bar'},el('i',{style:'width:'+pc(g.pts,g.max)+'%'})));last.checks.filter(c=>c.group===g.g).forEach(x=>box.append(el('div',{class:'chk '+x.cls},el('span',{class:'ic'},x.cls==='pass'?'✓':x.cls==='part'?'~':'✗'),el('span',{},el('b',{},x.label),el('span',{class:'ev'},x.ev)),el('span',{class:'n'},x.pts+'/'+x.max))));return box;}
+function render(r){last=r;const out=$('#out');out.innerHTML='';
+  out.append(el('div',{class:'score'},el('div',{class:'big'},String(r.score),el('small',{},' / 100')),el('div',{},el('div',{class:'verdict '+r.verdict[0]},r.verdict[1]),el('div',{class:'route'},'Route to: '+r.route),el('div',{class:'sum'},r.groups.map(g=>`${g.l} ${g.pts}/${g.max}`).join(' · ')+` · ${r.total}/${r.max} points`))));
+  out.append(el('div',{class:'groups'},...r.groups.map(part)));
+  if(r.near.length){const n=el('div',{class:'near'},el('h3',{},'Closest portfolio companies'));r.near.forEach(a=>n.append(el('div',{class:'row'+(r.hard&&a.same&&a.c.status==='Active'&&a.s>=5&&a.shared.length>=2?' conflict':''),style:'--sc:'+slot(a.c.sector)},el('span',{},el('b',{},a.c.name),' · '+a.c.sector),el('span',{},a.c.stage+' '+a.c.year+' · '+statusText(a.c)+(a.shared.length?' · shares '+a.shared.slice(0,3).join(', '):'')+(a.c.founders.length?' · '+a.c.founders[0].name:'')))));out.append(n);}
+  if(r.tags.length)out.append(el('div',{class:'tags'},...r.tags.map(t=>el('span',{class:'tag '+t[0]},t[1]))));
+  if(evidence.length)out.append(el('details',{style:'margin-top:12px;font-size:.85rem'},el('summary',{class:'muted',style:'cursor:pointer'},'Evidence read from the website'),el('ul',{style:'padding-left:18px;margin:6px 0 0;color:var(--ink-2)'},...evidence.map(e=>el('li',{},e)))));
+  out.append(el('div',{class:'actions'},el('button',{class:'btn small',type:'button',onclick:()=>addToPipeline(r,scanUrl)},'Add to pipeline'),el('button',{class:'btn ghost small',type:'button',onclick:async()=>{toast((await copyText(memo(r)))?'Memo copied':'Copy blocked by the browser');}},'Copy memo'),el('span',{class:'small muted'},'Score = points earned ÷ points available. Weights: Settings.')));
+}
+function memo(r){const geo={india:'India',global:'Global from India',other:'Outside India'}[r.i.geo];const L=[`${r.i.name} — Kalaari fit ${r.score}/100 (${r.groups.map(g=>`${g.l.toLowerCase()} ${g.pts}/${g.max}`).join(', ')}). ${r.verdict[1]}`,`${r.i.sector} · ${r.i.stage} · ${r.i.size?fmtM(r.i.size):'round size unknown'} · ${geo}${scanUrl?' · '+scanUrl:''}`,'Route to: '+r.route,'',...r.checks.map(x=>`${GROUPS[x.group]} · ${x.label} ${x.pts}/${x.max}: ${x.ev}`),'',r.near.length?'Closest: '+r.near.map(a=>`${a.c.name} (${a.c.stage} ${a.c.year}, ${statusText(a.c)})`).join('; '):'',founders.length?'Founders: '+founders.map(f=>f.name).join(', '):'','Pitch: '+r.i.desc.trim()];return L.join('\n');}
+let lastSig='';
+function run(force){const i=read();const sig=JSON.stringify(i)+'|'+JSON.stringify(cfg.weights)+JSON.stringify(cfg.thesis)+JSON.stringify(cfg.plan)+ov.added.length+Object.keys(ov.edited).length+ov.removed.length;if(!force&&sig===lastSig)return;lastSig=sig;render(score(i));}
+['#sName','#sDesc','#sSize'].forEach(s=>$(s).addEventListener('input',()=>run()));
+['#sSector','#sStage','#sGeo','#sFounder','#sAI','#sIndia','#sWomen','#sTraction'].forEach(s=>$(s).addEventListener('change',()=>run()));
+
+/* website extraction */
+function msg(t,cls){const m=$('#msg');m.hidden=!t;m.className='msg'+(cls?' '+cls:'');m.textContent=t||'';}
+async function extract(url){const r=await fetch('/api/extract?url='+encodeURIComponent(url));if(r.status===404)return{ok:false,error:'Website reading only works on the deployed app. Enter the details by hand here.',unavailable:true};let j;try{j=await r.json();}catch(e){return{ok:false,error:'The extractor returned an unreadable response.'};}return j;}
+function companyToInput(c){return{name:c.name,desc:(c.oneLiner||'')+(c.keywords&&c.keywords.length?' Keywords: '+c.keywords.join(', ')+'.':''),sector:cfg.sectors.includes(c.sector)?c.sector:(cfg.sectorRenames[c.sector]||cfg.sectors[0]),stage:c.stageGuess&&c.stageGuess!=='unknown'?c.stageGuess:'Seed',size:c.roundSizeUsdM,geo:c.geo,founder:c.founderProfile||'unknown',ai:!!c.aiNative,india:!!c.indiaMarket,women:!!c.womenLed,traction:!!c.hasTraction,founders:c.founders||[]};}
+async function scan(url){url=url.trim();if(!url)return;$('#url').value=url;const go=$('#go');go.disabled=true;go.textContent='Reading…';msg('Reading '+url.replace(/^https?:\/\//,'').replace(/\/$/,'')+' …');
+  try{const j=await extract(url);if(!j.ok){msg(j.error||'Could not read that site.','err');return;}
+    const c=j.company;evidence=c.evidence||[];scanUrl=url;fill(companyToInput(c));
+    const host=url.replace(/^https?:\/\//,'').replace(/\/.*$/,'');const stated=c.stageGuess&&c.stageGuess!=='unknown';
+    $('#srcnote').textContent=`Read from ${host} (${j.pagesRead.length} page${j.pagesRead.length>1?'s':''}). Edit anything.`;
+    if(j.thin)msg(`${host} loads mostly with JavaScript, so little text was readable. Check every field.`,'err');
+    else msg(`Read ${host}. ${stated?'The site states its funding stage':'Stage and round size are guesses'}; confirm them and the sector before trusting the score.`+(j.warning?' '+j.warning:''),'ok');
     $('#work').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){ msg('Could not reach the extractor: '+(e.message||e),'err'); }
-  finally{ go.disabled=false; go.textContent='Scan'; }
-}
-$('#urlform').addEventListener('submit',e=>{e.preventDefault(); scan($('#url').value);});
-document.querySelectorAll('.try button[data-u]').forEach(b=>b.onclick=()=>scan(b.dataset.u));
-$('#manual').onclick=()=>{ evidence=[]; $('#srcnote').textContent='Edit anything; the score updates live.'; fill({name:'',desc:'',sector:'AI & SaaS',stage:'Seed',size:null,geo:'india',founder:'first',ai:true,india:true,women:false,traction:false,founders:[]}); $('#sName').focus(); $('#work').scrollIntoView({behavior:'smooth',block:'start'}); };
+  }catch(e){msg('Could not reach the extractor: '+(e.message||e),'err');}
+  finally{go.disabled=false;go.textContent='Scan';}}
+$('#urlform').addEventListener('submit',e=>{e.preventDefault();scan($('#url').value);});
+$$('.try button[data-u]').forEach(b=>b.onclick=()=>scan(b.dataset.u));
+$('#manual').onclick=()=>{evidence=[];scanUrl='';$('#srcnote').textContent='Edit anything; the score updates live.';fill({name:'',desc:'',sector:cfg.sectors[0],stage:'Seed',size:null,geo:'india',founder:'first',ai:false,india:true,women:false,traction:false,founders:[]});$('#sName').focus();$('#work').scrollIntoView({behavior:'smooth',block:'start'});};
+$('#batchToggle').onclick=()=>{const b=$('#batch');b.hidden=!b.hidden;if(!b.hidden)$('#batchUrls').focus();};
 
-/* example at rest, marked as an example */
+/* batch */
+let batchRows=[];
+function renderBatch(){const w=$('#batchTable');w.hidden=!batchRows.length;w.innerHTML='';if(!batchRows.length)return;const t=el('table');t.append(el('thead',{},el('tr',{},...['Website','Company','Sector','Stage','Score','Verdict','Closest',''].map(h=>el('th',{},h)))));const b=el('tbody');batchRows.forEach(r=>{const tr=el('tr');tr.append(el('td',{},r.url));if(r.error){tr.append(el('td',{colspan:'6',style:'color:var(--crit)'},r.error),el('td',{}));}else if(!r.res){tr.append(el('td',{colspan:'7',class:'muted'},r.state||'queued'));}else{const s=r.res;tr.append(el('td',{},el('b',{},s.i.name)),el('td',{},s.i.sector),el('td',{},s.i.stage),el('td',{class:'num'},String(s.score)),el('td',{},s.verdict[1].split('.')[0]),el('td',{},s.near[0]?s.near[0].c.name:'—'),el('td',{},el('button',{class:'tog',type:'button',onclick:()=>{evidence=r.evidence;scanUrl=r.url;fill(r.input);$('#srcnote').textContent='Read from '+r.url+'. Edit anything.';$('#work').scrollIntoView({behavior:'smooth'});}},'Open'),el('button',{class:'tog',type:'button',onclick:()=>addToPipeline(s,r.url)},'Add')));}b.append(tr);});t.append(b);w.append(t);}
+$('#batchRun').onclick=async()=>{const urls=[...new Set($('#batchUrls').value.split(/\n+/).map(s=>s.trim()).filter(Boolean))];if(!urls.length)return;batchRows=urls.map(u=>({url:u,state:'queued'}));renderBatch();let done=0;$('#batchStatus').textContent=`0 of ${urls.length}`;const q=batchRows.slice();async function worker(){while(q.length){const r=q.shift();r.state='reading…';renderBatch();try{const j=await extract(r.url);if(!j.ok){r.error=j.error;}else{r.input=companyToInput(j.company);r.evidence=j.company.evidence||[];r.res=score(Object.assign({},r.input));}}catch(e){r.error=String(e.message||e);}done++;$('#batchStatus').textContent=`${done} of ${urls.length}`;renderBatch();}}await Promise.all([worker(),worker()]);$('#batchStatus').textContent=`Done: ${batchRows.filter(r=>r.res).length} scored, ${batchRows.filter(r=>r.error).length} failed.`;};
+$('#batchAddAll').onclick=()=>{let n=0;batchRows.filter(r=>r.res).forEach(r=>{addToPipeline(r.res,r.url,true);n++;});renderPipeline();toast(n?`${n} added to pipeline`:'Nothing to add yet');};
+
+/* ---------- pipeline ---------- */
+function addToPipeline(r,url,quiet){const e=pipeline.find(p=>(url&&p.url===url)||p.name.toLowerCase()===r.i.name.toLowerCase());const rec={name:r.i.name,url:url||'',sector:r.i.sector,stage:r.i.stage,size:r.i.size||'',score:r.score,verdict:r.verdict[1],route:r.route,updated:today(),input:r.i};if(e)Object.assign(e,rec);else pipeline.unshift(Object.assign({id:'p_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),status:'New',owner:'',notes:''},rec));savePipe();updatePipeBadge();if(!quiet){renderPipeline();toast(e?'Pipeline entry updated':'Added to pipeline');}}
+function updatePipeBadge(){const p=$('#pipeCount');p.textContent=pipeline.length;p.hidden=!pipeline.length;}
+function renderPipeline(){updatePipeBadge();const f=$('#pipeFilter');if(!f.options.length||f.options.length===1){STATUSES.forEach(s=>f.append(el('option',{},s)));}const filt=f.value,sort=$('#pipeSort').value;let rows=pipeline.filter(p=>!filt||p.status===filt);rows=rows.slice().sort((a,b)=>sort==='score'?b.score-a.score:sort==='name'?a.name.localeCompare(b.name):String(b.updated).localeCompare(String(a.updated)));$('#pipeCountText').textContent=rows.length+' of '+pipeline.length+' deals';const w=$('#pipeTable');w.innerHTML='';if(!pipeline.length){w.append(el('p',{class:'muted',style:'padding:14px'},'Nothing here yet. Score a deal on the Scan tab and press "Add to pipeline".'));return;}const t=el('table');t.append(el('thead',{},el('tr',{},...['Company','Sector','Stage','Score','Status','Owner','Notes','Updated',''].map(h=>el('th',{},h)))));const b=el('tbody');rows.forEach(p=>{const st=el('select',{},...STATUSES.map(s=>el('option',{selected:p.status===s},s)));st.onchange=()=>{p.status=st.value;p.updated=today();savePipe();renderPipeline();};const ow=el('input',{type:'text',value:p.owner||'',placeholder:'—'});ow.onchange=()=>{p.owner=ow.value;p.updated=today();savePipe();};const no=el('input',{type:'text',value:p.notes||'',placeholder:'notes'});no.onchange=()=>{p.notes=no.value;p.updated=today();savePipe();};b.append(el('tr',{},el('td',{},el('b',{},p.name),p.url?el('div',{class:'est'},el('a',{href:/^https?:/.test(p.url)?p.url:'https://'+p.url,target:'_blank',rel:'noopener'},p.url)):null),el('td',{},p.sector),el('td',{},p.stage),el('td',{class:'num'},String(p.score)),el('td',{},st),el('td',{},ow),el('td',{style:'min-width:180px'},no),el('td',{class:'num'},p.updated),el('td',{},el('button',{class:'tog',type:'button',onclick:()=>{evidence=[];scanUrl=p.url;fill(p.input||{name:p.name,sector:p.sector,stage:p.stage,size:p.size});showTab('scan');$('#srcnote').textContent='Loaded from the pipeline. Re-score and "Add to pipeline" to update.';}},'Open'),el('button',{class:'tog',type:'button',onclick:()=>{pipeline=pipeline.filter(x=>x.id!==p.id);savePipe();renderPipeline();}},'Remove'))));});t.append(b);w.append(t);}
+$('#pipeFilter').addEventListener('change',renderPipeline);$('#pipeSort').addEventListener('change',renderPipeline);
+$('#pipeExport').onclick=()=>{if(!pipeline.length)return toast('Pipeline is empty');download('kalaari-pipeline-'+today()+'.csv',toCSV(pipeline,['name','url','sector','stage','size','score','verdict','status','owner','notes','route','updated']),'text/csv');};
+$('#pipeClearPassed').onclick=()=>{const n=pipeline.filter(p=>p.status==='Passed').length;if(!n)return toast('No passed deals');if(!confirm(`Remove ${n} passed deal${n>1?'s':''}?`))return;pipeline=pipeline.filter(p=>p.status!=='Passed');savePipe();renderPipeline();};
+
+/* ---------- fund plan ---------- */
+function bindCfgInputs(root){$$('[data-cfg]',root).forEach(inp=>{const p=inp.dataset.cfg;const v=getPath(cfg,p);inp.value=v==null?'':v;inp.onchange=()=>{const raw=inp.value;setPath(cfg,p,inp.type==='number'?(raw===''?0:+raw):raw);saveCfg();onCfgChange(p);};});}
+function onCfgChange(path){if(path.startsWith('plan'))renderPlanDash();if(path.startsWith('thesis')||path.startsWith('weights'))renderSettingsSums();}
+function renderPlan(){bindCfgInputs($('#tab-plan'));const cg=$('#chequeGrid');cg.innerHTML='';STAGES.forEach(s=>{const inp=el('input',{type:'number',min:'0',step:'0.1',value:cfg.plan.cheque[s]==null?'':cfg.plan.cheque[s]});inp.onchange=()=>{cfg.plan.cheque[s]=+inp.value||0;saveCfg();renderPlanDash();};cg.append(el('label',{class:'f'},s,inp));});
+  const st=$('#sectorTargets');st.innerHTML='';cfg.sectors.forEach(s=>{const inp=el('input',{type:'number',min:'0',max:'100',step:'1',value:cfg.plan.sectorTargets[s]==null?'':cfg.plan.sectorTargets[s]});inp.onchange=()=>{cfg.plan.sectorTargets[s]=+inp.value||0;saveCfg();renderPlanDash();sums();};st.append(el('label',{class:'f'},s,inp));});
+  const sg=$('#stageTargets');sg.innerHTML='';['Pre-seed','Seed','Series A','Series B'].forEach(s=>{const inp=el('input',{type:'number',min:'0',max:'100',step:'1',value:cfg.plan.stageTargets[s]==null?'':cfg.plan.stageTargets[s]});inp.onchange=()=>{cfg.plan.stageTargets[s]=+inp.value||0;saveCfg();renderPlanDash();sums();};sg.append(el('label',{class:'f'},s,inp));});
+  const sums=()=>{const a=cfg.sectors.reduce((x,s)=>x+(+cfg.plan.sectorTargets[s]||0),0),b=Object.values(cfg.plan.stageTargets).reduce((x,v)=>x+(+v||0),0);$('#sectorSum').textContent=`adds up to ${a}%`+(a!==100?' (aim for 100)':'');$('#stageSum').textContent=`adds up to ${b}%`+(b!==100?' (aim for 100)':'');};sums();renderPlanDash();}
+function chartCard(container,title,sub,build,table){const c=el('div',{class:'chart'});const tog=el('button',{class:'tog',type:'button'},'As table');tog.onclick=()=>{c.classList.toggle('astable');tog.textContent=c.classList.contains('astable')?'As chart':'As table';};c.append(el('div',{class:'ch',style:'margin-bottom:2px'},el('div',{},el('h3',{},title),el('small',{},sub)),tog));build(c);const t=el('div',{class:'tbl'});const tb=el('table');tb.append(el('thead',{},el('tr',{},...table.head.map(h=>el('th',{},h)))));const bd=el('tbody');table.rows.forEach(r=>bd.append(el('tr',{},...r.map((v,i)=>el('td',{class:i?'num':''},String(v))))));tb.append(bd);t.append(el('div',{class:'tablewrap'},tb));c.append(t);container.append(c);}
+const svgNS='http://www.w3.org/2000/svg';const sv=(t,a={})=>{const e=document.createElementNS(svgNS,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+function pairBars(c,rows){const W=560,rowH=36,padL=170,padR=60,H=rows.length*rowH+6,max=Math.max(...rows.map(r=>Math.max(r.target,r.actual)),1);const s=sv('svg',{viewBox:`0 0 ${W} ${H}`});const inner=W-padL-padR;rows.forEach((r,i)=>{const y=i*rowH+4;const lab=sv('text',{x:padL-8,y:y+16,'text-anchor':'end'});lab.textContent=r.label;s.append(lab);const wt=Math.max(1,r.target/max*inner),wa=Math.max(1,r.actual/max*inner);s.append(sv('rect',{x:padL,y:y,width:wt,height:10,rx:2,fill:'var(--s1)'}));s.append(sv('rect',{x:padL,y:y+13,width:wa,height:10,rx:2,fill:'var(--s2)'}));const t1=sv('text',{class:'v',x:padL+wt+5,y:y+9});t1.textContent=r.target+'%';s.append(t1);const t2=sv('text',{class:'v',x:padL+wa+5,y:y+22});t2.textContent=r.actual+'%'+(r.n!=null?' ('+r.n+')':'');s.append(t2);});c.append(s);c.append(el('div',{class:'legend'},el('span',{},el('i',{style:'background:var(--s1)'}),'Target'),el('span',{},el('i',{style:'background:var(--s2)'}),'Actual (count in brackets)')));}
+function yearBars(c,years,counts,pace){const W=560,H=200,padL=30,padB=24,padT=14,n=years.length||1,bw=(W-padL-8)/n,max=Math.max(...years.map(y=>counts[y]||0),Math.ceil(pace),1);const s=sv('svg',{viewBox:`0 0 ${W} ${H}`});const yOf=v=>padT+(H-padT-padB)*(1-v/max);for(let g=0;g<=max;g+=Math.max(1,Math.ceil(max/4))){s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(g),y2:yOf(g),stroke:'var(--grid)'}));const t=sv('text',{class:'ax',x:padL-6,y:yOf(g)+4,'text-anchor':'end'});t.textContent=g;s.append(t);}years.forEach((yr,i)=>{const v=counts[yr]||0;const x=padL+i*bw+3;s.append(sv('rect',{x,y:yOf(v),width:Math.max(2,bw-6),height:Math.max(0,yOf(0)-yOf(v)),rx:2,fill:'var(--s1)'}));if(v){const t=sv('text',{class:'v',x:x+(bw-6)/2,y:yOf(v)-4,'text-anchor':'middle'});t.textContent=v;s.append(t);}const t=sv('text',{class:'ax',x:x+(bw-6)/2,y:H-8,'text-anchor':'middle'});t.textContent=yr;s.append(t);});if(pace>0){s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(pace),y2:yOf(pace),stroke:'var(--accent)','stroke-width':'2'}));const t=sv('text',{class:'v',x:padL+4,y:yOf(pace)-5,'text-anchor':'start',fill:'var(--accent-ink)'});t.textContent='target pace '+(Math.round(pace*10)/10)+' per year';s.append(t);}s.append(sv('line',{x1:padL,x2:W-8,y1:yOf(0),y2:yOf(0),stroke:'var(--axis)'}));c.append(s);c.append(el('div',{class:'legend'},el('span',{},el('i',{style:'background:var(--s1)'}),'New companies per year'),el('span',{},el('i',{style:'background:var(--accent)'}),'Target pace')));}
+function renderPlanDash(){const cos=portfolio();const ps=planStats(cos);const P=cfg.plan;const tiles=$('#planTiles');tiles.innerHTML='';
+  tiles.append(el('div',{class:'tile'},el('b',{},ps.n+' / '+P.targetCompanies),el('span',{},'companies in the fund window'),el('span',{class:'sub'},ps.slotsLeft>0?ps.slotsLeft+' slots left':'target reached')),
+    el('div',{class:'tile'},el('b',{},fmtM(ps.deployed)),el('span',{},'initial capital deployed'+(ps.estCount?' (est. for '+ps.estCount+')':'')),el('span',{class:'sub'},'of '+fmtM(ps.initialAlloc)+' initial allocation')),
+    el('div',{class:'tile'},el('b',{},fmtM(Math.max(0,ps.capitalLeft))),el('span',{},'initial capital left (est.)'),el('span',{class:'sub'},'reserves held: '+fmtM(ps.reserve))),
+    el('div',{class:'tile'},el('b',{},Math.round(ps.pace*10)/10+' / yr'),el('span',{},'pace so far'),el('span',{class:'sub'},'target '+(Math.round(ps.targetPace*10)/10)+' / yr over '+ps.years.length+' years')));
+  const ch=$('#planCharts');ch.innerHTML='';
+  const srows=cfg.sectors.map(s=>({label:s,target:+P.sectorTargets[s]||0,actual:pc(ps.bySector[s]||0,ps.n),n:ps.bySector[s]||0})).sort((a,b)=>b.target-a.target||b.actual-a.actual);
+  chartCard(ch,'Sector mix vs target','% of companies in the fund window',c=>pairBars(c,srows),{head:['Sector','Target %','Actual %','Companies'],rows:srows.map(r=>[r.label,r.target,r.actual,r.n])});
+  const stg=['Pre-seed','Seed','Pre-Series A','Series A','Series B'].filter(s=>(+P.stageTargets[s]||0)||ps.byStage[s]);const rows2=stg.map(s=>({label:s,target:+P.stageTargets[s]||0,actual:pc(ps.byStage[s]||0,ps.n),n:ps.byStage[s]||0}));
+  chartCard(ch,'Entry stage vs target','% of companies in the fund window',c=>pairBars(c,rows2),{head:['Stage','Target %','Actual %','Companies'],rows:rows2.map(r=>[r.label,r.target,r.actual,r.n])});
+  chartCard(ch,'Pacing','new companies per year against the target pace',c=>yearBars(c,ps.years,ps.byYear,ps.targetPace),{head:['Year','Companies'],rows:ps.years.map(y=>[y,ps.byYear[y]||0])});
+  const cx=ps.era.filter(c=>c.program==='CXXO');const cxrows=ps.years.map(y=>({y,n:cx.filter(c=>c.year===y).length,usd:cx.filter(c=>c.year===y).reduce((a,c)=>a+chequeOf(c).v,0)}));
+  chartCard(ch,'CXXO deployment','women founder-CEO companies per year (est. capital)',c=>{const t=el('div',{class:'small',style:'color:var(--ink-2)'});cxrows.forEach(r=>t.append(el('div',{style:'display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:4px 0'},el('span',{},String(r.y)),el('span',{class:'mono'},r.n+(r.n===1?' company · ':' companies · ')+fmtM(r.usd)+' of '+fmtM(P.cxxoPerYearUsdM)))));c.append(t);},{head:['Year','CXXO companies','Est. capital'],rows:cxrows.map(r=>[r.y,r.n,fmtM(r.usd)])});
+  const under=srows.filter(r=>r.target&&r.actual<r.target-5),over=srows.filter(r=>r.target&&r.actual>r.target+5);const g=$('#planGaps');g.innerHTML='';
+  g.append(el('div',{class:'callout'+(under.length||over.length?'':' ok')},el('b',{},'Read: '),under.length?`under target in ${under.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',over.length?`over target in ${over.map(r=>`${r.label} (${r.actual}% vs ${r.target}%)`).join(', ')}. `:'',(!under.length&&!over.length)?'Every sector is within 5 points of its target. ':'',`Deals in under-target sectors earn full Allocation points on the Scan tab; over-target sectors lose them.`));}
+
+/* ---------- portfolio tab ---------- */
+let editing=null;
+function renderPortfolio(){fillSectorSelect($('#pfSector'));$('#pfSector').insertBefore(el('option',{value:''},'All'),$('#pfSector').firstChild);$('#pfSector').value='';const st=$('#pfStatus');if(st.options.length<=1)['Active','Acquired','Exited','IPO','Shut down'].forEach(s=>st.append(el('option',{},s)));renderPfTable();}
+function renderPfTable(){const cos=portfolio();const q=$('#pfQ').value.trim().toLowerCase(),s=$('#pfSector').value,ss=$('#pfStatus').value,e=$('#pfEra').value;const P=cfg.plan;const rows=cos.filter(c=>(!s||c.sector===s)&&(!ss||c.status===ss)&&(!e||(e==='fund'?(c.year>=+P.startYear&&c.year<=+P.endYear):c.year<+P.startYear))&&(!q||[c.name,c.desc,c.hq,c.tags.join(' '),c.founders.map(f=>f.name).join(' ')].join(' ').toLowerCase().includes(q))).sort((a,b)=>b.year-a.year||a.name.localeCompare(b.name));$('#pfCount').textContent=rows.length+' of '+cos.length+(ov.added.length||Object.keys(ov.edited).length||ov.removed.length?` · ${ov.added.length} added, ${Object.keys(ov.edited).length} edited, ${ov.removed.length} removed`:'');const w=$('#pfTable');w.innerHTML='';const t=el('table');t.append(el('thead',{},el('tr',{},...['Company','Sector','Entry','Year','Status','HQ','Cheque $M','Founders',''].map(h=>el('th',{},h)))));const b=el('tbody');rows.forEach(c=>{const q2=chequeOf(c);b.append(el('tr',{},el('td',{},el('b',{},c.name),c.program?el('div',{class:'est'},c.program):null),el('td',{},c.sector),el('td',{},c.stage),el('td',{class:'num'},String(c.year)),el('td',{},statusText(c)),el('td',{},c.hq||''),el('td',{class:'num'},q2.est?el('span',{class:'est'},q2.v+' est.'):String(q2.v)),el('td',{},c.founders.map(f=>f.name).join(', ')),el('td',{},el('button',{class:'tog',type:'button',onclick:()=>openEditor(c)},'Edit'))));});t.append(b);w.append(t);}
+['#pfQ','#pfSector','#pfStatus','#pfEra'].forEach(s=>$(s).addEventListener('input',renderPfTable));
+function openEditor(c){editing=c?clone(c):{id:'u_'+Date.now(),name:'',sector:cfg.sectors[0],stage:'Seed',year:new Date().getFullYear(),status:'Active',outcome:'',program:'',hq:'',founded:'',desc:'',tags:[],founders:[],cheque:null,url:'',sources:[],custom:true};const ed=$('#pfEditor');ed.hidden=false;ed.innerHTML='';const f={};const inp=(k,label,type='text',extra={})=>{const i=el('input',Object.assign({type,value:editing[k]==null?'':editing[k]},extra));f[k]=i;return el('label',{class:'f'},label,i);};const sel=(k,label,opts)=>{const s=el('select',{},...opts.map(o=>el('option',{selected:editing[k]===o},o)));f[k]=s;return el('label',{class:'f'},label,s);};
+  const tagsI=el('input',{type:'text',value:editing.tags.join(', ')});const fI=el('textarea',{},editing.founders.map(x=>x.name+(x.role?' — '+x.role:'')).join('\n'));const dI=el('textarea',{},editing.desc||'');
+  ed.append(el('div',{class:'ch'},el('h3',{},c?'Edit '+c.name:'Add company'),el('small',{},c&&!c.custom?'Base entry from the dataset; your edits override it in this browser.':'')),
+    el('div',{class:'three'},inp('name','Company'),sel('sector','Sector',cfg.sectors),sel('stage','Entry stage',STAGES)),
+    el('div',{class:'three'},inp('year','Kalaari entry year','number'),sel('status','Status',['Active','Acquired','Exited','IPO','Shut down']),inp('outcome','Outcome note (e.g. Unicorn 2025, Acquired by X)')),
+    el('div',{class:'three'},inp('hq','HQ city'),inp('founded','Founded (year)','number'),inp('cheque','Kalaari cheque, USD M (blank = estimate)','number',{step:'0.1',min:'0'})),
+    el('div',{class:'two'},sel('program','Program',['','CXXO','Kstart']),inp('url','Website','text')),
+    el('label',{class:'f'},'What it does',dI),el('label',{class:'f'},'Tags (comma separated)',tagsI),el('label',{class:'f'},'Founders (one per line: Name — role)',fI),
+    el('div',{style:'display:flex;gap:8px;flex-wrap:wrap'},el('button',{class:'btn small',type:'button',onclick:()=>{const rec={};for(const k of Object.keys(f)){const v=f[k].value;rec[k]=f[k].type==='number'?(v===''?null:+v):v;}if(!rec.name.trim())return toast('Name is required');rec.year=+rec.year||0;rec.desc=dI.value;rec.tags=tagsI.value.split(',').map(s=>s.trim()).filter(Boolean);rec.founders=fI.value.split('\n').map(s=>s.trim()).filter(Boolean).map(s=>{const[m,r]=s.split(/\s+[—-]\s+/);return{name:m.trim(),role:(r||'').trim()};});ensureSector(rec.sector);saveCompany(editing.id,rec,!!editing.custom&&!D.companies.some(x=>x.id===editing.id));ed.hidden=true;renderPfTable();toast('Saved');}},'Save'),el('button',{class:'btn ghost small',type:'button',onclick:()=>{ed.hidden=true;}},'Cancel'),c?el('button',{class:'btn danger small',type:'button',onclick:()=>{if(!confirm('Remove '+c.name+' from the portfolio?'))return;removeCompany(c.id);ed.hidden=true;renderPfTable();}},'Remove'):null));ed.scrollIntoView({behavior:'smooth',block:'start'});}
+function ensureSector(s){if(s&&!cfg.sectors.includes(s)){cfg.sectors.push(s);saveCfg();}}
+function saveCompany(id,rec,isNew){const base=D.companies.find(x=>x.id===id);if(base){const diff={};for(const k of Object.keys(rec)){if(JSON.stringify(rec[k])!==JSON.stringify(base[k]))diff[k]=rec[k];}if(Object.keys(diff).length)ov.edited[id]=diff;else delete ov.edited[id];}else{const i=ov.added.findIndex(x=>x.id===id);const full=Object.assign({id,custom:true,sources:[]},rec);if(i>=0)ov.added[i]=full;else ov.added.push(full);}ov.removed=ov.removed.filter(x=>x!==id);saveOv();}
+function removeCompany(id){if(D.companies.some(x=>x.id===id)){if(!ov.removed.includes(id))ov.removed.push(id);}else ov.added=ov.added.filter(x=>x.id!==id);delete ov.edited[id];saveOv();}
+$('#pfAdd').onclick=()=>openEditor(null);
+$('#pfImport').onclick=()=>$('#pfFile').click();
+$('#pfFile').onchange=async()=>{const file=$('#pfFile').files[0];if(!file)return;const text=await file.text();const n=importPortfolioCSV(text);$('#pfFile').value='';renderPortfolio();toast(n+' companies imported');};
+function importPortfolioCSV(text){const rows=parseCSV(text);if(rows.length<2)return 0;const head=rows[0].map(h=>h.trim().toLowerCase());const col=n=>head.indexOf(n);const ix={id:col('id'),name:col('name')>=0?col('name'):col('company'),sector:col('sector'),stage:col('stage')>=0?col('stage'):col('entry'),year:col('year'),status:col('status'),outcome:col('outcome'),program:col('program'),hq:col('hq'),founded:col('founded'),desc:col('desc')>=0?col('desc'):col('description'),tags:col('tags'),founders:col('founders'),cheque:col('cheque'),url:col('url')>=0?col('url'):col('website')};if(ix.name<0)return 0;let n=0;for(const r of rows.slice(1)){const g=k=>ix[k]>=0?(r[ix[k]]||'').trim():'';const name=g('name');if(!name)continue;const existing=portfolio().find(c=>(ix.id>=0&&g('id')&&c.id===g('id'))||c.name.toLowerCase()===name.toLowerCase());const rec={name,sector:g('sector')||(existing?existing.sector:cfg.sectors[0]),stage:g('stage')||(existing?existing.stage:'Seed'),year:+g('year')||(existing?existing.year:0),status:g('status')||(existing?existing.status:'Active'),outcome:g('outcome')||(existing?existing.outcome:''),program:g('program')||(existing?existing.program:''),hq:g('hq')||(existing?existing.hq:''),founded:g('founded')?+g('founded'):(existing?existing.founded:''),desc:g('desc')||(existing?existing.desc:''),tags:g('tags')?g('tags').split(/[;,]/).map(s=>s.trim()).filter(Boolean):(existing?existing.tags:[]),founders:g('founders')?g('founders').split(/[;\n]/).map(s=>s.trim()).filter(Boolean).map(s=>{const[m,ro]=s.split(/\s+[—-]\s+/);return{name:m.trim(),role:(ro||'').trim()};}):(existing?existing.founders:[]),cheque:g('cheque')!==''?+g('cheque'):(existing?existing.cheque:null),url:g('url')||(existing?existing.url:'')};ensureSector(rec.sector);saveCompany(existing?existing.id:'u_'+Date.now()+'_'+n,rec,!existing);n++;}return n;}
+const pfCsvCols=['id','name','sector','stage','year','status','outcome','program','hq','founded','cheque','url','tags','founders','desc'];
+$('#pfExportCsv').onclick=()=>download('kalaari-portfolio-'+today()+'.csv',toCSV(portfolio().map(c=>Object.assign({},c,{tags:c.tags.join('; '),founders:c.founders.map(f=>f.name+(f.role?' — '+f.role:'')).join('; '),cheque:c.cheque==null?'':c.cheque})),pfCsvCols),'text/csv');
+$('#pfExportJson').onclick=()=>download('kalaari-portfolio-'+today()+'.json',JSON.stringify(portfolio(),null,1),'application/json');
+
+/* ---------- settings ---------- */
+function renderSettings(){bindCfgInputs($('#tab-settings'));const w=$('#weights');w.innerHTML='';WEIGHT_META.forEach(([k,l,g])=>{const inp=el('input',{type:'number',min:'0',max:'100',step:'1',value:cfg.weights[k]});inp.onchange=()=>{cfg.weights[k]=+inp.value||0;saveCfg();renderSettingsSums();};w.append(el('label',{class:'f'},el('span',{class:'h'},GROUPS[g]),l,inp));});
+  const fs=$('#focusSectors');fs.innerHTML='';cfg.sectors.forEach(s=>{const cb=el('input',{type:'checkbox',checked:cfg.thesis.focusSectors.includes(s)});cb.onchange=()=>{cfg.thesis.focusSectors=cfg.sectors.filter(x=>x===s?cb.checked:cfg.thesis.focusSectors.includes(x));saveCfg();};fs.append(el('label',{class:'inline'},cb,s));});
+  const sp=$('#stagePct');sp.innerHTML='';['Pre-seed','Seed','Series A','Series B','Later'].forEach(s=>{const inp=el('input',{type:'number',min:'0',max:'100',step:'5',value:cfg.thesis.stagePct[s]==null?0:cfg.thesis.stagePct[s]});inp.onchange=()=>{cfg.thesis.stagePct[s]=+inp.value||0;saveCfg();};sp.append(el('label',{class:'f'},s,inp));});
+  const sl=$('#sectorList');sl.innerHTML='';const cos=portfolio();cfg.sectors.forEach((s,i)=>{const inUse=cos.filter(c=>c.sector===s).length;const inp=el('input',{type:'text',value:s});inp.onchange=()=>{const nu=inp.value.trim();if(!nu||nu===s)return;if(cfg.sectors.includes(nu)){inp.value=s;return toast('That name is already used');}renameSector(s,nu);renderSettings();};const rm=el('button',{class:'tog',type:'button',disabled:inUse>0,title:inUse?inUse+' companies use this sector':'Remove',onclick:()=>{cfg.sectors=cfg.sectors.filter(x=>x!==s);cfg.thesis.focusSectors=cfg.thesis.focusSectors.filter(x=>x!==s);delete cfg.plan.sectorTargets[s];delete cfg.routing[s];saveCfg();renderSettings();}},inUse?inUse+' in use':'Remove');sl.append(el('div',{class:'r'},inp,rm));});
+  $('#addSector').onclick=()=>{const v=$('#newSector').value.trim();if(!v)return;if(cfg.sectors.includes(v))return toast('Already exists');cfg.sectors.push(v);cfg.plan.sectorTargets[v]=0;saveCfg();$('#newSector').value='';renderSettings();toast('Sector added; set its target on the Fund plan tab');};
+  const rt=$('#routing');rt.innerHTML='';cfg.sectors.forEach(s=>{const inp=el('input',{type:'text',value:cfg.routing[s]||'',placeholder:'team member'});inp.onchange=()=>{cfg.routing[s]=inp.value;saveCfg();};rt.append(el('div',{class:'r',style:'grid-template-columns:1fr 1.4fr'},el('span',{class:'small'},s),inp));});
+  renderSettingsSums();probeExtractor();}
+function renameSector(oldN,nu){const map=o=>{if(o&&o[oldN]!=null){o[nu]=o[oldN];delete o[oldN];}};cfg.sectors=cfg.sectors.map(x=>x===oldN?nu:x);cfg.thesis.focusSectors=cfg.thesis.focusSectors.map(x=>x===oldN?nu:x);map(cfg.plan.sectorTargets);map(cfg.routing);for(const k of Object.keys(cfg.sectorRenames))if(cfg.sectorRenames[k]===oldN)cfg.sectorRenames[k]=nu;if(D.sectors.includes(oldN))cfg.sectorRenames[oldN]=nu;ov.added.forEach(a=>{if(a.sector===oldN)a.sector=nu;});for(const id of Object.keys(ov.edited))if(ov.edited[id].sector===oldN)ov.edited[id].sector=nu;saveCfg();saveOv();}
+function renderSettingsSums(){const tot=WEIGHT_META.reduce((a,[k])=>a+(+cfg.weights[k]||0),0);const by=g=>WEIGHT_META.filter(x=>x[2]===g).reduce((a,[k])=>a+(+cfg.weights[k]||0),0);$('#wSum').textContent=`${tot} points available · thesis ${by('thesis')} · portfolio ${by('portfolio')} · plan ${by('plan')}`;}
+$('#wReset').onclick=()=>{cfg.weights=clone(DEFAULT_CFG.weights);saveCfg();renderSettings();toast('Weights reset');};
+async function probeExtractor(){const s=$('#extractStatus');try{if(location.protocol==='file:')throw new Error('local file');const r=await fetch('/api/extract?probe=1');if(r.status===404)throw new Error('404');const j=await r.json();s.innerHTML='';s.append(el('div',{},'Extractor: ',el('b',{class:'status-ok'},'available')),el('div',{},'AI reading (Claude): ',j.claudeAvailable?el('b',{class:'status-ok'},'on'):el('b',{class:'status-off'},'off — keyword reading is used')),el('p',{class:'muted',style:'margin-top:6px'},j.claudeAvailable?'Company pages are read by Claude into structured fields; founders and stage are only filled when the site states them.':'To switch on AI reading, an admin adds ANTHROPIC_API_KEY under Vercel → Project → Settings → Environment Variables, then redeploys. Keyword reading still fills sector, HQ, founders and any stated funding.'));}catch(e){s.innerHTML='';s.append(el('div',{},'Extractor: ',el('b',{class:'status-off'},'not reachable from this copy of the page')),el('p',{class:'muted',style:'margin-top:6px'},'Website reading works on the deployed app. Here, enter details by hand on the Scan tab.'));}}
+function shareableCfg(){return{sectors:cfg.sectors,sectorRenames:cfg.sectorRenames,thesis:cfg.thesis,weights:cfg.weights,plan:cfg.plan,routing:cfg.routing};}
+function shareLink(){const b=btoa(unescape(encodeURIComponent(JSON.stringify(shareableCfg())))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');return location.origin+location.pathname+'?cfg='+b;}
+function exportWorkspace(){return JSON.stringify({kind:'kalaari-decoded-workspace',version:1,exported:today(),cfg,portfolioEdits:ov,pipeline},null,1);}
+function importWorkspace(text){const j=JSON.parse(text);if(!j||j.kind!=='kalaari-decoded-workspace')throw new Error('Not a workspace file');if(j.cfg)cfg=deepMerge(DEFAULT_CFG,j.cfg);if(j.portfolioEdits)ov=Object.assign({added:[],edited:{},removed:[]},j.portfolioEdits);if(Array.isArray(j.pipeline))pipeline=j.pipeline;saveCfg();saveOv();savePipe();}
+$('#wsExport').onclick=()=>download('kalaari-decoded-workspace-'+today()+'.json',exportWorkspace(),'application/json');
+$('#wsImport').onclick=()=>$('#wsFile').click();
+$('#wsFile').onchange=async()=>{const file=$('#wsFile').files[0];if(!file)return;try{importWorkspace(await file.text());renderSettings();updatePipeBadge();toast('Workspace imported');}catch(e){toast('Import failed: '+e.message);}$('#wsFile').value='';};
+$('#wsShare').onclick=async()=>{toast((await copyText(shareLink()))?'Share link copied':'Copy blocked; the link is in the address bar');};
+$('#wsResetCfg').onclick=()=>{if(!confirm('Reset thesis, weights, sectors, routing and fund plan to defaults?'))return;cfg=clone(DEFAULT_CFG);saveCfg();renderSettings();toast('Settings reset');};
+$('#wsResetPf').onclick=()=>{if(!confirm('Discard all portfolio edits, additions and removals?'))return;ov={added:[],edited:{},removed:[]};saveOv();toast('Portfolio edits discarded');};
+$('#wsClearPipe').onclick=()=>{if(!confirm('Clear the whole pipeline?'))return;pipeline=[];savePipe();updatePipeBadge();toast('Pipeline cleared');};
+
+/* ---------- tabs & init ---------- */
+const TAB_RENDER={scan:()=>run(true),pipeline:renderPipeline,plan:renderPlan,portfolio:renderPortfolio,settings:renderSettings};
+function showTab(name){if(!TAB_RENDER[name])name='scan';$$('main > section').forEach(s=>s.hidden=s.id!=='tab-'+name);$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));cfg.ui.tab=name;saveCfg();if(location.hash!=='#'+name)history.replaceState(null,'','#'+name);TAB_RENDER[name]();window.scrollTo({top:0});}
+$$('#tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(TAB_RENDER[h])showTab(h);});
+updatePipeBadge();
 $('#srcnote').textContent='Example deal. Paste a website above or edit these fields.';
 fill({name:'Orbitly (example)',desc:'Ground-station-as-a-service for small satellite operators; AI scheduling of downlink capacity across India and South-East Asia.',sector:'DeepTech & Climate',stage:'Seed',size:2.5,geo:'india',founder:'first',ai:true,india:true,women:false,traction:false,founders:[]});
-
-/* ---------- portfolio reference ---------- */
-D.sectors.forEach(s=>$('#fSector').append(el('option',{},s)));
-['Active','Acquired','Exited','IPO','Shut down'].forEach(s=>$('#fStatus').append(el('option',{},s)));
-function renderRef(){
-  const q=$('#q').value.trim().toLowerCase(), s=$('#fSector').value, ss=$('#fStatus').value;
-  const rows=C.filter(c=>(!s||c.sector===s)&&(!ss||c.status===ss)&&(!q||[c.name,c.desc,c.hq,c.tags.join(' '),c.founders.map(f=>f.name).join(' ')].join(' ').toLowerCase().includes(q))).sort((a,b)=>b.year-a.year||a.name.localeCompare(b.name));
-  $('#count').textContent=rows.length+' of '+C.length;
-  const t=el('table'); t.append(el('thead',{},el('tr',{},...['Company','Sector','Entry','Year','Status','HQ','Founders'].map(h=>el('th',{},h)))));
-  const b=el('tbody'); rows.forEach(c=>b.append(el('tr',{},el('td',{},el('b',{},c.name)),el('td',{},c.sector),el('td',{},c.stage),el('td',{class:'num'},String(c.year)),el('td',{},statusText(c)),el('td',{},c.hq),el('td',{},c.founders.map(f=>f.name).join(', '))))); t.append(b);
-  const w=$('#table'); w.innerHTML=''; w.append(t);
-}
-['#q','#fSector','#fStatus'].forEach(s=>$(s).addEventListener('input',renderRef)); renderRef();
+showTab(location.hash.slice(1)||'scan');
+window.KD={get cfg(){return cfg;},get ov(){return ov;},get pipeline(){return pipeline;},score,read,fill,portfolio,planStats,addToPipeline,toCSV,parseCSV,importPortfolioCSV,exportWorkspace,importWorkspace,shareLink,showTab,DEFAULT_CFG};
 </script>

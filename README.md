@@ -1,35 +1,71 @@
 # Kalaari Decoded
 
-Paste a startup's website and see whether [Kalaari Capital](https://kalaari.com) would back it. The page reads
-the site, fills in the deal details, and scores them against exactly two things: **Kalaari's public investment
-thesis** (60 points) and **Kalaari's portfolio** of 91 traced companies (40 points). Every point comes with the
-evidence behind it, the closest portfolio companies are listed for conflict checks or intros, and a one-click memo
-goes to the clipboard.
+A deal-fit scanner and fund-plan workbench for the [Kalaari Capital](https://kalaari.com) investment team.
+Paste a startup's website; the app reads the site, fills in the deal, and scores it against three things the team
+controls: **the thesis**, **the portfolio** and **the fund plan**. Nothing else feeds the score.
 
 Live: https://kalaari-decoded-modiparvs-projects.vercel.app
 
-## How the score works
+## The five tabs
 
-| Thesis · 60 | Portfolio · 40 |
+| Tab | What it is for |
 |---|---|
-| Stage of round (20): pre-seed to Series A, first institutional cheque | Pattern (15): companies in this sector Kalaari backed since 2020 |
-| Cheque (15): $0.5–5M first cheque; avg $2.2M seed, $4.9M Series A | Adjacency (10): keyword overlap with the nearest portfolio company |
-| Sector (15): the named Fund IV focus areas | Conflict (10): full points unless an active portfolio company is a direct competitor |
-| Geography (10): India-first, India-only LP | Precedent (5): Kalaari has entered this sector at this stage before |
+| **Scan** | One website in, one score out. Details are read from the site (editable), the score is split into thesis, portfolio and plan points with a line of evidence per check, the closest portfolio companies are listed with a conflict flag, and the deal can go to the pipeline or be copied as a memo. "Scan a list" does the same for a pasted list of websites. |
+| **Pipeline** | Every deal you kept, with status (New → Screening → Partner meeting → IC → Invested / Passed), owner and notes. Open any row to re-score it; export as CSV. |
+| **Fund plan** | Fund size, window, target company count, reserves, typical cheque by stage, sector and stage targets. The dashboard shows companies and estimated capital deployed against plan, sector and stage mix versus target, pacing per year, and CXXO deployment. |
+| **Portfolio** | The companies the scanner compares against. Edit anything, add companies, enter actual cheques, import a CSV, export CSV or JSON. Edits are stored as overrides on top of the base data. |
+| **Settings** | Weights for every check, thesis rules (focus sectors, stage points, cheque band, geography, verdict thresholds), the sector list, routing by sector, extractor status, and workspace export / import / share link. |
 
-Founder signals (first-time, repeat, woman founder-CEO, AI-native, traction) are shown as tags, not points,
-because Kalaari says "potential over pedigree" and backs pre-traction teams.
+## How the score is built
 
-## Website extraction
+Each check earns a fraction of its weight; the score is points earned ÷ points available, shown out of 100.
+Any weight can be set to 0 to switch a check off. Defaults:
 
-`api/extract.js` is a Vercel serverless function. `GET /api/extract?url=<site>` fetches the homepage and one
-about/team page server-side and returns structured fields (name, one-liner, sector, HQ, founders, founding year,
-AI-native, funding stage and size if mentioned, evidence).
+| Group | Check | Default weight | Rule |
+|---|---|---|---|
+| Thesis | Stage | 18 | Stage points table (pre-seed and seed 100%, Series A 85%, Series B 30%, later 0%) |
+| Thesis | Cheque | 14 | Full inside the first-cheque band ($0.5–5M), partial when unknown or just above, low when far above |
+| Thesis | Sector | 14 | Full for focus sectors, a set percentage otherwise |
+| Thesis | Geography | 9 | India 100%, global-from-India 80%, outside India 20% |
+| Portfolio | Pattern | 13 | Number of companies in this sector backed inside the fund window |
+| Portfolio | Adjacency | 9 | Weighted keyword overlap with the nearest portfolio company (rare words count more) |
+| Portfolio | Conflict | 9 | Full unless an active portfolio company in the same sector shares two or more distinctive terms |
+| Portfolio | Precedent | 4 | Whether the fund has entered this sector at this stage before |
+| Plan | Allocation | 6 | Where the sector would sit against its target after this deal (under target earns full points) |
+| Plan | Capacity | 4 | Slots and estimated initial capital left in the fund |
 
-- With `ANTHROPIC_API_KEY` set in the Vercel project, the page text is sent to Claude (`claude-opus-5`) with a
-  strict output schema. This is the accurate mode.
-- Without it, a keyword/regex heuristic runs. It gets sector, HQ and founders right often enough to triage, but
-  check stage and round size by hand (sites rarely state them).
+Founder signals (first-time, repeat, operator, woman founder-CEO, AI-native, traction) appear as tags, not points,
+because Kalaari says "potential over pedigree" and backs pre-traction teams. Change that in Settings if you disagree.
+
+## Using it inside portfolio planning
+
+1. **Set the plan once** (Fund plan tab): fund size, window, target count, reserves, typical cheques, sector and
+   stage targets. The shipped values are illustrative defaults, not Kalaari's actual plan. Share the settings link
+   with the team so everyone scores against the same plan.
+2. **Keep the portfolio honest** (Portfolio tab): enter actual cheques for fund-window companies so "capital
+   deployed" stops being an estimate; add companies the base data missed; fix sectors.
+3. **Triage inbound with Scan**: the Plan fit group tells you whether a deal fills a gap or deepens an overweight;
+   the Conflict check tells you whether to ask a portfolio founder first.
+4. **Run the pipeline** from the Pipeline tab; export CSV for the Monday meeting.
+5. **Review the dashboard monthly**: sector and stage drift, pacing against target, CXXO deployment against its
+   annual budget.
+
+## Where things are stored
+
+Settings, portfolio edits and the pipeline live in the browser's local storage. To move them between people or
+machines use **Export workspace / Import workspace** (everything) or **Copy share link** (settings only). To make a
+portfolio correction permanent for everyone, edit `data/kalaari.json` and rebuild.
+
+## Website reading
+
+`api/extract.js` is a Vercel serverless function. `GET /api/extract?url=<site>` fetches the homepage plus one
+about/team page and returns structured fields. `GET /api/extract?probe=1` reports which mode is active.
+
+- With `ANTHROPIC_API_KEY` set on the Vercel project, page text goes to Claude (`claude-opus-5`) under a strict
+  output schema. Founders and funding are filled only when the site states them.
+- Without it, a keyword heuristic runs. It gets sector, HQ, founders and any stated funding; stage and round size
+  are usually unknown, and the Scan tab says so.
+- JavaScript-only sites yield little text; the app flags them and asks for the fields by hand.
 - Only public http(s) hosts are fetched; localhost and private ranges are refused.
 
 Set the key under Vercel → Project → Settings → Environment Variables → `ANTHROPIC_API_KEY`, then redeploy.
@@ -37,45 +73,26 @@ Set the key under Vercel → Project → Settings → Environment Variables → 
 ## Files
 
 ```
-public/index.html          built page (do not edit by hand)
-src/index.template.html    page source; data is inlined at the /*__DATA__*/ marker
+public/index.html          built app (do not edit by hand)
+src/index.template.html    app source; data is inlined at the /*__DATA__*/ marker
 api/extract.js             Vercel function: website → structured deal fields
-data/kalaari.json          the dataset: firm, thesis, funds, programs, team, companies
+data/kalaari.json          base dataset: firm, thesis, funds, programs, team, companies
 scripts/build.py           inlines data/kalaari.json into src/ → public/index.html, with validation
 scripts/scrape_kalaari.py  pulls fresh portfolio/team/why-we-invested pages from kalaari.com
 vercel.json                static output from public/, function timeout for api/extract
 ```
 
-## Refreshing the data
-
-```bash
-python scripts/scrape_kalaari.py        # writes data/kalaari_site_raw.json (needs network access to kalaari.com)
-# review the raw pull, merge changes into data/kalaari.json by hand
-python scripts/build.py                 # regenerates index.html
-```
-
-The scraper tries the WordPress REST API (`/wp-json/wp/v2/portfolio`, `/kalaari_team`, `/posts`) and falls back to
-the sitemap plus HTML parsing. It was written in an environment that could not reach kalaari.com, so run it once
-with `--limit 5` first and adjust the field regexes in `parse_page()` if the page markup differs.
-
 ## Data provenance and caveats
 
-- Compiled September 2026 from kalaari.com page metadata surfaced through web search plus press coverage
-  (YourStory, Inc42, Entrackr, Forbes India, Business Standard, Tracxn and Crunchbase summaries). The site itself
-  was not directly fetchable during the build, so every company carries a `sources` list and should be treated as a
-  lead, not a filing.
-- Kalaari states 160+ companies backed; this dataset traces 91 with enough detail to display. Missing ones are
-  mostly older Fund I–II positions without a live portfolio page.
-- **Founder ages.** `confidence: "reported"` means a dated public source states an age (Forbes 30 Under 30, an
-  interview). `confidence: "estimated"` is derived from a graduation year or stated career length. No entry is a
-  verified date of birth. 31 of 91 companies have any age signal.
-- The 8-unicorn count is Kalaari's own; the dataset names seven (Dream11, Cult.fit, Snapdeal, Upstox, ElasticRun,
-  Jumbotail, Good Glamm Group).
-- Sector buckets are ours (eight, so charts stay colour-safe); Kalaari's own tags are kept in each company's `tags`.
+- Base data compiled September 2026 from kalaari.com page metadata surfaced through search plus press coverage.
+  91 of Kalaari's 160+ companies are traced; missing ones are mostly older Fund I–II positions.
+- Per-company cheques are not public. The dashboard estimates them from the per-stage cheque in Fund plan and
+  marks them "est." until you enter actuals.
+- Founder ages in the data file are `reported` only where a dated public source states one; otherwise `estimated`.
+- The extractor and scoring are triage aids. They do not replace diligence.
 
-## Adding a company
+## Developer notes
 
-Append to `data/kalaari.json → companies` with a unique `id`, a `sector` from the `sectors` list, `stage` at
-Kalaari's entry, `year` of entry, `status` (Active, Acquired, Exited, IPO, Shut down), `program` (CXXO, Kstart or
-empty), `founders`, an optional `founderAge` (`{"value": 29, "basis": "...", "confidence": "reported"}` or
-`{"band": "30s", ...}`), and `sources`. `scripts/build.py` refuses duplicate ids and unknown sectors.
+`window.KD` exposes `cfg`, `score`, `read`, `fill`, `portfolio`, `planStats`, `addToPipeline`, `importPortfolioCSV`,
+`exportWorkspace`, `importWorkspace`, `shareLink` and `showTab` for debugging and tests. The Playwright test used
+during development lives outside the repo; a copy is easy to recreate from those hooks.
