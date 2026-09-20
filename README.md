@@ -1,22 +1,21 @@
 # Kalaari Decoded
 
-An interactive intelligence tool built from everything public about [Kalaari Capital](https://kalaari.com):
-what the firm does, what it says it wants, every portfolio company we could trace (with founders and
-founder-age signals), the team, and a **deal-fit scanner** the Kalaari team can use to triage inbound decks.
+A **deal-fit scanner** for the [Kalaari Capital](https://kalaari.com) investment team, built from everything the
+firm states publicly about what it backs. Enter the basics of an inbound deck and get a 0–100 fit score, the
+nearest portfolio companies (for conflict checks or founder intros), the team member it should route to, the
+questions a partner is likely to ask, and a plain-text memo to paste into a deal note.
+
+Live: https://kalaari-decoded-modiparvs-projects.vercel.app
 
 Open `index.html` in any browser. It is one self-contained file: no server, no build step needed to view it.
 
 ## What is inside
 
-| Section | What it answers |
+| Section | What it does |
 |---|---|
-| At a glance | AUM, companies, unicorns, IPOs, four funds, the 2006 → 2026 timeline, programs (CXXO, Kstart, Fellowship, Alpha Archives) |
-| What they want | Stage, first-cheque range, geography, founder filter ("potential over pedigree", founder-market fit, speed to value), how to pitch, Fund IV focus areas with the deals that back each, the firm's own research reports |
-| Portfolio explorer | 91 traced companies, filterable by sector, entry stage, status, program and fund era; cards or table; founders, founder age (reported vs estimated), latest round and sources |
-| Portfolio decoded | Sector mix, entry year by sector, stage at first cheque, outcomes, founder-age bands, Fund IV founder profile. Every chart has a hover layer and a table view |
-| Thesis vs deployment | Fund IV's stated focus areas against companies actually backed since 2020, with thin areas flagged |
-| Deal-fit scanner | Score a deal 0–100 against Kalaari's stated filter, see the nearest portfolio companies (conflicts or intros), get the team member it should route to, keep a per-browser shortlist |
-| Team | Investment team, venture partners and operations, from kalaari.com/teams |
+| Deal-fit scanner (hero) | Six checks worth 100 points: stage of round, round size, sector focus, geography, founder-market fit, thesis/program bonus. Output: score and verdict, per-check breakdown, notes, nearest portfolio companies with the shared keywords, partner questions, a per-browser shortlist, and "Copy memo" |
+| How it scores | The rubric, one card per check, plus Kalaari's filter in its own words (stages, cheque range, averages, geography, founder criteria, Fund IV focus areas, how to pitch) |
+| Portfolio reference | The 91 traced companies the scanner compares against, as a table or cards, filterable by sector, status and fund era, with founders and founder-age signals |
 
 ## Files
 
