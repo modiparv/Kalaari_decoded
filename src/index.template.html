@@ -1,5 +1,5 @@
 <title>Kalaari Decoded</title>
-<meta name="description" content="Deal-fit scanner for Kalaari Capital: score an inbound deal against the firm's stated filter, find the nearest portfolio companies, and route it to the right partner.">
+<meta name="description" content="Paste a startup's website and see how it scores against Kalaari Capital's public investment thesis and 91-company portfolio.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -7,9 +7,8 @@
   color-scheme:light;
   --paper:#f6f4ee; --paper-2:#efece3; --card:#fbfaf6; --ink:#191c24; --ink-2:#4a4f5c; --muted:#6e7280;
   --line:#dcd8cc; --line-2:#c9c4b5; --indigo:#2b3a67; --indigo-soft:#e3e7f3; --accent:#d9821a; --accent-ink:#9a5a0c; --accent-soft:#fbead4;
-  --good:#0ca30c; --good-ink:#006300; --crit:#d03b3b;
+  --good-ink:#006300; --good-soft:#e3f3e3; --crit:#b32f2f; --crit-soft:#f8e3e3;
   --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --s7:#4a3aa7; --s8:#e34948;
-  --shadow:0 1px 2px rgba(25,28,36,.06),0 8px 24px -12px rgba(25,28,36,.18);
   --display:"Familjen Grotesk",ui-sans-serif,system-ui,sans-serif; --body:"Source Sans 3",ui-sans-serif,system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){
@@ -17,336 +16,314 @@
     color-scheme:dark;
     --paper:#15171c; --paper-2:#1b1e25; --card:#1d2028; --ink:#ece9df; --ink-2:#c3c2b7; --muted:#9aa0ad;
     --line:#2b2f3a; --line-2:#3a3f4d; --indigo:#a9b6e6; --indigo-soft:#252b42; --accent:#f0a03c; --accent-ink:#f5b968; --accent-soft:#3a2a12;
-    --good:#0ca30c; --good-ink:#3ecf3e; --crit:#e66767;
+    --good-ink:#5fd35f; --good-soft:#1c2e1c; --crit:#f08080; --crit-soft:#3a1c1c;
     --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
   }
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
   --paper:#15171c; --paper-2:#1b1e25; --card:#1d2028; --ink:#ece9df; --ink-2:#c3c2b7; --muted:#9aa0ad;
   --line:#2b2f3a; --line-2:#3a3f4d; --indigo:#a9b6e6; --indigo-soft:#252b42; --accent:#f0a03c; --accent-ink:#f5b968; --accent-soft:#3a2a12;
-  --good:#0ca30c; --good-ink:#3ecf3e; --crit:#e66767;
+  --good-ink:#5fd35f; --good-soft:#1c2e1c; --crit:#f08080; --crit-soft:#3a1c1c;
   --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181; --s6:#008300; --s7:#9085e9; --s8:#e66767;
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
 }
 *{box-sizing:border-box}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;margin:0}
 a{color:var(--indigo)}
 h1,h2,h3{font-family:var(--display);letter-spacing:-.01em;text-wrap:balance;margin:0}
-h2{font-size:clamp(1.4rem,2.2vw,1.8rem);font-weight:600}
-h3{font-size:1.05rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
 p{margin:0}
-.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink)}
-.muted{color:var(--muted)}
 .mono{font-family:var(--mono)}
-.wrap{max-width:1180px;margin:0 auto;padding-inline:20px}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top .wrap{display:flex;align-items:center;gap:18px;min-height:56px;flex-wrap:wrap;padding-block:6px}
-.brand{font-family:var(--display);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.brand i{display:inline-block;width:12px;height:12px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
-nav.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;margin-left:auto}
-nav.tabs::-webkit-scrollbar{display:none}
-nav.tabs a{font-size:.9rem;color:var(--ink-2);text-decoration:none;padding:8px 10px;border-radius:6px;white-space:nowrap}
-nav.tabs a:hover,nav.tabs a:focus-visible{background:var(--paper-2);color:var(--ink);outline:none}
-nav.tabs a.on{background:var(--indigo);color:#fff}
-/* hero = scanner */
-.hero{padding-block:36px 10px}
-.hero h1{font-size:clamp(2rem,4.6vw,3.4rem);font-weight:700;line-height:1.04}
+.muted{color:var(--muted)}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:20px}
+.top{border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:54px;flex-wrap:wrap;padding-block:6px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-block;width:11px;height:11px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
+.basis{font-size:.82rem;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.basis b{color:var(--ink-2);font-weight:600}
+/* hero */
+.hero{padding-block:40px 16px;text-align:center}
+.hero h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1.05}
 .hero h1 em{font-style:normal;color:var(--accent)}
-.hero .lede{font-size:1.08rem;max-width:66ch;color:var(--ink-2);margin-top:12px}
-.scanner{display:grid;grid-template-columns:1fr 1.15fr;gap:20px;align-items:start;margin-top:26px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
-.form{display:grid;gap:12px}
-.form .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form label{display:grid;gap:4px;font-size:.76rem;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;min-width:0}
-.form label.inline{grid-template-columns:auto 1fr;align-items:center;text-transform:none;font-family:var(--body);font-size:.95rem;color:var(--ink);letter-spacing:0}
-select,input[type=text],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:6px;padding:8px 10px;width:100%;min-width:0}
-.form textarea{min-height:88px;resize:vertical}
+.hero p{color:var(--ink-2);font-size:1.05rem;max-width:52ch;margin:10px auto 0}
+.urlrow{display:flex;gap:8px;max-width:640px;margin:22px auto 0}
+.urlrow input{flex:1;font:inherit;font-size:1.05rem;padding:12px 14px;border:1px solid var(--line-2);border-radius:8px;background:var(--card);color:var(--ink);min-width:0}
+.btn{font:inherit;font-weight:600;background:var(--accent);color:#1a1205;border:0;border-radius:8px;padding:12px 18px;cursor:pointer;white-space:nowrap}
+.btn:disabled{opacity:.6;cursor:progress}
+.btn.ghost{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-weight:400;padding:8px 12px;border-radius:6px;font-size:.9rem}
+.btn.small{padding:8px 12px;font-size:.9rem;border-radius:6px}
 select:focus-visible,input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.btn{font:inherit;font-weight:600;background:var(--accent);color:#1a1205;border:0;border-radius:6px;padding:10px 16px;cursor:pointer}
-.btn.ghost{background:transparent;border:1px solid var(--line-2);color:var(--ink-2);font-weight:400}
-.tog{font:inherit;font-size:.78rem;background:transparent;border:1px solid var(--line-2);color:var(--ink-2);border-radius:5px;padding:3px 8px;cursor:pointer}
-.result{position:sticky;top:calc(env(safe-area-inset-top,0px) + 68px)}
-.score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
-.score .big{font-family:var(--display);font-size:3.8rem;font-weight:700;line-height:1}
+.try{font-size:.85rem;color:var(--muted);margin-top:10px}
+.try button{font:inherit;font-size:.85rem;background:none;border:0;color:var(--indigo);cursor:pointer;text-decoration:underline;padding:0 4px}
+.msg{max-width:640px;margin:10px auto 0;font-size:.9rem;padding:8px 12px;border-radius:6px;background:var(--paper-2);color:var(--ink-2);text-align:left}
+.msg.err{background:var(--crit-soft);color:var(--crit)}
+.msg.ok{background:var(--good-soft);color:var(--good-ink)}
+/* workspace */
+.work{display:grid;grid-template-columns:.9fr 1.1fr;gap:18px;margin-top:26px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:12px}
+.ch small{color:var(--muted);font-size:.8rem}
+.form{display:grid;gap:10px}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{display:grid;gap:3px;font-size:.72rem;color:var(--muted);font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;min-width:0}
+.form label.inline{grid-template-columns:auto 1fr;align-items:center;text-transform:none;font-family:var(--body);font-size:.92rem;color:var(--ink);letter-spacing:0}
+select,input[type=text],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:6px;padding:7px 10px;width:100%;min-width:0}
+textarea{min-height:64px;resize:vertical}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+.founders{font-size:.88rem;color:var(--ink-2)}
+.founders span{color:var(--muted)}
+/* result */
+.result{position:sticky;top:12px}
+.score{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center}
+.score .big{font-family:var(--display);font-size:3.6rem;font-weight:700;line-height:1}
 .score .big small{font-size:1rem;color:var(--muted);font-family:var(--body);font-weight:400}
-.verdict{font-weight:600;font-size:1.05rem}
+.verdict{font-weight:600;font-size:1.02rem}
 .verdict.strong{color:var(--good-ink)} .verdict.mid{color:var(--accent-ink)} .verdict.weak{color:var(--crit)}
-.route{font-size:.92rem;color:var(--ink-2);margin-top:4px}
-.breakdown{display:grid;gap:7px;margin-top:16px}
-.breakdown .row{display:grid;grid-template-columns:180px 1fr auto;gap:10px;align-items:center;font-size:.9rem}
-.breakdown .track{height:8px;background:var(--paper-2);border-radius:4px;overflow:hidden}
-.breakdown .fill{height:100%;background:var(--indigo)}
-.breakdown .row.warn .fill{background:var(--accent)}
-.breakdown .n{font-family:var(--mono);font-size:.78rem;font-variant-numeric:tabular-nums;color:var(--muted)}
-.rh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:18px}
-.notes{display:grid;gap:6px;margin-top:8px;font-size:.92rem;color:var(--ink-2)}
-.notes div{padding-left:14px;position:relative}
-.notes div::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-.adj{display:grid;gap:6px;margin-top:8px}
-.adj .a{display:flex;justify-content:space-between;gap:10px;font-size:.9rem;padding:7px 10px;border:1px solid var(--line);border-left:4px solid var(--sc,var(--line-2));border-radius:6px;background:var(--paper);flex-wrap:wrap}
-.adj .a span{color:var(--muted);font-size:.8rem}
-.adj .a .why{flex-basis:100%;font-size:.8rem;color:var(--muted)}
-.qs{margin-top:8px;padding-left:18px;color:var(--ink-2);font-size:.92rem}
-.qs li+li{margin-top:4px}
-.shortlist{margin-top:18px;font-size:.9rem;border-top:1px solid var(--line);padding-top:12px}
-.shortlist ul{padding-left:18px;margin:6px 0 0}
-.shortlist li+li{margin-top:4px}
-.toast{font-size:.8rem;color:var(--good-ink);margin-left:8px}
-section{padding-block:36px;border-top:1px solid var(--line)}
-.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:18px}
-.sec-head p{color:var(--ink-2);max-width:64ch}
-.rubric{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.rubric .card{display:grid;gap:6px;align-content:start}
-.rubric .pts{font-family:var(--mono);font-size:.78rem;color:var(--accent-ink)}
-.rubric p{font-size:.92rem;color:var(--ink-2)}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem}
-.kv dt{color:var(--muted);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
-.kv dd{margin:0}
-/* explorer */
-.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:16px}
-.filters label{font-size:.74rem;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;gap:4px}
+.route{font-size:.9rem;color:var(--ink-2);margin-top:2px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.part h3{display:flex;justify-content:space-between;align-items:baseline;font-size:.95rem}
+.part h3 span{font-family:var(--mono);font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.part .bar{height:6px;background:var(--paper-2);border-radius:3px;overflow:hidden;margin:6px 0 10px}
+.part .bar i{display:block;height:100%;background:var(--indigo)}
+.part.pf .bar i{background:var(--accent)}
+.chk{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:start;font-size:.88rem;padding:5px 0;border-top:1px solid var(--line)}
+.chk .ic{font-family:var(--mono);font-weight:600;text-align:center}
+.chk.pass .ic{color:var(--good-ink)} .chk.part .ic{color:var(--accent-ink)} .chk.fail .ic{color:var(--crit)}
+.chk b{font-weight:600}
+.chk .ev{color:var(--muted);font-size:.82rem;display:block}
+.chk .n{font-family:var(--mono);font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.near{margin-top:14px}
+.near .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.88rem;padding:6px 10px;border:1px solid var(--line);border-left:4px solid var(--sc,var(--line-2));border-radius:6px;background:var(--paper);margin-top:6px}
+.near .row span{color:var(--muted);font-size:.8rem}
+.near .row.conflict{border-color:var(--crit);border-left-color:var(--crit)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:.78rem;padding:3px 9px;border-radius:999px;background:var(--indigo-soft);color:var(--indigo);font-weight:600}
+.tag.cx{background:var(--accent-soft);color:var(--accent-ink)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.toast{font-size:.8rem;color:var(--good-ink)}
+.shortlist{font-size:.86rem;margin-top:10px}
+.shortlist ul{padding-left:18px;margin:4px 0 0}
+.tog{font:inherit;font-size:.76rem;background:transparent;border:1px solid var(--line-2);color:var(--ink-2);border-radius:5px;padding:2px 7px;cursor:pointer;margin-left:6px}
+/* basis section */
+section{padding-block:34px;border-top:1px solid var(--line);margin-top:34px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two-col h3{margin-bottom:6px}
+.two-col p{font-size:.92rem;color:var(--ink-2)}
+.two-col .card{border-top:3px solid var(--indigo)}
+.two-col .card.pf{border-top-color:var(--accent)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:.88rem;margin-top:10px}
+.kv dt{color:var(--muted);font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
+.kv dd{margin:0;color:var(--ink-2)}
+details.ref{margin-top:14px}
+details.ref summary{cursor:pointer;color:var(--indigo);font-size:.92rem}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin:12px 0}
+.filters label{font-size:.7rem;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;gap:4px}
 .filters select,.filters input{width:auto;min-width:140px}
-.filters input[type=text]{min-width:220px}
-.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
-.seg button{font:inherit;font-size:.85rem;background:var(--card);color:var(--ink-2);border:0;padding:8px 12px;cursor:pointer}
-.seg button.on{background:var(--indigo);color:#fff}
-.count{font-family:var(--mono);font-size:.8rem;color:var(--muted);margin-left:auto}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:.78rem;padding:3px 9px;border-radius:999px;border:1px solid var(--line-2);color:var(--ink-2);background:var(--paper)}
-.chip.sec{border-color:transparent;color:#fff}
-.chip.prog{background:var(--accent-soft);border-color:transparent;color:var(--accent-ink);font-weight:600}
-.chip.ai{background:var(--indigo-soft);border-color:transparent;color:var(--indigo);font-weight:600}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.co{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px;border-top:3px solid var(--sc,var(--line));min-width:0}
-.co header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;min-width:0}
-.co header>div{min-width:0}
-.co h3{font-size:1.05rem}
-.co .meta{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
-.co .desc{color:var(--ink-2);font-size:.95rem;overflow-wrap:anywhere}
-.co .founders{font-size:.9rem;display:grid;gap:3px}
-.co .founders span{color:var(--muted)}
-.age{font-family:var(--mono);font-size:.76rem;padding:2px 8px;border-radius:4px;background:var(--paper-2);color:var(--ink-2);white-space:nowrap}
-.age.rep{background:var(--indigo-soft);color:var(--indigo)}
-.status{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid var(--line-2);text-align:right;max-width:46%;flex-shrink:0}
-.status.IPO,.status.Unicorn{border-color:var(--accent);color:var(--accent-ink)}
-.status.Acquired,.status.Exited{color:var(--indigo);border-color:var(--indigo)}
-.status.Shut{color:var(--crit);border-color:var(--crit)}
-.co details{font-size:.85rem;min-width:0}
-.co details summary{cursor:pointer;color:var(--muted)}
-.co details a{overflow-wrap:anywhere;display:block;font-size:.78rem}
+.count{font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-left:auto}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
-table{border-collapse:collapse;width:100%;font-size:.9rem;background:var(--card)}
-th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
+table{border-collapse:collapse;width:100%;font-size:.86rem;background:var(--card)}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--paper-2);position:sticky;top:0}
 td.num{font-variant-numeric:tabular-nums;text-align:right}
-footer{padding-block:24px 40px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
-footer ul{padding-left:18px}
-@media (max-width:900px){.scanner,.rubric{grid-template-columns:1fr}.result{position:static}.breakdown .row{grid-template-columns:1fr}}
-@media (max-width:560px){.form .two{grid-template-columns:1fr}.top .wrap{gap:8px}nav.tabs{margin-left:0;width:100%}}
+footer{padding-block:20px 36px;font-size:.8rem;color:var(--muted);border-top:1px solid var(--line)}
+@media (max-width:860px){.work,.split,.two-col{grid-template-columns:1fr}.result{position:static}}
+@media (max-width:560px){.form .two,.checks{grid-template-columns:1fr}.urlrow{flex-direction:column}.chk{grid-template-columns:18px 1fr}.chk .n{grid-column:2}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="top"><div class="wrap">
   <div class="brand"><i></i>Kalaari Decoded</div>
-  <nav class="tabs" id="tabs">
-    <a href="#scanner">Deal-fit scanner</a><a href="#rubric">How it scores</a><a href="#portfolio">Portfolio reference</a>
-  </nav>
+  <div class="basis">Scored against <b>Kalaari's investment thesis</b> and <b><span id="nCo"></span> portfolio companies</b>, nothing else.</div>
 </div></div>
 
 <main class="wrap">
-<div class="hero" id="scanner">
-  <div class="eyebrow">For the Kalaari investment team · inbound triage</div>
-  <h1>Does this deal <em>fit Kalaari</em>?</h1>
-  <p class="lede">Type in the basics of an inbound deck. The scanner scores it against the filter Kalaari states publicly (stage, first-cheque size, sector focus, geography, founder-market fit), pulls the nearest portfolio companies for conflict checks or intros, and names who on the team should see it first.</p>
-  <div class="scanner">
-    <div class="card form">
-      <label>Company<input type="text" id="sName" value="Orbitly"></label>
-      <div class="two">
-        <label>Sector<select id="sSector"></select></label>
-        <label>Round<select id="sStage"><option>Pre-seed</option><option selected>Seed</option><option>Series A</option><option>Series B</option><option>Later</option></select></label>
-      </div>
-      <div class="two">
-        <label>Round size (USD millions)<input type="number" id="sSize" value="2.5" min="0" step="0.1"></label>
-        <label>Headquarters<select id="sGeo"><option value="india" selected>India</option><option value="global">Global from India</option><option value="other">Outside India</option></select></label>
-      </div>
-      <label>Founder profile<select id="sFounder"><option value="first" selected>First-time founder(s)</option><option value="repeat">Repeat founder(s)</option><option value="operator">Senior operator(s) leaving big tech</option></select></label>
-      <label class="inline"><input type="checkbox" id="sWomen"> Woman founder-CEO (CXXO eligible)</label>
-      <label class="inline"><input type="checkbox" id="sAI" checked> AI-native product</label>
-      <label class="inline"><input type="checkbox" id="sIndia" checked> India-scale market is the primary wedge</label>
-      <label class="inline"><input type="checkbox" id="sTraction"> Paying customers or revenue already</label>
-      <label>One-line pitch and keywords<textarea id="sDesc">Ground-station-as-a-service for small satellite operators; AI scheduling of downlink capacity across India and SE Asia.</textarea></label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn" id="sRun" type="button">Score this deal</button><button class="btn ghost" id="sSave" type="button">Add to shortlist</button><button class="btn ghost" id="sCopy" type="button">Copy memo</button><span class="toast" id="toast"></span></div>
-    </div>
-    <div class="card result" id="sOut"></div>
-  </div>
+<div class="hero">
+  <h1>Would <em>Kalaari</em> back this startup?</h1>
+  <p>Paste the company's website. Details are pulled from the site, then scored against what Kalaari says it invests in and what it has actually backed.</p>
+  <form class="urlrow" id="urlform">
+    <input type="text" id="url" placeholder="company website, e.g. digantara.co.in" autocomplete="off" spellcheck="false">
+    <button class="btn" id="go" type="submit">Scan</button>
+  </form>
+  <div class="try">Try: <button type="button" data-u="https://www.nudgebee.com">nudgebee.com</button> · <button type="button" data-u="https://articulussurgical.com">articulussurgical.com</button> · <button type="button" data-u="https://www.chara.tech">chara.tech</button> · or <button type="button" id="manual">fill in the details yourself</button></div>
+  <div class="msg" id="msg" hidden></div>
 </div>
 
-<section id="rubric">
-  <div class="sec-head"><div><div class="eyebrow">How it scores</div><h2>Six checks, 100 points, all from Kalaari's own filter</h2></div><p>Nothing here is inferred from private data. Each check maps to something Kalaari says on kalaari.com, in its "Why we invested" notes, or in Vani Kola's 2025 talks.</p></div>
-  <div class="rubric" id="rubricgrid"></div>
-  <div class="card" style="margin-top:14px">
-    <h3 style="margin-bottom:10px">The filter, as Kalaari states it</h3>
-    <dl class="kv" id="filterkv"></dl>
+<div class="work" id="work">
+  <div class="card">
+    <div class="ch"><h3>Company details</h3><small id="srcnote">Edit anything; the score updates live.</small></div>
+    <div class="form">
+      <label>Company<input type="text" id="sName"></label>
+      <label>What it does<textarea id="sDesc"></textarea></label>
+      <div class="two">
+        <label>Sector<select id="sSector"></select></label>
+        <label>Round being raised<select id="sStage"><option>Pre-seed</option><option>Seed</option><option>Series A</option><option>Series B</option><option>Later</option></select></label>
+      </div>
+      <div class="two">
+        <label>Round size (USD millions)<input type="number" id="sSize" min="0" step="0.1" placeholder="unknown"></label>
+        <label>Headquarters<select id="sGeo"><option value="india">India</option><option value="global">Global from India</option><option value="other">Outside India</option></select></label>
+      </div>
+      <label>Founders<select id="sFounder"><option value="first">First-time founders</option><option value="repeat">Repeat founders</option><option value="operator">Senior operators from big companies</option><option value="unknown">Unknown</option></select></label>
+      <div class="founders" id="sFounders"></div>
+      <div class="checks">
+        <label class="inline"><input type="checkbox" id="sAI"> AI-native product</label>
+        <label class="inline"><input type="checkbox" id="sIndia"> Customers mainly in India</label>
+        <label class="inline"><input type="checkbox" id="sWomen"> Woman founder-CEO</label>
+        <label class="inline"><input type="checkbox" id="sTraction"> Has paying customers</label>
+      </div>
+    </div>
   </div>
-</section>
+  <div class="card result" id="out"></div>
+</div>
 
-<section id="portfolio">
-  <div class="sec-head"><div><div class="eyebrow">Portfolio reference</div><h2>The companies the scanner compares against</h2></div><p><span id="nTraced"></span> Kalaari companies traced with sector, entry stage, status and founders. This is what "nearest portfolio companies" is drawn from. Filter it to sanity-check a match.</p></div>
-  <div class="filters">
-    <label>Search<input type="text" id="q" placeholder="name, tag, founder, city"></label>
-    <label>Sector<select id="fSector"><option value="">All</option></select></label>
-    <label>Status<select id="fStatus"><option value="">All</option></select></label>
-    <label>Era<select id="fEra"><option value="">All</option><option value="fund4">Fund IV (2020+)</option><option value="fund3">Fund III (2015–19)</option><option value="fund2">Fund II (2011–14)</option><option value="fund1">Fund I (to 2010)</option></select></label>
-    <label>View<span class="seg"><button id="vTable" class="on" type="button">Table</button><button id="vCards" type="button">Cards</button></span></label>
-    <span class="count" id="count"></span>
+<section id="basis">
+  <div class="two-col">
+    <div class="card">
+      <h3>Thesis · 60 points</h3>
+      <p>What Kalaari says it invests in, taken from kalaari.com, its "Why we invested" notes and Vani Kola's 2025 talks.</p>
+      <dl class="kv">
+        <dt>Stage</dt><dd>Pre-seed to Series A, first institutional cheque · 20 pts</dd>
+        <dt>Cheque</dt><dd>$0.5M–5M first cheque (avg $2.2M seed, $4.9M Series A) · 15 pts</dd>
+        <dt>Sectors</dt><dd>Vertical AI, DeepTech &amp; SpaceTech, SaaS, gaming &amp; creators, consumer, fintech, climate, healthtech · 15 pts</dd>
+        <dt>Geography</dt><dd>India-first; Bengaluru office; India-only LP · 10 pts</dd>
+        <dt>Founders</dt><dd>"Potential over pedigree." First-time founders welcome; women founder-CEOs via CXXO · tags, not points</dd>
+      </dl>
+    </div>
+    <div class="card pf">
+      <h3>Portfolio · 40 points</h3>
+      <p>What Kalaari has actually backed: <span id="nCo2"></span> companies with sector, entry stage, year, status and founders.</p>
+      <dl class="kv">
+        <dt>Pattern</dt><dd>How many companies in this sector Kalaari has backed since 2020 · 15 pts</dd>
+        <dt>Adjacency</dt><dd>How close the nearest portfolio company is (shared keywords) · 10 pts</dd>
+        <dt>Conflict</dt><dd>Full points unless an active portfolio company looks like a direct competitor · 10 pts</dd>
+        <dt>Precedent</dt><dd>Whether Kalaari has entered this sector at this stage before · 5 pts</dd>
+      </dl>
+    </div>
   </div>
-  <div class="cards" id="cards" hidden></div>
-  <div class="tablewrap" id="table"></div>
+  <details class="ref">
+    <summary>See the portfolio the scanner compares against</summary>
+    <div class="filters">
+      <label>Search<input type="text" id="q" placeholder="name, tag, founder, city"></label>
+      <label>Sector<select id="fSector"><option value="">All</option></select></label>
+      <label>Status<select id="fStatus"><option value="">All</option></select></label>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tablewrap" id="table"></div>
+  </details>
 </section>
 </main>
 
-<footer><div class="wrap">
-  <b>What to trust.</b>
-  <ul>
-    <li>The scoring rubric is a reading of Kalaari's public filter, not the firm's actual investment committee criteria. Use it to triage, not to decide.</li>
-    <li>Portfolio data was compiled in September 2026 from kalaari.com page metadata and press coverage. Founder ages marked "est." are derived from graduation year or career length; only "reported" ones come from a dated source.</li>
-    <li>The shortlist lives in this browser only. "Copy memo" puts a plain-text summary on the clipboard for a deal note or Slack.</li>
-  </ul>
-</div></footer>
+<footer><div class="wrap">A triage aid, not Kalaari's investment committee. Portfolio data compiled September 2026 from kalaari.com and press; website extraction reads only public pages. Shortlist is saved in this browser only.</div></footer>
 
 <script>
 const D = /*__DATA__*/{}/*__END__*/;
 const $ = (s, r=document) => r.querySelector(s);
-const el = (t, a={}, ...k) => { const e=document.createElement(t); for(const [x,y] of Object.entries(a)){ if(x==='class') e.className=y; else if(x==='html') e.innerHTML=y; else if(x.startsWith('on')) e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} for(const c of k){ if(c==null) continue; e.append(c.nodeType?c:document.createTextNode(c)); } return e; };
+const el = (t, a={}, ...k) => { const e=document.createElement(t); for(const [x,y] of Object.entries(a)){ if(x==='class') e.className=y; else if(x.startsWith('on')) e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} for(const c of k){ if(c==null) continue; e.append(c.nodeType?c:document.createTextNode(c)); } return e; };
 const SLOT = {}; D.sectors.forEach((s,i)=>SLOT[s]='var(--s'+(i+1)+')');
 const C = D.companies;
-const era=y=> y>=2020?'fund4': y>=2015?'fund3': y>=2011?'fund2':'fund1';
-function ageLabel(a){ if(!a) return null; const t = a.value!=null ? String(a.value) : a.band; return {t, rep:a.confidence==='reported', basis:a.basis}; }
-function statusClass(c){ if(c.outcome&&c.outcome.startsWith('Unicorn')) return 'Unicorn'; return c.status.split(' ')[0]; }
-function statusText(c){ return c.outcome || c.status; }
+const F4 = C.filter(c=>c.year>=2020);
+const statusText = c => c.outcome || c.status;
+$('#nCo').textContent=C.length; $('#nCo2').textContent=C.length;
+D.sectors.forEach(s=>$('#sSector').append(el('option',{},s)));
 
-/* ---------- rubric ---------- */
-const RUBRIC=[
-  ['Stage of round',25,'Pre-seed, seed and Series A score full marks. Kalaari says it wants to be the first institutional cheque; Series B or later only as follow-on in existing companies.'],
-  ['Round size',20,'Full marks for $0.5M to $6M, the band around Kalaari\'s stated $500K–$5M first cheque (avg $2.2M seed, $4.9M Series A). Bigger rounds need a co-lead and lose points.'],
-  ['Sector focus',20,'Full marks in the Fund IV areas: vertical AI, DeepTech and SpaceTech, SaaS, gaming and creator economy, consumer, fintech, climate, healthtech. Others get half.'],
-  ['Geography',15,'India HQ scores 15, global-from-India 12, elsewhere 3. Kalaari is India-first with a Bengaluru office and an India-only LP.'],
-  ['Founder-market fit',10,'First-time and repeat founders score the same: "your pedigree is not important to us; your potential is." Senior operators score 9 pending a why-now story.'],
-  ['Thesis and program bonus',10,'Woman founder-CEO routes to CXXO (+5). AI-native matches the 2024–26 vertical-AI tilt (+3). India-scale wedge (+2). Existing revenue is noted but not scored: Kalaari backs pre-traction.']
-];
-RUBRIC.forEach(([n,p,d])=>$('#rubricgrid').append(el('div',{class:'card'},el('div',{class:'pts'},p+' points'),el('h3',{},n),el('p',{},d))));
-const fk=$('#filterkv');
-[['Stages',D.thesis.stages.join(' · ')],['First cheque',D.thesis.chequeRange],['Average',`$${D.thesis.avgCheques.seed_usd_m}M seed · $${D.thesis.avgCheques.seriesA_usd_m}M Series A`],['Geography',D.thesis.geography],['Role',D.thesis.role],['Founders',D.thesis.founderFilter.join('; ')],['Fund IV focus',D.thesis.sectorFocusFundIV.map(f=>f.area).join(' · ')],['How to pitch',D.thesis.howToPitch]].forEach(([k,v])=>fk.append(el('dt',{},k),el('dd',{},v)));
+const FOCUS = {'AI & SaaS':'vertical AI and SaaS','DeepTech & Climate':'DeepTech, SpaceTech and climate','Gaming & Media':'gaming and the creator economy','Consumer & D2C':'consumer and D2C','FinTech':'fintech','HealthTech':'healthtech'};
+const ROUTE={'AI & SaaS':'Jayraj Bharat Patel (AI-driven software), then Sampath P','Gaming & Media':'Harshit Kumar (gaming, SMB-tech)','Consumer & D2C':'Pranav Koshal; Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy for sales-tech and distribution','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy (logistics, revenue ops)','EdTech & HR':'Sampath P or Kiran Vasireddy (upskilling)'};
+const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services','your','our','you','are','can','all','more','new','one','best','via','through','every','any','get','use','used','how','what','who','also','has','have']);
+const tok = s => new Set((String(s).toLowerCase().match(/[a-z][a-z0-9+\-]{2,}/g)||[]).filter(t=>!STOP.has(t)));
 
-/* ---------- scanner ---------- */
-D.sectors.forEach(s=>$('#sSector').append(el('option',{},s))); $('#sSector').value='DeepTech & Climate';
-const ROUTE={'AI & SaaS':'Jayraj Bharat Patel (AI-driven, workflow-first software), then Sampath P','Gaming & Media':'Harshit Kumar (gaming, SMB-tech, Bharat)','Consumer & D2C':'Pranav Koshal, with Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy if it is sales-tech or distribution','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy (logistics infrastructure, revenue ops)','EdTech & HR':'Sampath P (edtech operator) or Kiran Vasireddy (upskilling)'};
-const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services']);
-function tokens(s){return new Set((String(s).toLowerCase().match(/[a-z][a-z0-9+\-]{2,}/g)||[]).filter(t=>!STOP.has(t)));}
-function read(){ return {name:$('#sName').value.trim()||'This company', sector:$('#sSector').value, stage:$('#sStage').value, size:parseFloat($('#sSize').value)||0, geo:$('#sGeo').value, founder:$('#sFounder').value, women:$('#sWomen').checked, ai:$('#sAI').checked, india:$('#sIndia').checked, traction:$('#sTraction').checked, desc:$('#sDesc').value}; }
+/* ---------- state ---------- */
+let founders=[]; let source='manual'; let evidence=[];
+function read(){ return {name:$('#sName').value.trim()||'This company', desc:$('#sDesc').value, sector:$('#sSector').value, stage:$('#sStage').value, size:parseFloat($('#sSize').value)||0, geo:$('#sGeo').value, founder:$('#sFounder').value, ai:$('#sAI').checked, india:$('#sIndia').checked, women:$('#sWomen').checked, traction:$('#sTraction').checked}; }
+function fill(c){
+  $('#sName').value=c.name||''; $('#sDesc').value=c.desc||''; $('#sSector').value=c.sector||D.sectors[0]; $('#sStage').value=c.stage||'Seed'; $('#sSize').value=c.size!=null&&c.size>0?c.size:''; $('#sGeo').value=c.geo||'india'; $('#sFounder').value=c.founder||'unknown'; $('#sAI').checked=!!c.ai; $('#sIndia').checked=!!c.india; $('#sWomen').checked=!!c.women; $('#sTraction').checked=!!c.traction;
+  founders=c.founders||[]; const fb=$('#sFounders'); fb.innerHTML=''; if(founders.length){ fb.append('Named on site: '); founders.forEach((f,i)=>fb.append(el('span',{},(i?', ':'')+f.name+(f.role?' ('+f.role+')':'')))); }
+  run();
+}
+
+/* ---------- scoring ---------- */
 function score(i){
-  const parts=[], notes=[], qs=[];
-  const stageS={'Pre-seed':25,'Seed':25,'Series A':22,'Series B':8,'Later':0}[i.stage]; parts.push(['Stage of round',stageS,25]);
-  if(stageS<10) notes.push(`Kalaari enters at pre-seed to Series A and only follows on later. A ${i.stage} entry is off-thesis unless it is already a portfolio company.`);
-  let sz; if(i.size<=0) sz=8; else if(i.size<0.5) sz=14; else if(i.size<=6) sz=20; else if(i.size<=12) sz=12; else sz=4; parts.push(['Round size',sz,20]);
-  if(i.size>6) notes.push(`At $${i.size}M the round is above the $0.5–5M first cheque. Kalaari would need a co-lead; ask who else is in.`);
-  if(i.size>0&&i.size<0.5) notes.push('Below $500K is smaller than Kalaari usually leads; it may fit as a CXXO or angel-style cheque.');
-  const inFocus=['AI & SaaS','DeepTech & Climate','Gaming & Media','Consumer & D2C','FinTech','HealthTech'].includes(i.sector); const secS=inFocus?20:10; parts.push(['Sector focus',secS,20]);
-  if(!inFocus) notes.push(`${i.sector} is not a named Fund IV focus. Kalaari has backed it before (see the reference list), so lead with why this one is a foundational-tech shift, not a category bet.`);
-  const geoS={india:15,global:12,other:3}[i.geo]; parts.push(['Geography',geoS,15]);
-  if(i.geo==='other') notes.push('Kalaari is India-first with a Bengaluru office and an India-only LP; outside-India HQs are rare exceptions.');
-  parts.push(['Founder-market fit',i.founder==='operator'?9:10,10]);
-  if(i.founder==='first') notes.push('"Potential over pedigree": first-time founders are explicitly welcome, so this costs nothing. The partner will probe earned insight instead.');
-  if(i.founder==='repeat') notes.push('Repeat founder: expect questions on what the last company taught them and why this problem now.');
-  let bonus=0; if(i.women){bonus+=5; notes.push('Woman founder-CEO: route through CXXO ($10M a year, champion advisor, community). Vatsala Hali runs the program.');} if(i.ai){bonus+=3; notes.push('AI-native: matches the vertical-AI tilt of 2024–26 deals. Expect the "speed to value, not speed to launch" question.');} if(i.india){bonus+=2;} parts.push(['Thesis and program bonus',bonus,10]);
-  if(i.traction) notes.push('Existing revenue is a plus in the meeting but not in the score; Kalaari regularly backs pre-revenue teams.');
-  qs.push('What is the earned insight: what do you know about this problem that incumbents do not?');
-  qs.push('How fast does a customer get to value after signing, in days?');
-  qs.push(i.ai?'What breaks in the product if the underlying model gets 10x cheaper tomorrow?':'Which foundational technology shift makes this possible now and not three years ago?');
-  qs.push(i.stage==='Pre-seed'||i.stage==='Seed'?'What does the next 18 months of milestones look like against this cheque?':'What did the last round buy, and what is different this time?');
-  const total=Math.min(100,parts.reduce((a,p)=>a+p[1],0));
-  const tk=tokens(i.desc+' '+i.name);
-  const adj=C.map(c=>{const ct=tokens(c.desc+' '+c.tags.join(' ')+' '+c.name); const hits=[]; tk.forEach(t=>{if(ct.has(t)) hits.push(t);}); const s=hits.length*3+(c.sector===i.sector?2:0)+(c.status==='Active'?1:0)+(c.year>=2020?1:0); return {c,s,hits};}).filter(a=>a.s>=3).sort((a,b)=>b.s-a.s).slice(0,5);
-  const verdict=total>=75?['strong','Strong fit. Worth a partner meeting this week.']:total>=55?['mid','Plausible fit. Screen on founder-market fit and speed to value.']:['weak','Weak fit against the stated filter. Pass, or refer to a better-suited fund.'];
-  return {i,parts,notes,qs,total,adj,verdict};
+  const T=[], P=[], tags=[];
+  // Thesis 60
+  const st={'Pre-seed':20,'Seed':20,'Series A':17,'Series B':6,'Later':0}[i.stage]; T.push(['Stage',st,20, st>=17?'pass':st>0?'part':'fail', st>=17?`${i.stage} is where Kalaari enters (pre-seed to Series A, first institutional cheque)`:`Kalaari enters at pre-seed to Series A; ${i.stage} is follow-on territory`]);
+  let cs, cl, ce; if(i.size<=0){cs=10;cl='part';ce='Round size unknown; Kalaari\'s first cheque is $0.5–5M';} else if(i.size<0.5){cs=10;cl='part';ce=`$${i.size}M is below the usual $0.5–5M first cheque; possible as a CXXO or angel-style ticket`;} else if(i.size<=6){cs=15;cl='pass';ce=`$${i.size}M sits inside the $0.5–5M first-cheque band (avg $2.2M seed, $4.9M Series A)`;} else if(i.size<=12){cs=8;cl='part';ce=`$${i.size}M is above the $5M first cheque; needs a co-lead`;} else {cs=2;cl='fail';ce=`$${i.size}M is far above Kalaari's cheque size`;} T.push(['Cheque',cs,15,cl,ce]);
+  const inF=!!FOCUS[i.sector]; T.push(['Sector',inF?15:7,15,inF?'pass':'part',inF?`${i.sector} is a named Fund IV focus (${FOCUS[i.sector]})`:`${i.sector} is not a named Fund IV focus; Kalaari has backed it before but leads with AI, DeepTech, SaaS, gaming, consumer, fintech`]);
+  const g={india:[10,'pass','India HQ: matches Kalaari\'s India-first mandate'],global:[8,'pass','India-based, global customers: fits "global from India" SaaS and DeepTech'],other:[2,'fail','Outside India: Kalaari is India-first with an India-only LP']}[i.geo]; T.push(['Geography',g[0],10,g[1],g[2]]);
+  // Portfolio 40
+  const same=F4.filter(c=>c.sector===i.sector); const n=same.length; const ps=n>=6?15:n>=3?12:n>=1?8:3; P.push(['Pattern',ps,15,n>=3?'pass':n>=1?'part':'fail',n?`Kalaari backed ${n} ${i.sector} compan${n===1?'y':'ies'} since 2020: ${same.slice(0,3).map(c=>c.name).join(', ')}${n>3?'…':''}`:`No ${i.sector} deal since 2020 in the traced portfolio`]);
+  const tk=tok(i.desc+' '+i.name);
+  const near=C.map(c=>{const ct=tok(c.desc+' '+c.tags.join(' ')+' '+c.name); const hits=[...tk].filter(t=>ct.has(t)); return {c,hits,s:hits.length*3+(c.sector===i.sector?2:0)+(c.year>=2020?1:0)};}).filter(a=>a.hits.length||a.c.sector===i.sector).sort((a,b)=>b.s-a.s).slice(0,4);
+  const best=near[0]; const bh=best?best.hits.length:0; const as=bh>=3?10:bh===2?7:bh===1?4:0; P.push(['Adjacency',as,10,bh>=2?'pass':bh===1?'part':'fail',best&&bh?`Closest: ${best.c.name} (shares ${best.hits.slice(0,4).join(', ')}); Kalaari knows this space`:'No portfolio company shares this product language; a new lane for Kalaari']);
+  const conflict=near.find(a=>a.c.status==='Active'&&a.c.sector===i.sector&&a.hits.length>=3); const soft=!conflict&&near.find(a=>a.c.status==='Active'&&a.c.sector===i.sector&&a.hits.length===2);
+  P.push(['Conflict',conflict?0:soft?5:10,10,conflict?'fail':soft?'part':'pass',conflict?`${conflict.c.name} (active, ${conflict.c.stage} ${conflict.c.year}) looks like a direct competitor; expect a pass unless the wedge is clearly different`:soft?`${soft.c.name} is adjacent and active; check for overlap before the meeting`:'No active portfolio company competes directly']);
+  const prec=same.find(c=>c.stage===i.stage)||C.find(c=>c.sector===i.sector&&c.stage===i.stage); P.push(['Precedent',prec?5:2,5,prec?'pass':'part',prec?`Kalaari has entered ${i.sector} at ${i.stage} before: ${prec.c?prec.c.name:prec.name} (${prec.year})`:`No ${i.stage} entry in ${i.sector} on record; Kalaari usually enters this sector at ${mode(C.filter(c=>c.sector===i.sector).map(c=>c.stage))||'seed'}`]);
+  if(i.women) tags.push(['cx','CXXO eligible: $10M a year for women founder-CEOs']); if(i.ai) tags.push(['','AI-native: matches the 2024–26 vertical-AI tilt']); if(i.founder==='first') tags.push(['','First-time founders: no penalty, "potential over pedigree"']); if(i.founder==='repeat') tags.push(['','Repeat founders']); if(i.traction) tags.push(['','Paying customers: noted, not scored']); if(i.india) tags.push(['','India-scale wedge']);
+  const t=T.reduce((a,x)=>a+x[1],0), p=P.reduce((a,x)=>a+x[1],0), total=t+p;
+  const verdict=total>=75?['strong','Strong fit. Worth a partner meeting.']:total>=55?['mid','Plausible. Screen on founder-market fit and speed to value.']:['weak','Weak fit against the stated filter.'];
+  return {i,T,P,t,p,total,near,tags,verdict};
+}
+function mode(arr){ const m={}; arr.forEach(x=>m[x]=(m[x]||0)+1); return Object.keys(m).sort((a,b)=>m[b]-m[a])[0]; }
+function part(title,items,sub,cls){
+  const box=el('div',{class:'part '+cls}); box.append(el('h3',{},title,el('span',{},sub)));
+  box.append(el('div',{class:'bar'},el('i',{style:'width:'+(100*items.reduce((a,x)=>a+x[1],0)/items.reduce((a,x)=>a+x[2],0))+'%'})));
+  items.forEach(x=>box.append(el('div',{class:'chk '+x[3]},el('span',{class:'ic'},x[3]==='pass'?'✓':x[3]==='part'?'~':'✗'),el('span',{},el('b',{},x[0]),el('span',{class:'ev'},x[4])),el('span',{class:'n'},x[1]+'/'+x[2]))));
+  return box;
 }
 function render(r){
-  const out=$('#sOut'); out.innerHTML='';
-  out.append(el('div',{class:'eyebrow'},'Fit score · '+r.i.name),
-    el('div',{class:'score'},el('div',{class:'big'},String(r.total),el('small',{},' / 100')),el('div',{},el('div',{class:'verdict '+r.verdict[0]},r.verdict[1]),el('div',{class:'route'},'Route to: '+(ROUTE[r.i.sector]||'Investment team')))),
-    el('div',{class:'breakdown'},...r.parts.map(p=>el('div',{class:'row'+(p[1]/p[2]<0.5?' warn':'')},el('span',{},p[0]),el('div',{class:'track'},el('div',{class:'fill',style:'width:'+(100*p[1]/p[2])+'%'})),el('span',{class:'n'},p[1]+' / '+p[2])))),
-    el('div',{class:'rh'},el('h3',{},'What the score is saying')), el('div',{class:'notes'},...r.notes.map(n=>el('div',{},n))),
-    el('div',{class:'rh'},el('h3',{},r.adj.length?'Nearest portfolio companies':'No close portfolio neighbour'),el('span',{class:'muted',style:'font-size:.8rem'},r.adj.length?'conflict check · intros':'clean lane')),
-    el('div',{class:'adj'},...r.adj.map(a=>el('div',{class:'a',style:'--sc:'+SLOT[a.c.sector]},el('span',{},el('b',{},a.c.name),' · '+a.c.sector),el('span',{},a.c.stage+' '+a.c.year+' · '+statusText(a.c)),el('span',{class:'why'},(a.hits.length?'shared: '+a.hits.slice(0,4).join(', '):'same sector')+(a.c.founders.length?' · founders: '+a.c.founders.slice(0,2).map(f=>f.name).join(', '):''))))),
-    el('div',{class:'rh'},el('h3',{},'Questions the partner will ask')), el('ol',{class:'qs'},...r.qs.map(q=>el('li',{},q))));
-  renderShortlist(out);
+  const out=$('#out'); out.innerHTML='';
+  out.append(el('div',{class:'score'},el('div',{class:'big'},String(r.total),el('small',{},' / 100')),el('div',{},el('div',{class:'verdict '+r.verdict[0]},r.verdict[1]),el('div',{class:'route'},'Route to: '+(ROUTE[r.i.sector]||'Investment team')))),
+    el('div',{class:'split'},part('Thesis fit',r.T,r.t+' / 60','th'),part('Portfolio fit',r.P,r.p+' / 40','pf')));
+  if(r.near.length){ const n=el('div',{class:'near'},el('h3',{},'Closest portfolio companies')); r.near.forEach(a=>n.append(el('div',{class:'row'+(a.c.status==='Active'&&a.c.sector===r.i.sector&&a.hits.length>=3?' conflict':''),style:'--sc:'+SLOT[a.c.sector]},el('span',{},el('b',{},a.c.name),' · '+a.c.sector),el('span',{},a.c.stage+' '+a.c.year+' · '+statusText(a.c)+(a.hits.length?' · shares '+a.hits.slice(0,3).join(', '):'')+(a.c.founders.length?' · '+a.c.founders[0].name:''))))); out.append(n); }
+  if(r.tags.length) out.append(el('div',{class:'tags'},...r.tags.map(t=>el('span',{class:'tag '+t[0]},t[1]))));
+  if(evidence.length) out.append(el('details',{style:'margin-top:12px;font-size:.85rem'},el('summary',{class:'muted',style:'cursor:pointer'},'Evidence read from the website'),el('ul',{style:'padding-left:18px;margin:6px 0 0;color:var(--ink-2)'},...evidence.map(e=>el('li',{},e)))));
+  const act=el('div',{class:'actions'},el('button',{class:'btn small',type:'button',onclick:()=>{const l=loadShort(); l.unshift({name:r.i.name,sector:r.i.sector,stage:r.i.stage,total:r.total,when:new Date().toISOString().slice(0,10)}); saveShort(l); render(r); flash('Saved');}},'Add to shortlist'),el('button',{class:'btn ghost',type:'button',onclick:()=>copy(memo(r))},'Copy memo'),el('span',{class:'toast',id:'toast'}));
+  out.append(act); renderShortlist(out,r);
 }
-function memo(r){
-  const L=[]; L.push(`${r.i.name} — Kalaari fit ${r.total}/100 (${r.verdict[1]})`); L.push(`${r.i.sector} · ${r.i.stage} · $${r.i.size}M · ${ {india:'India',global:'Global from India',other:'Outside India'}[r.i.geo] } · ${ {first:'first-time',repeat:'repeat',operator:'operator'}[r.i.founder] } founders${r.i.women?' · woman founder-CEO (CXXO)':''}${r.i.ai?' · AI-native':''}`);
-  L.push('Route to: '+(ROUTE[r.i.sector]||'Investment team')); L.push('');
-  L.push('Score: '+r.parts.map(p=>`${p[0]} ${p[1]}/${p[2]}`).join(' · ')); L.push('');
-  if(r.notes.length){L.push('Notes:'); r.notes.forEach(n=>L.push('- '+n)); L.push('');}
-  L.push('Nearest portfolio: '+(r.adj.length?r.adj.map(a=>`${a.c.name} (${a.c.stage} ${a.c.year}, ${statusText(a.c)})`).join('; '):'none')); L.push('');
-  L.push('Questions:'); r.qs.forEach((q,i)=>L.push(`${i+1}. ${q}`)); L.push(''); L.push('Pitch: '+r.i.desc.trim());
-  return L.join('\n');
-}
+function memo(r){ const L=[`${r.i.name} — Kalaari fit ${r.total}/100 (thesis ${r.t}/60, portfolio ${r.p}/40). ${r.verdict[1]}`,`${r.i.sector} · ${r.i.stage} · ${r.i.size?'$'+r.i.size+'M':'round size unknown'} · ${ {india:'India',global:'Global from India',other:'Outside India'}[r.i.geo] }`,'Route to: '+(ROUTE[r.i.sector]||'Investment team'),'',...r.T.map(x=>`Thesis · ${x[0]} ${x[1]}/${x[2]}: ${x[4]}`),...r.P.map(x=>`Portfolio · ${x[0]} ${x[1]}/${x[2]}: ${x[4]}`),'',r.near.length?'Closest: '+r.near.map(a=>`${a.c.name} (${a.c.stage} ${a.c.year}, ${statusText(a.c)})`).join('; '):'',founders.length?'Founders: '+founders.map(f=>f.name).join(', '):'','Pitch: '+r.i.desc.trim()]; return L.filter(x=>x!==undefined).join('\n'); }
+function flash(t){ const x=$('#toast'); if(!x) return; x.textContent=t; setTimeout(()=>{ if(x.textContent===t) x.textContent=''; },2200); }
+async function copy(t){ try{ await navigator.clipboard.writeText(t); flash('Memo copied'); }catch(e){ const ta=el('textarea',{style:'position:fixed;left:-9999px'},t); document.body.append(ta); ta.select(); try{ document.execCommand('copy'); flash('Memo copied'); }catch(e2){ flash('Copy blocked'); } ta.remove(); } }
 function loadShort(){ try{ return JSON.parse(localStorage.getItem('kalaari.shortlist')||'[]'); }catch(e){ return []; } }
 function saveShort(l){ try{ localStorage.setItem('kalaari.shortlist',JSON.stringify(l.slice(0,30))); }catch(e){} }
-function renderShortlist(out){ const l=loadShort(); const box=el('div',{class:'shortlist'},el('b',{},'Shortlist'),el('span',{class:'muted'},' · saved in this browser only'));
-  if(!l.length) box.append(el('p',{class:'muted',style:'margin-top:4px'},'Nothing saved yet. Score a deal and press "Add to shortlist".'));
-  else { const ul=el('ul'); l.forEach((s,i)=>{ const rm=el('button',{class:'tog',type:'button',style:'margin-left:8px'},'remove'); rm.onclick=()=>{ const n=loadShort(); n.splice(i,1); saveShort(n); render(last); }; ul.append(el('li',{},`${s.name} · ${s.sector} · ${s.stage} · `,el('b',{},s.total+'/100'),el('span',{class:'muted'},' · '+s.when),rm)); }); box.append(ul); }
-  out.append(box); }
-let last=score(read());
-function run(){ last=score(read()); render(last); return last; }
-function flash(t){ const x=$('#toast'); x.textContent=t; setTimeout(()=>{ if(x.textContent===t) x.textContent=''; },2200); }
-$('#sRun').onclick=run;
-$('#sSave').onclick=()=>{ const r=run(); const l=loadShort(); l.unshift({name:r.i.name,sector:r.i.sector,stage:r.i.stage,total:r.total,when:new Date().toISOString().slice(0,10)}); saveShort(l); render(r); flash('Saved'); };
-$('#sCopy').onclick=async()=>{ const r=run(); const t=memo(r); try{ await navigator.clipboard.writeText(t); flash('Memo copied'); }catch(e){ const ta=el('textarea',{style:'position:fixed;left:-9999px'},t); document.body.append(ta); ta.select(); try{ document.execCommand('copy'); flash('Memo copied'); }catch(e2){ flash('Copy blocked by browser'); } ta.remove(); } };
-['#sSector','#sStage','#sSize','#sGeo','#sFounder','#sWomen','#sAI','#sIndia','#sTraction'].forEach(s=>$(s).addEventListener('change',run));
-render(last);
+function renderShortlist(out,r){ const l=loadShort(); if(!l.length) return; const box=el('div',{class:'shortlist'},el('b',{},'Shortlist')); const ul=el('ul'); l.forEach((s,i)=>{ const rm=el('button',{class:'tog',type:'button',onclick:()=>{const n=loadShort(); n.splice(i,1); saveShort(n); render(r);}},'remove'); ul.append(el('li',{},`${s.name} · ${s.sector} · ${s.stage} · `,el('b',{},s.total+'/100'),' · '+s.when,rm)); }); box.append(ul); out.append(box); }
+let last=null;
+function run(){ last=score(read()); render(last); }
+['#sName','#sDesc','#sSector','#sStage','#sSize','#sGeo','#sFounder','#sAI','#sIndia','#sWomen','#sTraction'].forEach(s=>{ $(s).addEventListener('input',run); $(s).addEventListener('change',run); });
+
+/* ---------- website extraction ---------- */
+function msg(t,cls){ const m=$('#msg'); m.hidden=!t; m.className='msg'+(cls?' '+cls:''); m.textContent=t||''; }
+async function scan(url){
+  url=url.trim(); if(!url) return; $('#url').value=url;
+  const go=$('#go'); go.disabled=true; go.textContent='Reading site…'; msg('Reading '+url.replace(/^https?:\/\//,'')+' …');
+  try{
+    const r=await fetch('/api/extract?url='+encodeURIComponent(url));
+    if(r.status===404){ msg('Website extraction runs on the deployed app (Vercel). Here you can fill in the details yourself.','err'); return; }
+    const j=await r.json();
+    if(!j.ok){ msg(j.error||'Could not read that site.','err'); return; }
+    const c=j.company; evidence=c.evidence||[]; source=j.mode;
+    fill({name:c.name, desc:c.oneLiner+(c.keywords&&c.keywords.length?' Keywords: '+c.keywords.join(', ')+'.':''), sector:c.sector, stage:c.stageGuess&&c.stageGuess!=='unknown'?c.stageGuess:'Seed', size:c.roundSizeUsdM, geo:c.geo, founder:c.founderProfile||'unknown', ai:c.aiNative, india:c.indiaMarket, women:c.womenLed, traction:c.hasTraction, founders:c.founders||[]});
+    $('#srcnote').textContent=(j.mode==='claude'?'Extracted by Claude from ':'Extracted from ')+j.pagesRead.length+' page'+(j.pagesRead.length>1?'s':'')+'. Edit anything.';
+    msg((j.mode==='claude'?'Read the site with Claude. ':'Read the site (keyword extraction; add ANTHROPIC_API_KEY on Vercel for Claude-quality extraction). ')+(j.warning||'')+'Check the round and stage: sites rarely state them.','ok');
+    $('#work').scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(e){ msg('Could not reach the extractor: '+(e.message||e),'err'); }
+  finally{ go.disabled=false; go.textContent='Scan'; }
+}
+$('#urlform').addEventListener('submit',e=>{e.preventDefault(); scan($('#url').value);});
+document.querySelectorAll('.try button[data-u]').forEach(b=>b.onclick=()=>scan(b.dataset.u));
+$('#manual').onclick=()=>{ evidence=[]; $('#srcnote').textContent='Edit anything; the score updates live.'; fill({name:'',desc:'',sector:'AI & SaaS',stage:'Seed',size:null,geo:'india',founder:'first',ai:true,india:true,women:false,traction:false,founders:[]}); $('#sName').focus(); $('#work').scrollIntoView({behavior:'smooth',block:'start'}); };
+
+/* example at rest, marked as an example */
+$('#srcnote').textContent='Example deal. Paste a website above or edit these fields.';
+fill({name:'Orbitly (example)',desc:'Ground-station-as-a-service for small satellite operators; AI scheduling of downlink capacity across India and South-East Asia.',sector:'DeepTech & Climate',stage:'Seed',size:2.5,geo:'india',founder:'first',ai:true,india:true,women:false,traction:false,founders:[]});
 
 /* ---------- portfolio reference ---------- */
 D.sectors.forEach(s=>$('#fSector').append(el('option',{},s)));
 ['Active','Acquired','Exited','IPO','Shut down'].forEach(s=>$('#fStatus').append(el('option',{},s)));
-$('#nTraced').textContent=C.length;
-let view='table';
-function filtered(){
-  const q=$('#q').value.trim().toLowerCase(), s=$('#fSector').value, ss=$('#fStatus').value, e=$('#fEra').value;
-  return C.filter(c=> (!s||c.sector===s)&&(!ss||c.status===ss)&&(!e||era(c.year)===e)&&(!q||[c.name,c.desc,c.hq,c.tags.join(' '),c.founders.map(f=>f.name).join(' '),c.outcome].join(' ').toLowerCase().includes(q)) ).sort((a,b)=>b.year-a.year||a.name.localeCompare(b.name));
+function renderRef(){
+  const q=$('#q').value.trim().toLowerCase(), s=$('#fSector').value, ss=$('#fStatus').value;
+  const rows=C.filter(c=>(!s||c.sector===s)&&(!ss||c.status===ss)&&(!q||[c.name,c.desc,c.hq,c.tags.join(' '),c.founders.map(f=>f.name).join(' ')].join(' ').toLowerCase().includes(q))).sort((a,b)=>b.year-a.year||a.name.localeCompare(b.name));
+  $('#count').textContent=rows.length+' of '+C.length;
+  const t=el('table'); t.append(el('thead',{},el('tr',{},...['Company','Sector','Entry','Year','Status','HQ','Founders'].map(h=>el('th',{},h)))));
+  const b=el('tbody'); rows.forEach(c=>b.append(el('tr',{},el('td',{},el('b',{},c.name)),el('td',{},c.sector),el('td',{},c.stage),el('td',{class:'num'},String(c.year)),el('td',{},statusText(c)),el('td',{},c.hq),el('td',{},c.founders.map(f=>f.name).join(', '))))); t.append(b);
+  const w=$('#table'); w.innerHTML=''; w.append(t);
 }
-function card(c){
-  const a=ageLabel(c.founderAge);
-  const founders=el('div',{class:'founders'});
-  if(!c.founders.length) founders.append(el('span',{},'Founders not verified in sources'));
-  c.founders.forEach(f=>founders.append(el('div',{},f.name+' ',el('span',{},'· '+f.role+(f.note?' · '+f.note:'')))));
-  const chips=el('div',{class:'chips'},el('span',{class:'chip sec',style:'background:'+SLOT[c.sector]},c.sector));
-  if(c.program) chips.append(el('span',{class:'chip prog'},c.program));
-  if(c.aiNative) chips.append(el('span',{class:'chip ai'},'AI-native'));
-  c.tags.slice(0,3).forEach(t=>chips.append(el('span',{class:'chip'},t)));
-  const src=el('details',{},el('summary',{},'Latest + sources'),el('p',{style:'margin:6px 0'},c.latest),...c.sources.map(u=>el('a',{href:u,target:'_blank',rel:'noopener'},u.replace(/^https?:\/\//,''))));
-  return el('article',{class:'co',style:'--sc:'+SLOT[c.sector]},
-    el('header',{},el('div',{},el('h3',{},c.name),el('div',{class:'meta'},`${c.stage} entry · ${c.year} · ${c.hq||'HQ n/a'} · founded ${c.founded}`)),el('span',{class:'status '+statusClass(c)},statusText(c))),
-    el('p',{class:'desc'},c.desc), chips,
-    el('div',{style:'display:flex;justify-content:space-between;gap:8px;align-items:flex-start'},founders, a?el('span',{class:'age'+(a.rep?' rep':''),title:a.basis},'age '+a.t+(a.rep?'':' est.')):el('span',{class:'age',title:'No dated public source'},'age n/a')),
-    src);
-}
-function renderExplorer(){
-  const rows=filtered(); $('#count').textContent=rows.length+' of '+C.length+' companies';
-  const cards=$('#cards'), tbl=$('#table'); cards.innerHTML=''; tbl.innerHTML='';
-  if(view==='cards'){ cards.hidden=false; tbl.hidden=true; rows.forEach(c=>cards.append(card(c))); }
-  else { cards.hidden=true; tbl.hidden=false;
-    const t=el('table'); t.append(el('thead',{},el('tr',{},...['Company','Sector','Entry','Year','Status','HQ','Founders','Founder age','Program'].map(h=>el('th',{},h)))));
-    const b=el('tbody'); rows.forEach(c=>{const a=ageLabel(c.founderAge); b.append(el('tr',{},el('td',{},el('b',{},c.name)),el('td',{},c.sector),el('td',{},c.stage),el('td',{class:'num'},String(c.year)),el('td',{},statusText(c)),el('td',{},c.hq),el('td',{},c.founders.map(f=>f.name).join(', ')),el('td',{},a?a.t+(a.rep?' (reported)':' (est.)'):'n/a'),el('td',{},c.program)));}); t.append(b); tbl.append(t); }
-}
-['#q','#fSector','#fStatus','#fEra'].forEach(s=>$(s).addEventListener('input',renderExplorer));
-$('#vCards').onclick=()=>{view='cards';$('#vCards').classList.add('on');$('#vTable').classList.remove('on');renderExplorer();};
-$('#vTable').onclick=()=>{view='table';$('#vTable').classList.add('on');$('#vCards').classList.remove('on');renderExplorer();};
-renderExplorer();
-
-/* ---------- scroll spy ---------- */
-const links=[...$('#tabs').querySelectorAll('a')]; const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
-const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id));}});},{rootMargin:'-40% 0px -55% 0px'});
-secs.forEach(s=>s&&io.observe(s));
+['#q','#fSector','#fStatus'].forEach(s=>$(s).addEventListener('input',renderRef)); renderRef();
 </script>

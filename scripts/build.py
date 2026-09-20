@@ -14,7 +14,7 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "kalaari.json"
 TEMPLATE = ROOT / "src" / "index.template.html"
-OUT = ROOT / "index.html"
+OUT = ROOT / "public" / "index.html"
 
 MARK = re.compile(r"/\*__DATA__\*/.*?/\*__END__\*/", re.S)
 
@@ -37,6 +37,7 @@ def main() -> int:
         print("template is missing the /*__DATA__*/ … /*__END__*/ marker", file=sys.stderr)
         return 1
     html = MARK.sub(lambda _: blob, html, count=1)
+    OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(html, encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} ({len(html)//1024} KB, {len(ids)} companies)")
     return 0

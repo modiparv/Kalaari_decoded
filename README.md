@@ -1,30 +1,49 @@
 # Kalaari Decoded
 
-A **deal-fit scanner** for the [Kalaari Capital](https://kalaari.com) investment team, built from everything the
-firm states publicly about what it backs. Enter the basics of an inbound deck and get a 0–100 fit score, the
-nearest portfolio companies (for conflict checks or founder intros), the team member it should route to, the
-questions a partner is likely to ask, and a plain-text memo to paste into a deal note.
+Paste a startup's website and see whether [Kalaari Capital](https://kalaari.com) would back it. The page reads
+the site, fills in the deal details, and scores them against exactly two things: **Kalaari's public investment
+thesis** (60 points) and **Kalaari's portfolio** of 91 traced companies (40 points). Every point comes with the
+evidence behind it, the closest portfolio companies are listed for conflict checks or intros, and a one-click memo
+goes to the clipboard.
 
 Live: https://kalaari-decoded-modiparvs-projects.vercel.app
 
-Open `index.html` in any browser. It is one self-contained file: no server, no build step needed to view it.
+## How the score works
 
-## What is inside
-
-| Section | What it does |
+| Thesis · 60 | Portfolio · 40 |
 |---|---|
-| Deal-fit scanner (hero) | Six checks worth 100 points: stage of round, round size, sector focus, geography, founder-market fit, thesis/program bonus. Output: score and verdict, per-check breakdown, notes, nearest portfolio companies with the shared keywords, partner questions, a per-browser shortlist, and "Copy memo" |
-| How it scores | The rubric, one card per check, plus Kalaari's filter in its own words (stages, cheque range, averages, geography, founder criteria, Fund IV focus areas, how to pitch) |
-| Portfolio reference | The 91 traced companies the scanner compares against, as a table or cards, filterable by sector, status and fund era, with founders and founder-age signals |
+| Stage of round (20): pre-seed to Series A, first institutional cheque | Pattern (15): companies in this sector Kalaari backed since 2020 |
+| Cheque (15): $0.5–5M first cheque; avg $2.2M seed, $4.9M Series A | Adjacency (10): keyword overlap with the nearest portfolio company |
+| Sector (15): the named Fund IV focus areas | Conflict (10): full points unless an active portfolio company is a direct competitor |
+| Geography (10): India-first, India-only LP | Precedent (5): Kalaari has entered this sector at this stage before |
+
+Founder signals (first-time, repeat, woman founder-CEO, AI-native, traction) are shown as tags, not points,
+because Kalaari says "potential over pedigree" and backs pre-traction teams.
+
+## Website extraction
+
+`api/extract.js` is a Vercel serverless function. `GET /api/extract?url=<site>` fetches the homepage and one
+about/team page server-side and returns structured fields (name, one-liner, sector, HQ, founders, founding year,
+AI-native, funding stage and size if mentioned, evidence).
+
+- With `ANTHROPIC_API_KEY` set in the Vercel project, the page text is sent to Claude (`claude-opus-5`) with a
+  strict output schema. This is the accurate mode.
+- Without it, a keyword/regex heuristic runs. It gets sector, HQ and founders right often enough to triage, but
+  check stage and round size by hand (sites rarely state them).
+- Only public http(s) hosts are fetched; localhost and private ranges are refused.
+
+Set the key under Vercel → Project → Settings → Environment Variables → `ANTHROPIC_API_KEY`, then redeploy.
 
 ## Files
 
 ```
-index.html                 built dashboard (do not edit by hand)
+public/index.html          built page (do not edit by hand)
 src/index.template.html    page source; data is inlined at the /*__DATA__*/ marker
+api/extract.js             Vercel function: website → structured deal fields
 data/kalaari.json          the dataset: firm, thesis, funds, programs, team, companies
-scripts/build.py           inlines data/kalaari.json into src/ → index.html, with validation
+scripts/build.py           inlines data/kalaari.json into src/ → public/index.html, with validation
 scripts/scrape_kalaari.py  pulls fresh portfolio/team/why-we-invested pages from kalaari.com
+vercel.json                static output from public/, function timeout for api/extract
 ```
 
 ## Refreshing the data

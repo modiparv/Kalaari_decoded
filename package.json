@@ -1,0 +1,17 @@
+{
+  "name": "kalaari-decoded",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deal-fit scanner for Kalaari Capital: scores a startup against Kalaari's public investment thesis and portfolio.",
+  "scripts": {
+    "build": "python3 scripts/build.py"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": ">=0.70.0 <2",
+    "zod": "^3.25.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
