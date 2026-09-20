@@ -40,7 +40,7 @@ p{margin:0}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:54px;flex-wrap:wrap;padding-block:6px}
 .brand{font-family:var(--display);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:10px}
 .brand i{display:inline-block;width:11px;height:11px;background:var(--accent);transform:rotate(45deg);border-radius:2px}
-.basis{font-size:.82rem;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap}
+.basis{font-size:.82rem;color:var(--muted)}
 .basis b{color:var(--ink-2);font-weight:600}
 /* hero */
 .hero{padding-block:40px 16px;text-align:center}
@@ -228,7 +228,7 @@ D.sectors.forEach(s=>$('#sSector').append(el('option',{},s)));
 
 const FOCUS = {'AI & SaaS':'vertical AI and SaaS','DeepTech & Climate':'DeepTech, SpaceTech and climate','Gaming & Media':'gaming and the creator economy','Consumer & D2C':'consumer and D2C','FinTech':'fintech','HealthTech':'healthtech'};
 const ROUTE={'AI & SaaS':'Jayraj Bharat Patel (AI-driven software), then Sampath P','Gaming & Media':'Harshit Kumar (gaming, SMB-tech)','Consumer & D2C':'Pranav Koshal; Rajesh Raju for D2C','FinTech':'Pranav Koshal; Kiran Vasireddy for sales-tech and distribution','DeepTech & Climate':'Vani Kola\'s office, with Sampath P','HealthTech':'Sampath P','B2B Commerce & Logistics':'Kiran Vasireddy (logistics, revenue ops)','EdTech & HR':'Sampath P or Kiran Vasireddy (upskilling)'};
-const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services','your','our','you','are','can','all','more','new','one','best','via','through','every','any','get','use','used','how','what','who','also','has','have']);
+const STOP=new Set(['and','the','for','with','that','this','from','into','across','their','platform','company','india','indian','startup','startups','based','using','built','build','building','make','makes','help','helps','world','first','largest','leading','online','digital','tech','technology','solutions','solution','products','product','service','services','your','our','you','are','can','all','more','new','one','best','via','through','every','any','get','use','used','how','what','who','also','has','have','small','large','big','top','fast','faster','better','across','between','without','within','over','under','out','than','then','them','they','its','operators','customers','users','business','businesses','companies','india\'s','keywords']);
 const tok = s => new Set((String(s).toLowerCase().match(/[a-z][a-z0-9+\-]{2,}/g)||[]).filter(t=>!STOP.has(t)));
 
 /* ---------- state ---------- */
