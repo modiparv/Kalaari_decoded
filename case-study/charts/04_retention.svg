@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+<rect width="640" height="440" fill="#fcfcfb"/>
+<text x="70" y="28" font-size="17" font-weight="600" fill="#0b0b0b">Annual ARR retention</text>
+<text x="70" y="48" font-size="12.5" fill="#52514e">Gross 53-57%, net 60-65%. Healthy B2B SaaS: 85-90%+ gross, 100%+ net (the line).</text>
+<line x1="70" y1="384.0" x2="616" y2="384.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="62" y="388.0" font-size="11" text-anchor="end" fill="#898781">0%</text>
+<line x1="70" y1="332.0" x2="616" y2="332.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="336.0" font-size="11" text-anchor="end" fill="#898781">20%</text>
+<line x1="70" y1="280.0" x2="616" y2="280.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="284.0" font-size="11" text-anchor="end" fill="#898781">40%</text>
+<line x1="70" y1="228.0" x2="616" y2="228.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="232.0" font-size="11" text-anchor="end" fill="#898781">60%</text>
+<line x1="70" y1="176.0" x2="616" y2="176.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="180.0" font-size="11" text-anchor="end" fill="#898781">80%</text>
+<line x1="70" y1="124.0" x2="616" y2="124.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="128.0" font-size="11" text-anchor="end" fill="#898781">100%</text>
+<line x1="70" y1="72.0" x2="616" y2="72.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="76.0" font-size="11" text-anchor="end" fill="#898781">120%</text>
+<line x1="70" y1="124.0" x2="616" y2="124.0" stroke="#52514e" stroke-width="1"/>
+<text x="161.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3</text>
+<text x="343.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4</text>
+<text x="525.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5</text>
+<rect x="105.6" y="237.3" width="54.4" height="145.7" rx="2" fill="#2a78d6"/>
+<rect x="162.0" y="228.2" width="54.4" height="154.8" rx="2" fill="#eb6834"/>
+<rect x="287.6" y="246.9" width="54.4" height="136.1" rx="2" fill="#2a78d6"/>
+<rect x="344.0" y="229.4" width="54.4" height="153.6" rx="2" fill="#eb6834"/>
+<rect x="469.6" y="240.4" width="54.4" height="142.6" rx="2" fill="#2a78d6"/>
+<rect x="526.0" y="216.6" width="54.4" height="166.4" rx="2" fill="#eb6834"/>
+<text x="132.8" y="230.3" font-size="11" text-anchor="middle" fill="#52514e">57%</text>
+<text x="314.8" y="239.9" font-size="11" text-anchor="middle" fill="#52514e">53%</text>
+<text x="496.8" y="233.4" font-size="11" text-anchor="middle" fill="#52514e">56%</text>
+<text x="189.2" y="221.2" font-size="11" text-anchor="middle" fill="#52514e">60%</text>
+<text x="371.2" y="222.4" font-size="11" text-anchor="middle" fill="#52514e">60%</text>
+<text x="553.2" y="209.6" font-size="11" text-anchor="middle" fill="#52514e">65%</text>
+<rect x="70" y="422" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="85" y="431" font-size="11.5" fill="#52514e">Gross revenue retention</text>
+<rect x="268.6" y="422" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="283.6" y="431" font-size="11.5" fill="#52514e">Net revenue retention</text>
+<text x="616" y="431" font-size="11" text-anchor="end" fill="#898781">line = 100%</text>
+</svg>

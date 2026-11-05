@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="440" viewBox="0 0 640 440" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+<rect width="640" height="440" fill="#fcfcfb"/>
+<text x="70" y="28" font-size="17" font-weight="600" fill="#0b0b0b">Annual operating expenses by line (excluding COGS)</text>
+<text x="70" y="48" font-size="12.5" fill="#52514e">People cost fell $3.7M in Y5; every non-people line rose. USD.</text>
+<line x1="70" y1="384.0" x2="616" y2="384.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="62" y="388.0" font-size="11" text-anchor="end" fill="#898781">$0</text>
+<line x1="70" y1="306.0" x2="616" y2="306.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="310.0" font-size="11" text-anchor="end" fill="#898781">$5M</text>
+<line x1="70" y1="228.0" x2="616" y2="228.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="232.0" font-size="11" text-anchor="end" fill="#898781">$10M</text>
+<line x1="70" y1="150.0" x2="616" y2="150.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="154.0" font-size="11" text-anchor="end" fill="#898781">$15M</text>
+<line x1="70" y1="72.0" x2="616" y2="72.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="76.0" font-size="11" text-anchor="end" fill="#898781">$20M</text>
+<text x="124.6" y="402" font-size="11" text-anchor="middle" fill="#898781">Y1</text>
+<text x="233.8" y="402" font-size="11" text-anchor="middle" fill="#898781">Y2</text>
+<text x="343.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3</text>
+<text x="452.2" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4</text>
+<text x="561.4" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5</text>
+<rect x="91.7" y="364.6" width="65.7" height="18.4" rx="2" fill="#2a78d6"/>
+<rect x="91.7" y="360.5" width="65.7" height="2.1" rx="2" fill="#eb6834"/>
+<rect x="91.7" y="355.7" width="65.7" height="2.9" rx="2" fill="#1baf7a"/>
+<rect x="91.7" y="351.0" width="65.7" height="2.7" rx="2" fill="#eda100"/>
+<rect x="200.9" y="329.6" width="65.7" height="53.4" rx="2" fill="#2a78d6"/>
+<rect x="200.9" y="318.1" width="65.7" height="9.5" rx="2" fill="#eb6834"/>
+<rect x="200.9" y="306.9" width="65.7" height="9.2" rx="2" fill="#1baf7a"/>
+<rect x="200.9" y="297.1" width="65.7" height="7.8" rx="2" fill="#eda100"/>
+<rect x="310.1" y="235.4" width="65.7" height="147.6" rx="2" fill="#2a78d6"/>
+<rect x="310.1" y="201.9" width="65.7" height="31.6" rx="2" fill="#eb6834"/>
+<rect x="310.1" y="176.0" width="65.7" height="23.9" rx="2" fill="#1baf7a"/>
+<rect x="310.1" y="154.9" width="65.7" height="19.1" rx="2" fill="#eda100"/>
+<rect x="419.3" y="200.7" width="65.7" height="182.3" rx="2" fill="#2a78d6"/>
+<rect x="419.3" y="164.5" width="65.7" height="34.1" rx="2" fill="#eb6834"/>
+<rect x="419.3" y="133.4" width="65.7" height="29.2" rx="2" fill="#1baf7a"/>
+<rect x="419.3" y="109.4" width="65.7" height="21.9" rx="2" fill="#eda100"/>
+<rect x="528.5" y="257.9" width="65.7" height="125.1" rx="2" fill="#2a78d6"/>
+<rect x="528.5" y="221.6" width="65.7" height="34.3" rx="2" fill="#eb6834"/>
+<rect x="528.5" y="183.7" width="65.7" height="35.9" rx="2" fill="#1baf7a"/>
+<rect x="528.5" y="155.3" width="65.7" height="26.5" rx="2" fill="#eda100"/>
+<text x="124.6" y="344.0" font-size="11" text-anchor="middle" fill="#52514e">$2.2M</text>
+<text x="233.8" y="290.1" font-size="11" text-anchor="middle" fill="#52514e">$5.6M</text>
+<text x="343.0" y="147.9" font-size="11" text-anchor="middle" fill="#52514e">$14.7M</text>
+<text x="452.2" y="102.4" font-size="11" text-anchor="middle" fill="#52514e">$17.7M</text>
+<text x="561.4" y="148.3" font-size="11" text-anchor="middle" fill="#52514e">$14.7M</text>
+<rect x="70" y="422" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="85" y="431" font-size="11.5" fill="#52514e">People</text>
+<rect x="146.2" y="422" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="161.2" y="431" font-size="11.5" fill="#52514e">S&amp;M (non-people)</text>
+<rect x="294.4" y="422" width="10" height="10" rx="2" fill="#1baf7a"/>
+<text x="309.4" y="431" font-size="11.5" fill="#52514e">G&amp;A</text>
+<rect x="349.0" y="422" width="10" height="10" rx="2" fill="#eda100"/>
+<text x="364.0" y="431" font-size="11.5" fill="#52514e">Rent &amp; others</text>
+</svg>

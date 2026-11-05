@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+<rect width="640" height="360" fill="#fcfcfb"/>
+<text x="70" y="28" font-size="17" font-weight="600" fill="#0b0b0b">Contracted ARR per FTE</text>
+<text x="70" y="48" font-size="12.5" fill="#52514e">Up 46% in Y5, from cuts more than from growth. USD.</text>
+<line x1="70" y1="304.0" x2="616" y2="304.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="62" y="308.0" font-size="11" text-anchor="end" fill="#898781">$0</text>
+<line x1="70" y1="257.6" x2="616" y2="257.6" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="261.6" font-size="11" text-anchor="end" fill="#898781">$20k</text>
+<line x1="70" y1="211.2" x2="616" y2="211.2" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="215.2" font-size="11" text-anchor="end" fill="#898781">$40k</text>
+<line x1="70" y1="164.8" x2="616" y2="164.8" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="168.8" font-size="11" text-anchor="end" fill="#898781">$60k</text>
+<line x1="70" y1="118.4" x2="616" y2="118.4" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="122.4" font-size="11" text-anchor="end" fill="#898781">$80k</text>
+<line x1="70" y1="72.0" x2="616" y2="72.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="76.0" font-size="11" text-anchor="end" fill="#898781">$100k</text>
+<text x="83.7" y="322" font-size="11" text-anchor="middle" fill="#898781">Y1 Q1</text>
+<text x="138.2" y="322" font-size="11" text-anchor="middle" fill="#898781">Y1 Q3</text>
+<text x="192.8" y="322" font-size="11" text-anchor="middle" fill="#898781">Y2 Q1</text>
+<text x="247.4" y="322" font-size="11" text-anchor="middle" fill="#898781">Y2 Q3</text>
+<text x="302.1" y="322" font-size="11" text-anchor="middle" fill="#898781">Y3 Q1</text>
+<text x="356.6" y="322" font-size="11" text-anchor="middle" fill="#898781">Y3 Q3</text>
+<text x="411.2" y="322" font-size="11" text-anchor="middle" fill="#898781">Y4 Q1</text>
+<text x="465.9" y="322" font-size="11" text-anchor="middle" fill="#898781">Y4 Q3</text>
+<text x="520.5" y="322" font-size="11" text-anchor="middle" fill="#898781">Y5 Q1</text>
+<text x="575.0" y="322" font-size="11" text-anchor="middle" fill="#898781">Y5 Q3</text>
+<polyline points="83.7,303.1 111.0,298.0 138.2,284.3 165.6,256.8 192.8,251.6 220.2,238.2 247.4,232.3 274.8,196.6 302.1,205.0 329.4,206.7 356.6,197.3 383.9,178.2 411.2,161.9 438.6,173.2 465.9,165.7 493.1,152.5 520.5,171.3 547.8,137.5 575.0,94.0 602.4,82.9" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+<circle cx="83.7" cy="303.1" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="111.0" cy="298.0" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="138.2" cy="284.3" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="165.6" cy="256.8" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="192.8" cy="251.6" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="220.2" cy="238.2" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="247.4" cy="232.3" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="274.8" cy="196.6" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="302.1" cy="205.0" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="329.4" cy="206.7" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="356.6" cy="197.3" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="383.9" cy="178.2" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="411.2" cy="161.9" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="438.6" cy="173.2" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="465.9" cy="165.7" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="493.1" cy="152.5" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="520.5" cy="171.3" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="547.8" cy="137.5" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="575.0" cy="94.0" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<circle cx="602.4" cy="82.9" r="3.5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="493.1" y="144.5" font-size="11" text-anchor="middle" fill="#52514e">$65k</text>
+<text x="602.4" y="74.9" font-size="11" text-anchor="middle" fill="#52514e">$95k</text>
+</svg>
