@@ -8,7 +8,7 @@
 
 ## 1. Verdict in one paragraph
 
-This is an ~$8.4M contracted-ARR, 135-customer SaaS business that has spent Y4 and Y5 running hard to stand still. Headline ARR grew 26% in Y5 and the team was cut 24%, which is what the founders will present. Underneath, the business retains only 53-57% of its ARR each year (net 60-65%), recognised revenue fell 2-6% in Y5, EBITDA burn is still ~$10M a year against $11.7M of cash, and the Y5 cash burn was flattered by $3.1M of customer prepayments that will reverse if churn continues. The next financing is 12-18 months away and will be priced on retention, not on the ARR headline. Retention is the only problem that matters at this board.
+This is an ~$8.4M contracted-ARR, 135-customer SaaS business that has spent Y4 and Y5 running hard to stand still. Headline ARR grew 26% in Y5 and headcount fell 14% in the year (24% from the peak), which is what the founders will present. Underneath, the business retains only 53-57% of its ARR each year (net 60-65%), recognised revenue fell 2-6% in Y5, EBITDA burn is still ~$10M a year against $11.7M of cash, and the Y5 cash burn was flattered by $3.1M of customer prepayments that will reverse if churn continues. The next financing is 12-18 months away and will be priced on retention, not on the ARR headline. Retention is the only problem that matters at this board.
 
 ## 2. Key takeaways
 
@@ -78,7 +78,7 @@ Cumulative EBITDA burn over five years is ~$41M against $9.8M of equity left on 
 | Logo churn (on opening customers) | 44% | 45% | 36% |
 | Churned ARR per churned logo ($k) | 33 | 43 | 63 |
 
-**What the numbers say.** Gross retention in the mid-50s is far outside any B2B SaaS benchmark (SMB 80-85%, mid-market and enterprise 90%+). The modest improvement in net retention in Y5 comes from expansion tripling to $609k, which is genuinely encouraging, not from churn falling: churned ARR rose again in Y5.
+**What the numbers say.** Gross retention in the mid-50s is far outside any B2B SaaS benchmark (SMB 80-85%, mid-market and enterprise 90%+). The modest improvement in net retention in Y5 comes from expansion rising 53% to $609k, which is genuinely encouraging, not from churn falling: churned ARR rose again in Y5.
 
 **Who is leaving.** Churned ARR per logo has doubled from $33k to $63k, and in Y5 Q1 it was $73k, above the $62k average account. Larger-than-average customers left in Y5. That is worse than small-account churn because those are the accounts that justify the CAC.
 
@@ -127,7 +127,7 @@ Cumulative EBITDA burn over five years is ~$41M against $9.8M of equity left on 
 
 **People.** FTE peaked at 116 in Y4 Q3 and ended Y5 at 88. People cost per average FTE was $109k in Y4 and $87k in Y5, high for an India-based team and worth understanding (senior or overseas staff, ESOP charges, contractors). Y5 Q2 people cost dipped to $1.66M against $2.35M before and $2.07M after, which looks like a one-off credit of roughly $0.5M (bonus or ESOP reversal). If so, the underlying Y5 burn is ~$0.5M higher than reported.
 
-**Non-people costs went the wrong way.** With 24% fewer people, rent rose 19% and G&A 21%. Y5 Q1 non-people opex was $1.9M versus $1.3M in Y4 Q4, with S&M and G&A both recorded at exactly $682,053.99. Either a one-off was booked across lines or the numbers are allocations rather than ledger balances. G&A at 41% of revenue, rent at 14% and an undefined "Others" at 17% are the obvious places to cut next.
+**Non-people costs went the wrong way.** With 14% fewer people than a year earlier (24% below the peak), rent rose 19% and G&A 21%. Y5 Q1 non-people opex was $1.9M versus $1.3M in Y4 Q4, with S&M and G&A both recorded at exactly $682,053.99. Either a one-off was booked across lines or the numbers are allocations rather than ledger balances. G&A at 41% of revenue, rent at 14% and an undefined "Others" at 17% are the obvious places to cut next.
 
 ![FTE](charts/06a_fte.png)
 
@@ -197,7 +197,7 @@ The workbook, read at face value, supports a set of conclusions that do not surv
 | 10 | "The restructuring fixed the cost base." | People cost fell 31%; every other line rose and non-people opex is up $0.7M. ARR per FTE is still ~$95k. | Half-done |
 | 11 | "Q4 Y5 revenue of $1.85M (+23% YoY) is the new run-rate." | Subscription MRR grew 7% in the quarter; the 68% jump in BL2 revenue is not run-rate and the quarterly revenue/MRR ratio ranges 73-136%. | Do not annualise |
 
-**The steelman.** The strongest honest case for the company is: exit ARR +26%; expansion ARR tripled to $609k, so the product does grow inside accounts that stay; new-logo ACV is rising ($58k to $67k); the team was cut 24% and burn fell 21% while ARR grew; deferred revenue doubling shows customers are willing to prepay, which is a signal of commitment and gives cash flexibility; Y5 Q4 revenue was the highest ever. All of that is true. It is also all consistent with a business that signs annual deals at quarter-end under pressure and loses a large share of them a year later. The data that would separate the two stories is cohort retention by vintage and by business line, and the company has not provided it. Until it does, the bear reading should be the planning case.
+**The steelman.** The strongest honest case for the company is: exit ARR +26%; expansion ARR rose 53% to $609k, so the product does grow inside accounts that stay; new-logo ACV is rising ($58k to $67k); headcount fell 14% in the year (24% from the peak) and burn fell 21% while ARR grew; deferred revenue doubling shows customers are willing to prepay, which is a signal of commitment and gives cash flexibility; Y5 Q4 revenue was the highest ever. All of that is true. It is also all consistent with a business that signs annual deals at quarter-end under pressure and loses a large share of them a year later. The data that would separate the two stories is cohort retention by vintage and by business line, and the company has not provided it. Until it does, the bear reading should be the planning case.
 
 **Limits of this analysis.** CAC and sales efficiency use same-period S&M with no sales-cycle lag; retention is computed on opening ARR with the standard convention; the anniversary-churn pattern is inferred from timing, not cohorts; no customer-concentration, pipeline, or pricing data exists in the workbook; USD translation may distort INR-functional trends; and the two business lines are unlabelled, so any statement about what they are is a hypothesis.
 
@@ -229,7 +229,7 @@ Ordered by importance. Each one says what a good answer looks like.
 2. Of the $2.6M churned in Y5 and the 42 logos, what were the top ten accounts, their ACV, tenure, and stated reason (product gap, champion left, price, competitor, went out of business, never went live)? Y5 Q1 alone lost 16 logos and $1.2M at $73k per logo: who were they?
 3. Which ARR is up for renewal in each month of Y6, in particular the Y5 M6 ($1.04M) and Y5 M9 ($1.03M) cohorts? What is the renewal process, who owns it, and what is the current health score on those accounts?
 4. Churn spikes in month 12 and month 1 every year. Are contracts annual and co-terminated to the calendar year? What is the auto-renewal clause? How much of the churn is "never renewed after a quarter-end discounted first year"?
-5. Expansion ARR tripled to $609k. Which accounts, which product, and is there a repeatable expansion motion or was it a few large upsells (Y4 M12 $148k, Y5 M9 $211k)?
+5. Expansion ARR rose 53% to $609k. Which accounts, which product, and is there a repeatable expansion motion or was it a few large upsells (Y4 M12 $148k, Y5 M9 $211k)?
 6. Downgrades of $494k in Y4 and $313k in Y5: seat reductions, module removals, or price concessions at renewal?
 
 **B. What "ARR" means**
@@ -253,7 +253,7 @@ Ordered by importance. Each one says what a good answer looks like.
 **E. Cost base**
 
 16. People cost per head is $87-109k a year. Where is the team located, how much is ESOP (non-cash), and how much is contractors? What was the one-off credit in Y5 Q2 (people cost $1.66M versus $2.35M and $2.07M around it)?
-17. Rent rose 19% while headcount fell 24%. What are the lease commitments, and when can space be given back?
+17. Rent rose 19% while headcount fell 14% in the year (24% from the peak). What are the lease commitments, and when can space be given back?
 18. Explain Y5 Q1 non-people opex of $1.9M (versus $1.3M in Y4 Q4), including why S&M and G&A are identical to the cent. What one-offs are in it?
 19. G&A is 41% of revenue and "Others" is 17%. Break "Others" down. What is the plan to bring G&A under 20% of revenue?
 20. Define COGS. Does "Product & Engineering" in COGS include any salaries, or are all engineering salaries in People Cost?

@@ -101,13 +101,13 @@ td.tw{white-space:normal;text-align:left;min-width:200px}
 <header>
   <div class="eyebrow">Board pre-read · Early-stage B2B SaaS · Y1 to Y5 · USD</div>
   <h1>MIS &amp; Balance Sheet Review</h1>
-  <p class="sub">Reviewed by Kalaari's IC (three members) and two board directors. Figures rebuilt from the MIS and audited accounts, with four sheet formula errors corrected.</p>
-  <nav aria-label="Sections"><a href="#takeaways">1 · Takeaways</a><a href="#analysis">2 · Analysis &amp; risks</a><a href="#questions">3 · Questions</a><a href="#panel">IC &amp; board view</a><a href="#issues">Data issues</a></nav>
+  <p class="sub">Reviewed by Kalaari's IC (three members) and two board directors. Figures rebuilt from the MIS and audited accounts. Nine wrong cells in the company file were corrected.</p>
+  <nav aria-label="Sections"><a href="#takeaways">1 · Takeaways</a><a href="#analysis">2 · Analysis &amp; risks</a><a href="#questions">3 · Questions</a><a href="#panel">IC &amp; board view</a><a href="#issues">Data issues</a><a href="#terms">Terms</a></nav>
 </header>
 
 <div class="verdict" role="note">
   <div class="eyebrow">Verdict</div>
-  <p><strong>Burning cash to replace ARR, not grow it.</strong> ARR +26% to $8.4M, but about 45% of the base leaks out every year, burn is $10M against $11.7M of cash, and underlying runway is about 13 months. Y5 Q2-Q4 retention improved to a ~70% run-rate. The Y6 renewals decide the path.</p>
+  <p><strong>The company wins customers but loses too many.</strong> ARR grew 26% to $8.4M, but only 56% of the starting ARR was kept in Y5. It loses about $10M a year and has $11.7M of cash, so about 13 months of runway. Q2 to Q4 of Y5 were better (about 70% kept). The Y6 renewals will decide what happens next.</p>
 </div>
 
 <section aria-label="Headline numbers"><div class="kpis" id="kpiGrid"></div></section>
@@ -149,8 +149,19 @@ td.tw{white-space:normal;text-align:left;min-width:200px}
 </section>
 
 <section id="issues">
-  <div class="sechead"><h2>Data issues in the MIS</h2><span class="eyebrow">Four corrected, rest open</span></div>
+  <div class="sechead"><h2>Data issues in the MIS</h2><span class="eyebrow">Nine corrected, rest open</span></div>
   <div class="tablewrap"><table id="issueTable"></table></div>
+</section>
+
+<section id="terms">
+  <div class="sechead"><h2>Terms used</h2></div>
+  <div class="box small"><ul class="pts">
+    <li><b>ARR:</b> yearly value of all signed subscription contracts.</li>
+    <li><b>Gross retention:</b> share of last year's ARR still kept, not counting upsells. Net retention counts upsells.</li>
+    <li><b>Burn multiple:</b> loss for each $1 of ARR added. Under 2x is healthy.</li>
+    <li><b>CAC:</b> cost to win one new customer. <b>LTV/CAC:</b> lifetime gross profit of a customer divided by CAC. 3x or more is healthy.</li>
+    <li><b>Runway:</b> months until cash runs out. "Underlying" leaves out customer prepayments.</li>
+  </ul></div>
 </section>
 
 <footer>Source: company MIS (Summary MIS and KPIs tabs), audited P&amp;L and balance sheet for Y4 and Y5. Q2-Q4 run-rate retention is annualised from those three quarters. Benchmarks are typical B2B SaaS ranges.</footer>
@@ -230,34 +241,34 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
 new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 
 document.getElementById('tkList').innerHTML=li([
- '<b>Retention is the business.</b> Gross retention 56% in Y5 (benchmark 85-90%). About $3.7M of new ARR a year is needed just to stay flat.',
- '<b>Q2-Q4 Y5 was better.</b> Annualised gross retention ~70%, net ~81%. Y5 Q1 alone lost $1.4M, half the year\'s churn.',
- '<b>Growth is expensive.</b> Burn multiple 17x in Y4, 5.9x in Y5 (good is under 2x). LTV/CAC 1.2x.',
- '<b>Revenue lags ARR.</b> ARR +26%, audited revenue -2.5%. BL1 down 52% from peak; BL2 now 81% of Q4 revenue.',
- '<b>Runway is ~13 months underlying.</b> $11.7M cash, but $3.1M of Y5 cash came from prepayments and $1.2M from interest.',
- '<b>The MIS is not board-grade.</b> Four formula errors, a $212k Y4 revenue gap to the audit, and $1.08M of unexplained cash and reserves movement.',
+ '<b>Customer losses are the main problem.</b> Only 56% of ARR kept in Y5 (healthy is 85-90%). About $3.7M of new ARR a year is needed just to stand still.',
+ '<b>One bad quarter.</b> Y5 Q1 alone lost $1.4M, half the year\'s losses. Q2 to Q4 kept about 70% on a yearly basis.',
+ '<b>Growth costs too much.</b> In Y5 the company lost $5.9 for every $1 of ARR added ($17 in Y4). Healthy is under $2. ARR gained was only 1.6x ARR lost.',
+ '<b>Revenue fell while ARR grew.</b> ARR up 26%, audited revenue down 2.5%. Business Line 1 is shrinking; Business Line 2 grew 12%.',
+ '<b>Cash is tighter than it looks.</b> $3.1M of Y5 cash came from customers paying upfront and $1.2M from interest. Without them, runway is about 13 months.',
+ '<b>The MIS has many errors.</b> Nine cells were wrong and are now corrected. Ten more items need answers, including $1.08M of unexplained cash movement.',
 ]);
 document.getElementById('drvPlus').innerHTML=li([
- 'Expansion ARR tripled to $609k in Y5',
- 'New-deal size rising: Y5 Q4 averaged $88k vs $62k installed base',
+ 'Upsells to existing customers up 53% to $609k',
+ 'New deals getting bigger: $88k average in Y5 Q4',
  'Gross margin steady at 75-80%',
- 'Y5 H2 bookings the strongest ever ($2.2M)',
- 'Headcount cut 24%; ARR per FTE $65k to $95k',
+ 'Y5 Q2 and Q3: best two quarters ever ($2.8M new ARR)',
+ 'Headcount down 14% in Y5; ARR per employee $65k to $95k',
 ]);
 document.getElementById('drvMinus').innerHTML=li([
- 'Larger accounts leaving: churned ARR per lost logo $33k to $63k',
+ 'Lost accounts getting bigger: $33k each in Y3, $63k in Y5',
  '72% of new ARR booked in quarter-end months',
- 'Only 9 new logos in Y5 Q4; CAC about $97k fully loaded',
+ 'Only 9 new customers in Y5 Q4; winning one costs about $97k',
  'G&A, rent and other costs up ~20% while people cost fell 31%',
- 'Business Line 1 in decline with no stated plan',
+ 'Business Line 1 shrinking with no stated plan',
 ]);
 const RISKS=[
  ['Y6 renewals of the Y5 M6 and M9 deals fail','$2.1M of ARR; churn peaks at anniversaries','Critical'],
  ['Cash runs out before retention proof exists','~13 months underlying runway; interest income falls with cash','Critical'],
- ['Next round is flat or down, or needs an insider bridge','~$45M raised vs $8.4M ARR at 56% retention','Critical'],
- ['Numbers the board relies on are wrong','4 formula errors; $1,473k adjustment in two Y5 expense lines','High'],
- ['New-logo engine stalls','9 logos in Y5 Q4; net magic number 0.3x','High'],
- ['Cost cuts hit the wrong teams','24% headcount cut; no split by function given','Medium'],
+ ['Next round is flat or down, or needs a bridge from existing investors','About $45M raised vs $8.4M ARR at 56% retention','Critical'],
+ ['The board cannot fully trust the numbers','9 wrong cells; 1,473 added to two Y5 expense lines','High'],
+ ['New customer wins slow down','9 new customers in Y5 Q4; $0.29 of net ARR per $1 of sales spend','High'],
+ ['Cost cuts hit the wrong teams','Headcount 102 to 88 in Y5; no split by team given','Medium'],
 ];
 document.getElementById('riskTable').innerHTML='<thead><tr><th scope="col">Key risk</th><th scope="col" style="text-align:left">Signal in the numbers</th><th scope="col">Severity</th></tr></thead><tbody>'+RISKS.map(([r,s,v])=>`<tr><td class="tw"><b>${r}</b></td><td class="tw">${s}</td><td><span class="pill ${v==='Critical'?'crit':'warn'}">${v}</span></td></tr>`).join('')+'</tbody>';
 
@@ -277,11 +288,11 @@ document.getElementById('decisions').innerHTML=li([
 const QS=[
  ['Retention','Who were the top 10 churned accounts in Y5? Why did Y5 Q1 lose 16 logos and $1.2M?','High'],
  ['Retention','What is the health today of the Y5 M6 and M9 accounts ($2.1M) that renew in Y6?','High'],
- ['Retention','Was Y5 Q1 churn a planned BL1 exit or product failure?','High'],
- ['Growth','Were quarter-end deals discounted? How does first-year price compare with renewal price?','Medium'],
+ ['Retention','Was the Y5 Q1 loss a planned Business Line 1 exit or a product problem? Will the Q2-Q4 improvement last?','High'],
+ ['Growth','How does the first-year price compare with the renewal price?','Medium'],
  ['Growth','Why only 9 new logos in Y5 Q4? What is the weighted Y6 Q1 pipeline?','Medium'],
  ['Growth','Reconcile the two S&M figures ($5.9M vs $2.3M). What is quota attainment?','Medium'],
- ['Cost','Which functions did the 24% headcount cut hit? Was customer success reduced?','High'],
+ ['Cost','Which teams did the cuts come from (102 to 88 people in Y5)? Was customer success cut?','High'],
  ['Cost','Why did rent and G&A rise 20% while headcount fell? What are lease break dates?','Medium'],
  ['Cash','What is the $1,473k in both Y5 expense lines: ESOP, reclass, or a double count?','High'],
  ['Cash','What is the $1.08M reserves debit outside the P&L? Share the statement of changes in equity.','High'],
@@ -319,6 +330,9 @@ const IS=[
  ['Y4 Q4 EBITDA','Formula leaves out four cost lines','Burn understated by $1.3M','Corrected'],
  ['Y4 Q1, Y5 Q2 gross margin %','COGS divided by revenue','Showed 19% and 25%, not 81% and 75%','Corrected'],
  ['Y5 Q4 new-customer ACV','Divides by new customers + 15','Showed $33k; true figure $88k','Corrected'],
+ ['Y5 M12, M6 and Q2 deal size','Formula altered or typed over','Understated deal size by $30-50k','Corrected'],
+ ['Y4 M4-M6 ARR growth','Typed over','Showed a fake -4.8% month','Corrected'],
+ ['Y3 Q4 revenue','Up 59% while subscription revenue rose 10%','Possible one-off revenue','Open'],
  ['Y5 Q1 S&M and G&A','Identical to the cent','One line is wrong','Open'],
  ['Y4 MIS vs audit','Revenue $212k higher than audited','Flatters Y4','Open'],
  ['Y5 audited expenses','Same $1,473k added to two lines','Possible double count','Open'],

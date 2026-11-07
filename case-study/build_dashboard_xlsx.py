@@ -29,7 +29,7 @@ thin = Side(style="thin", color="BFBFBF")
 top_border = Border(top=Side(style="thin", color="000000"))
 box = Border(left=thin, right=thin, top=thin, bottom=thin)
 
-USD = '#,##0;(#,##0);"-"'
+USD = '#,##0,;(#,##0,);"-"'
 USDK = '#,##0;(#,##0);"-"'
 PCT = '0.0%;(0.0%);"-"'
 MULT = '0.0"x";(0.0"x");"-"'
@@ -50,6 +50,27 @@ for ref, f, note in fixes:
 for ref in ("S12", "S13"):
     s[ref].fill = fill_yel
     s[ref].comment = Comment("S&M and G&A are identical to the cent in Y5 Q1 (682,053.99). Looks like an allocation or copy error. To be confirmed with management.", "Reviewer")
+
+kp_ws = wb["KPIs"]
+kfix = [
+    ("CD14", '=IFERROR(CD7/CD13,"NA")', "Corrected. Original formula divided new ARR by (new customers + 15). It showed $33k; the true Y5 Q4 average is $88k."),
+    ("CC14", '=IFERROR(CC7/CC13,"NA")', "Corrected. Original formula was =(CC7-329000)/(CC13-1). It showed $72.7k; the true Y5 M12 average is $124k."),
+    ("BU14", '=IFERROR(BU7/BU13,"NA")', "Corrected. A typed number (58,412) had replaced the formula. True Y5 M6 average is $104k."),
+    ("BV14", '=IFERROR(BV7/BV13,"NA")', "Corrected. A typed number (51,170) had replaced the formula. True Y5 Q2 average is $75k."),
+    ("BU16", '=IFERROR(BU14/12,"NA")', "Corrected. A typed number had replaced the formula."),
+    ("BV16", '=IFERROR(BV14/12,"NA")', "Corrected. A typed number had replaced the formula."),
+    ("BC20", '=IFERROR((BC11-AY11)/AY11,"NA")', "Corrected. A typed growth rate (-4.8%) had replaced the formula."),
+    ("BD20", '=IFERROR((BD11-AZ11)/AZ11,"NA")', "Corrected. A typed growth rate had replaced the formula."),
+    ("BE20", '=IFERROR((BE11-BA11)/BA11,"NA")', "Corrected. A typed growth rate had replaced the formula."),
+]
+for ref, f, note in kfix:
+    kp_ws[ref] = f
+    kp_ws[ref].fill = fill_yel
+    kp_ws[ref].comment = Comment(note, "Reviewer")
+s["N3"].fill = fill_yel
+s["N3"].comment = Comment("Revenue jumps 59% this quarter while subscription revenue rises about 10%, then falls back next quarter. Possibly c.$0.4M of one-off or catch-up revenue. To be confirmed.", "Reviewer")
+s["C3"].fill = fill_yel
+s["C3"].comment = Comment("Revenue of $120 gives a COGS ratio of exactly 66.23x. May be a typing error (about $12,029?). To be confirmed.", "Reviewer")
 
 # ------------------------------------------------------------------ helpers
 QTRS = [s.cell(row=2, column=c).value for c in range(3, 23)]
@@ -91,11 +112,11 @@ def section(ws, r, text, last_col):
 
 # ================================================================== Quarterly KPIs
 q = wb.create_sheet("Quarterly KPIs", 0)
-setup(q, "Quarterly KPIs", "All figures in USD unless stated. Linked to the Summary MIS and KPIs tabs; EBITDA and gross margin recomputed from line items.",
+setup(q, "Quarterly KPIs", "USD '000 unless stated. Linked to the Summary MIS and KPIs tabs; EBITDA and gross margin recomputed from line items.",
       {"B": 38, **{L(c): 11 for c in range(3, 23)}})
 QR = {}
 r = 5
-header_row(q, r, ["USD"] + QTRS)
+header_row(q, r, ["USD '000"] + QTRS)
 q.freeze_panes = "C6"
 r += 1
 
@@ -149,6 +170,8 @@ qline("Net new ARR", lambda i, c: f"={c}{QR['Closing ARR']}-{c}{QR['Opening ARR'
 qline("ARR growth (QoQ)", lambda i, c: f"=IFERROR({c}{QR['Net new ARR']}/{c}{QR['Opening ARR']},0)", PCT)
 qline("Gross ARR lost, % of opening", lambda i, c: f"=IFERROR(-({c}{QR['Downgrade']}+{c}{QR['Churn']})/{c}{QR['Opening ARR']},0)", PCT)
 qline("Net ARR retention (quarter)", lambda i, c: f"=IFERROR(({c}{QR['Opening ARR']}+{c}{QR['Expansion']}+{c}{QR['Downgrade']}+{c}{QR['Churn']})/{c}{QR['Opening ARR']},0)", PCT)
+qline("Gross retention, annualised from this quarter", lambda i, c: f"=IF({c}{QR['Opening ARR']}=0,0,(1-{c}{QR['Gross ARR lost, % of opening']})^4)", PCT)
+qline("SaaS quick ratio (ARR gained / ARR lost)", lambda i, c: f"=IFERROR(({c}{QR['New ARR']}+{c}{QR['Expansion']})/-({c}{QR['Downgrade']}+{c}{QR['Churn']}),0)", MULT)
 qline("Subscription ARR (closing MRR x 12)", lambda i, c: f"=KPIs!{kcol(i)}30*12", link=True)
 r += 1
 section(q, r, "Customers", 22); r += 1
@@ -169,11 +192,11 @@ qline("ARR per FTE", lambda i, c: f"=IFERROR({c}{QR['Closing ARR']}/{c}{QR['FTE 
 
 # ================================================================== Annual Summary
 a = wb.create_sheet("Annual Summary", 0)
-setup(a, "Annual Summary", "USD. Built from the Quarterly KPIs tab. n.m. = not meaningful.",
+setup(a, "Annual Summary", "USD '000 unless stated. Built from the Quarterly KPIs tab. n.m. = not meaningful (usually the first year, which has no opening balance). See the Glossary tab for terms.",
       {"B": 44, "C": 3, **{L(c): 13 for c in range(4, 9)}, "I": 3, "J": 60})
 AR = {}
 r = 5
-header_row(a, r, ["USD", ""] + YEARS + ["", "Comment"])
+header_row(a, r, ["USD '000", ""] + YEARS + ["", "Comment"])
 a.freeze_panes = "D6"
 r += 1
 
@@ -239,6 +262,8 @@ aline("Total operating expenses", lambda y, c: f"=SUM({c}{AR['People cost']}:{c}
       comment="Y5 cut came only from people cost. Every other line rose.")
 aline("EBITDA", lambda y, c: f"={c}{AR['Gross margin']}-{c}{AR['Total operating expenses']}", bold=True, border=True)
 aline("EBITDA margin", lambda y, c: f"=IFERROR({c}{AR['EBITDA']}/{c}{AR['Revenue']},0)", PCT)
+aline("Rule of 40 (revenue growth % + EBITDA margin %)", nm(lambda y, c: f"=IFERROR(({c}{AR['Revenue'] + 1}+{c}{AR['EBITDA margin']})*100,\"n.m.\")"), '0;(0);"-"',
+      comment="Healthy SaaS scores 40 or more. Shown as a plain number.")
 r += 1
 section(a, r, "ARR & retention", 10); r += 1
 aline("Opening ARR", qfirst("Opening ARR"))
@@ -254,6 +279,14 @@ aline("Gross revenue retention (GRR)", nm(lambda y, c: f"=IFERROR(({c}{AR['Openi
       comment="B2B SaaS benchmark: 85-90%+. This business loses c.45% of its base every year.")
 aline("Net revenue retention (NRR)", nm(lambda y, c: f"=IFERROR(({c}{AR['Opening ARR']}+{c}{AR['Expansion']}+{c}{AR['Downgrade']}+{c}{AR['Churn']})/{c}{AR['Opening ARR']},\"n.m.\")"), PCT, bold=True,
       comment="Benchmark: 100%+. Expansion is growing but is small relative to churn.")
+aline("Gross retention, second half annualised", nm(lambda y, c: f"=IFERROR(1-2*-(SUM('Quarterly KPIs'!{L(5+4*y)}{QR['Downgrade']}:{L(6+4*y)}{QR['Downgrade']})+SUM('Quarterly KPIs'!{L(5+4*y)}{QR['Churn']}:{L(6+4*y)}{QR['Churn']}))/AVERAGE('Quarterly KPIs'!{L(5+4*y)}{QR['Opening ARR']}:{L(6+4*y)}{QR['Opening ARR']}),\"n.m.\")"), PCT,
+      comment="Q3 and Q4 only. Y5 H2 is about 70%, much better than the full year, because Y5 Q1 alone lost $1.4M.")
+aline("Dollar churn (churned ARR as % of opening ARR)", nm(lambda y, c: f"=IFERROR(-{c}{AR['Churn']}/{c}{AR['Opening ARR']},\"n.m.\")"), PCT,
+      comment="Excludes downgrades. Compare with logo churn below: dollar churn is higher in Y5.")
+aline("SaaS quick ratio (ARR gained / ARR lost)", nm(lambda y, c: f"=IFERROR(({c}{AR['New ARR']}+{c}{AR['Expansion']})/-({c}{AR['Downgrade']}+{c}{AR['Churn']}),\"n.m.\")"), MULT,
+      comment="Healthy SaaS is 4x or more. Here about $1.6 is added for every $1 lost.")
+aline("Revenue as % of average ARR", nm(lambda y, c: f"=IFERROR({c}{AR['Revenue']}/AVERAGE({c}{AR['Opening ARR']},{c}{AR['Closing ARR']}),\"n.m.\")"), PCT,
+      comment="Below 100% means signed contracts are not all turning into revenue yet.")
 aline("Subscription ARR (closing)", qlast("Subscription ARR (closing MRR x 12)"))
 aline("Subscription ARR as % of contracted ARR", lambda y, c: f"=IFERROR({c}{AR['Subscription ARR (closing)']}/{c}{AR['Closing ARR']},0)", PCT,
       comment="The gap between the two ARR definitions is not explained in the MIS.")
@@ -266,23 +299,31 @@ aline("Closing customers", lambda y, c: f"=SUM({c}{AR['Opening customers']}:{c}{
 aline("Logo churn, % of opening", nm(lambda y, c: f"=IFERROR(-{c}{AR['Churned customers']}/{c}{AR['Opening customers']},\"n.m.\")"), PCT)
 aline("Average ACV, new customers", lambda y, c: f"=IFERROR({c}{AR['New ARR']}/{c}{AR['New customers']},0)")
 aline("Churned ARR per churned customer", lambda y, c: f"=IFERROR({c}{AR['Churn']}/{c}{AR['Churned customers']},0)", USD,
-      comment="Rising sharply: larger accounts are leaving.")
+      comment="Rising: $33k in Y3 to $63k in Y5. Lost accounts are now about the size of an average account.")
 aline("Average ARR per customer (closing)", lambda y, c: f"=IFERROR({c}{AR['Closing ARR']}/{c}{AR['Closing customers']},0)")
 r += 1
 section(a, r, "Go-to-market efficiency & unit economics", 10); r += 1
 aline("S&M cost (KPI tab, fully loaded)", qsum("S&M cost (KPI tab, fully loaded)"),
       comment="2.5-3x the S&M line in Summary MIS. Assumed to include S&M salaries. Needs reconciling.")
 aline("CAC per new customer", lambda y, c: f"=IFERROR({c}{AR['S&M cost (KPI tab, fully loaded)']}/{c}{AR['New customers']},0)")
-aline("CAC payback (months, gross-margin adjusted)", lambda y, c: f"=IFERROR({c}{AR['S&M cost (KPI tab, fully loaded)']}/({c}{AR['New ARR']}*{c}{AR['Gross margin %']})*12,0)", MON)
-aline("Magic number, gross (new ARR / S&M)", lambda y, c: f"=IFERROR({c}{AR['New ARR']}/{c}{AR['S&M cost (KPI tab, fully loaded)']},0)", MULT)
-aline("Magic number, net (net new ARR / S&M)", lambda y, c: f"=IFERROR({c}{AR['Net new ARR']}/{c}{AR['S&M cost (KPI tab, fully loaded)']},0)", MULT)
-aline("Burn multiple (EBITDA burn / net new ARR)", lambda y, c: f"=IFERROR(-{c}{AR['EBITDA']}/{c}{AR['Net new ARR']},0)", MULT, bold=True,
-      comment="Below 2x is good, above 3x is a concern. Y4 was very poor.")
-aline("Implied customer lifetime (months, from GRR)", nm(lambda y, c: f"=IFERROR(12/(1-{c}{AR['Gross revenue retention (GRR)']}),\"n.m.\")"), MON,
+aline("CAC payback (months, gross-margin adjusted)", nm(lambda y, c: f"=IFERROR({c}{AR['S&M cost (KPI tab, fully loaded)']}/({c}{AR['New ARR']}*{c}{AR['Gross margin %']})*12,\"n.m.\")"), MON,
+      comment="Months of gross profit from a new customer needed to pay back the cost of winning it.")
+aline("Magic number, gross (new ARR / S&M)", nm(lambda y, c: f"=IFERROR({c}{AR['New ARR']}/{c}{AR['S&M cost (KPI tab, fully loaded)']},\"n.m.\")"), MULT,
+      comment="New ARR won for each $1 of sales and marketing spend.")
+aline("Magic number, net (net new ARR / S&M)", nm(lambda y, c: f"=IFERROR({c}{AR['Net new ARR']}/{c}{AR['S&M cost (KPI tab, fully loaded)']},\"n.m.\")"), MULT,
+      comment="Same, after subtracting ARR lost.")
+aline("Burn multiple (EBITDA burn / net new ARR)", nm(lambda y, c: f"=IFERROR(-{c}{AR['EBITDA']}/{c}{AR['Net new ARR']},\"n.m.\")"), MULT, bold=True,
+      comment="Dollars of loss for each $1 of ARR added. Under 2x is good, over 3x is a concern.")
+aline("Implied revenue lifetime (months, from GRR)", nm(lambda y, c: f"=IFERROR(12/(1-{c}{AR['Gross revenue retention (GRR)']}),\"n.m.\")"), MON,
       comment="KPI tab hard-codes 36 months and never uses it.")
-aline("LTV (ACV x GM% x lifetime)", nm(lambda y, c: f"=IFERROR({c}{AR['Average ACV, new customers']}*{c}{AR['Gross margin %']}*{c}{AR['Implied customer lifetime (months, from GRR)']}/12,\"n.m.\")"))
+aline("LTV (ACV x GM% x lifetime)", nm(lambda y, c: f"=IFERROR({c}{AR['Average ACV, new customers']}*{c}{AR['Gross margin %']}*{c}{AR['Implied revenue lifetime (months, from GRR)']}/12,\"n.m.\")"))
 aline("LTV / CAC", nm(lambda y, c: f"=IFERROR({c}{AR['LTV (ACV x GM% x lifetime)']}/{c}{AR['CAC per new customer']},\"n.m.\")"), MULT, bold=True,
-      comment="Benchmark: 3x+. Under 2x means growth destroys value at current churn.")
+      comment="Lifetime gross profit of a customer divided by the cost to win it. Healthy is 3x or more.")
+r += 1
+aline("CAC, Summary MIS S&M line (floor)", lambda y, c: f"=IFERROR({c}{AR['Sales & marketing (non-people)']}/{c}{AR['New customers']},0)",
+      comment="Uses the smaller S&M line, which leaves out S&M salaries. The true figure is between this and the line above.")
+aline("LTV / CAC, Summary MIS S&M line (ceiling)", nm(lambda y, c: f"=IFERROR({c}{AR['LTV (ACV x GM% x lifetime)']}/{c}{AR['CAC, Summary MIS S&M line (floor)']},\"n.m.\")"), MULT,
+      comment="Best case. Y5 reaches about 3x only if S&M salaries are ignored.")
 r += 1
 section(a, r, "Team", 10); r += 1
 aline("FTE (year end)", qlast("FTE (quarter end)"), NUM)
@@ -326,10 +367,13 @@ x = c_.cell(row=r, column=3, value=f"={BS}!D29-{BS}!C29"); x.number_format = USD
 row_actual = r; r += 1
 c_.cell(row=r, column=2, value="Unexplained movement").font = f_norm
 x = c_.cell(row=r, column=3, value=f"=C{row_actual}-C{rows_expl}"); x.number_format = USDK
-c_.cell(row=r, column=7, value="Equals the fall in reserves beyond the reported loss. Most likely FX translation on INR cash. Ask management.").font = Font(name=F, size=9, italic=True, color="595959")
+c_.cell(row=r, column=7, value="Equals the fall in reserves beyond the reported loss. Could be FX translation, a prior-period adjustment or an ESOP entry. Ask management.").font = Font(name=F, size=9, italic=True, color="595959")
 r += 1
-c_.cell(row=r, column=2, value="Check: reserves movement not through P&L").font = f_norm
+c_.cell(row=r, column=2, value="Reserves movement not through P&L").font = f_norm
 x = c_.cell(row=r, column=3, value=f"=({BS}!D9-{BS}!C9)-{PL}!D20"); x.number_format = USDK
+r += 1
+c_.cell(row=r, column=2, value="Check: unexplained movement less reserves movement (should be zero)").font = f_norm
+x = c_.cell(row=r, column=3, value=f"=C{r-2}-C{r-1}"); x.number_format = USDK
 r += 2
 
 section(c_, r, "Runway from end of Y5", 7); r += 1
@@ -338,8 +382,9 @@ cash = f"={BS}!D29"
 ebitda_y5 = f"'Annual Summary'!H{AR['EBITDA']}"
 runway = [
     ("Y5 actual cash burn (helped by prepayments and interest)", f"=-C{row_actual}"),
+    ("Underlying cash burn (actual burn without the prepayment build)", f"=-C{row_actual}+C{b0 + 2}"),
     ("Y5 EBITDA burn", f"=-{ebitda_y5}/1000"),
-    ("Y5 EBITDA burn less other income", f"=-{ebitda_y5}/1000-{PL}!D8"),
+    ("Y5 EBITDA burn net of interest income", f"=-{ebitda_y5}/1000-{PL}!D8"),
     ("Y5 Q4 EBITDA burn, annualised", f"=-'Quarterly KPIs'!V{QR['EBITDA']}*4/1000"),
 ]
 RUNWAY_ROWS = []
@@ -350,7 +395,7 @@ for lab, f in runway:
     x = c_.cell(row=r, column=5, value=f"=IFERROR(C{r}/D{r}*12,0)"); x.number_format = MON; x.font = f_bold
     RUNWAY_ROWS.append(r)
     r += 1
-c_.cell(row=r, column=2, value="Planning case: 12-15 months. Deferred revenue unwinds if renewals slip, and interest income falls with the cash balance.").font = Font(name=F, size=9, italic=True, color="595959")
+c_.cell(row=r, column=2, value="Planning case: about 13 months (underlying burn). Prepayments unwind if renewals slip, and interest income falls with the cash balance.").font = Font(name=F, size=9, italic=True, color="595959")
 r += 2
 
 section(c_, r, "Working capital", 7); r += 1
@@ -379,6 +424,26 @@ x = c_.cell(row=r, column=3, value=f"={BS}!C28/{PL}!C7*365"); x.number_format = 
 x = c_.cell(row=r, column=4, value=f"={BS}!D28/{PL}!D7*365"); x.number_format = '0'
 r += 2
 
+section(c_, r, "Balance sheet ratios", 7); r += 1
+header_row(c_, r, ["", "End Y4", "End Y5"]); r += 1
+RATIOS = [
+    ("Current ratio (current assets / current liabilities)", f"={BS}!C32/{BS}!C19", f"={BS}!D32/{BS}!D19", MULT),
+    ("Current ratio excluding deferred revenue", f"={BS}!C32/({BS}!C19-{BS}!C17)", f"={BS}!D32/({BS}!D19-{BS}!D17)", MULT),
+    ("Cash as % of total assets", f"={BS}!C29/{BS}!C33", f"={BS}!D29/{BS}!D33", PCT),
+    ("Equity as % of total assets", f"={BS}!C10/{BS}!C33", f"={BS}!D10/{BS}!D33", PCT),
+    ("Deferred revenue as % of revenue", f"={BS}!C17/{PL}!C7", f"={BS}!D17/{PL}!D7", PCT),
+    ("Billings (revenue plus increase in deferred revenue)", "", f"={PL}!D7+({BS}!D17-{BS}!C17)", USDK),
+    ("Interest yield on average cash", "", f"={PL}!D8/AVERAGE({BS}!C29,{BS}!D29)", PCT),
+    ("Burn multiple on cash basis (cash burn / net new ARR)", "", f"=-C{row_actual}*1000/'Annual Summary'!H{AR['Net new ARR']}", MULT),
+]
+for lab, f1, f2, fmt in RATIOS:
+    c_.cell(row=r, column=2, value=lab).font = f_norm
+    for j, f in enumerate((f1, f2)):
+        if f:
+            x = c_.cell(row=r, column=3 + j, value=f); x.number_format = fmt
+    r += 1
+r += 1
+
 section(c_, r, "MIS vs audited financial statements", 7); r += 1
 header_row(c_, r, ["USD '000", "Audited FS", "MIS", "Difference"]); r += 1
 rec_start = r
@@ -401,23 +466,28 @@ c_.cell(row=rec_start + 4, column=7, value="Y5 FS expense lines both include a +
 
 # ================================================================== Data issues
 d = wb.create_sheet("Data Issues", 0)
-setup(d, "Data Issues in the MIS", "Errors and gaps found while rebuilding the numbers. Items 1-3 have been corrected in the Summary MIS tab (highlighted yellow).",
+setup(d, "Data Issues in the MIS", "Errors and gaps found in the company file. Corrected cells are yellow in the Summary MIS and KPIs tabs, with a note on each.",
       {"B": 5, "C": 30, "D": 62, "E": 50, "F": 14})
 issues = [
-    ("Summary MIS, cell R16 (Y4 Q4 EBITDA)", "Formula was =R9-R11, i.e. gross margin less People Cost only. S&M, G&A, Rent and Others were left out.", "Y4 Q4 EBITDA shown as -$1.56M instead of -$2.88M. Y4 burn understated by $1.3M.", "Corrected"),
-    ("Summary MIS, cell O19 (Y4 Q1 GM%)", "Formula divides COGS by revenue instead of gross margin by revenue.", "Showed 19% gross margin instead of 81%.", "Corrected"),
-    ("Summary MIS, cell T19 (Y5 Q2 GM%)", "Same error as O19.", "Showed 25% gross margin instead of 75%.", "Corrected"),
-    ("Summary MIS, Y5 Q1 S&M and G&A", "Both lines are exactly 682,053.99.", "One of the two is wrong, or both are allocations rather than ledger balances.", "Open"),
-    ("Summary MIS, Y2 Q1-Q3 Rent vs Others", "Rent & Utilities equals Others to the cent in three quarters.", "Suggests costs are allocated by formula, not booked.", "Open"),
-    ("Summary MIS vs audited P&L, Y4", "MIS revenue 6,290k vs audited 6,078k; MIS non-people costs 142k below audit.", "MIS flatters Y4 EBITDA by c.$0.35M.", "Open"),
-    ("P&L as per FS, Y5 expense lines", "Employee benefits =6664+1473+11 and other expenses =6453+1473-11.", "The same 1,473k appears in both lines. Possibly a reclass counted twice.", "Open"),
-    ("KPIs row 58 vs Summary MIS row 12", "KPI tab S&M cost is 2.5-3x the S&M line in Summary MIS, with no definition.", "CAC is $97k or $38k depending on which line is used.", "Open"),
-    ("KPIs, cell CD14 (Y5 Q4 new-customer ACV)", "Formula divides new ARR by new customers plus 15.", "Shows $33k average deal size instead of $88k.", "Open"),
-    ("KPIs row 51", "Customer lifetime of 36 months is hard-coded and no formula uses it.", "LTV is never calculated; the 36 months is not supported by the churn data (27-33 months).", "Open"),
-    ("KPIs row 40", "'# Dropped customers*' is zero throughout; the asterisk has no footnote.", "Definition unclear.", "Open"),
-    ("KPIs rows 45-46", "Churn and growth shown only as quarterly rates. No GRR, NRR, cohorts or ARR by business line.", "The most important SaaS metrics are missing from the board pack.", "Open"),
-    ("KPIs rows 11 vs 31", "Contracted ARR and subscription ARR differ by 6-18% with no explanation.", "Unclear what 'ARR' means in board materials.", "Open"),
-    ("Balance sheet", "No cash flow statement. Cash and reserves fall by $1.08M more than the P&L explains.", "Burn and FX exposure are not visible.", "Open"),
+    ("Summary MIS, R16 (Y4 Q4 EBITDA)", "Formula took only People Cost away from gross margin. Four cost lines were left out.", "Y4 Q4 loss shown as $1.56M instead of $2.88M.", "Corrected"),
+    ("Summary MIS, O19 (Y4 Q1 gross margin %)", "Formula divided COGS by revenue.", "Showed 19% instead of 81%.", "Corrected"),
+    ("Summary MIS, T19 (Y5 Q2 gross margin %)", "Same error as O19.", "Showed 25% instead of 75%.", "Corrected"),
+    ("KPIs, CD14 (Y5 Q4 average new deal)", "Formula divided by new customers plus 15.", "Showed $33k instead of $88k.", "Corrected"),
+    ("KPIs, CC14 (Y5 M12 average new deal)", "Formula took $329k off new ARR and 1 off the customer count.", "Showed $72.7k instead of $124k.", "Corrected"),
+    ("KPIs, BU14 and BV14 (Y5 M6, Y5 Q2 average new deal)", "Typed numbers replaced the formula.", "Showed $58k and $51k instead of $104k and $75k.", "Corrected"),
+    ("KPIs, BU16 and BV16 (same, monthly)", "Typed numbers replaced the formula.", "Understated deal size.", "Corrected"),
+    ("KPIs, BC20 to BE20 (Y4 M4 to M6 ARR growth)", "Typed growth rates replaced the formula.", "Showed a fake -4.8% month.", "Corrected"),
+    ("KPIs, row 46 (customer growth)", "Some months compare with last month, others with three months back.", "Growth rates not comparable.", "Open"),
+    ("Summary MIS, S12 and S13 (Y5 Q1)", "S&M and G&A are the same to the cent (682,053.99).", "One of them is wrong.", "Open"),
+    ("Summary MIS, Y2 rent vs Others", "Equal to the cent in three quarters.", "Costs look allocated, not booked.", "Open"),
+    ("Summary MIS, N3 (Y3 Q4 revenue)", "Revenue up 59% while subscription revenue rose about 10%.", "Possibly $0.4M of one-off revenue.", "Open"),
+    ("Summary MIS, C3 (Y1 Q1 revenue)", "Revenue of $120 gives an exact 66.23x cost ratio.", "Possible typing error.", "Open"),
+    ("MIS vs audit, Y4", "MIS revenue $212k above audit; costs $142k below.", "MIS made Y4 look about $0.35M better.", "Open"),
+    ("Audited P&L, Y5 expenses", "The same 1,473 is added to both expense lines.", "Could be ESOP, a reclass or a double count.", "Open"),
+    ("KPIs row 58 vs Summary MIS row 12", "Two S&M figures; one is 2.5 to 3 times the other.", "Cost to win a customer is $38k or $97k.", "Open"),
+    ("KPIs row 51", "36-month customer life typed in and never used.", "Customer value never calculated.", "Open"),
+    ("Balance sheet", "Cash and reserves fall $1.08M more than the loss explains.", "Unexplained cash movement.", "Open"),
+    ("Whole pack", "No retention, cohorts, ARR by business line or cash flow statement.", "Key SaaS numbers missing.", "Open"),
 ]
 r = 5
 header_row(d, r, ["#", "Where", "Issue", "Impact", "Status"]); r += 1
@@ -436,36 +506,32 @@ for n, (w, iss, imp, st) in enumerate(issues, 1):
 
 # ================================================================== Board questions
 bq = wb.create_sheet("Board Questions", 0)
-setup(bq, "Questions for Founders & Management", "Ahead of the next board meeting. Ordered by priority within each area.",
+setup(bq, "Questions for Founders & Management", "For the Investment Partner to raise before the next board meeting. Ordered by priority within each area.",
       {"B": 5, "C": 18, "D": 70, "E": 55, "F": 10})
 QS = [
-    ("Retention", "Share ARR cohort retention by signing quarter (Y3 Q1 onwards) at 12 and 24 months, split by business line.", "GRR of 53-57% is the main issue. We need to know whether recent cohorts are better than older ones.", "High"),
-    ("Retention", "Who were the top 10 churned accounts in Y5 (ACV, tenure, reason)? Y5 Q1 alone lost 16 customers and $1.2M of ARR.", "Churned ARR per customer has doubled to $63k, so larger accounts are leaving.", "High"),
-    ("Retention", "What ARR is up for renewal each month of Y6, especially the Y5 M6 ($1.04M) and Y5 M9 ($1.03M) cohorts? What is their health today?", "These two months produced half of Y5 new ARR. Their renewal decides Y6.", "High"),
-    ("Retention", "Churn peaks in month 12 and month 1 every year. Are contracts annual and calendar-aligned? How much churn is first-year deals not renewing?", "Points to quarter-end deals that do not stick.", "High"),
-    ("Retention", "Which accounts drove the $609k of expansion in Y5, and is there a repeatable upsell motion?", "Expansion is the one improving retention lever.", "Medium"),
-    ("Retention", "What drove downgrades of $494k (Y4) and $313k (Y5): seat cuts, module removal, or price concessions?", "Separates product value issues from commercial ones.", "Medium"),
-    ("ARR definition", "Define contracted ARR vs subscription ARR. Does contracted ARR include pilots, ramps at full value, services or multi-year TCV?", "The two differ by 6-18%. The board needs one clean number.", "High"),
-    ("ARR definition", "For the Y5 M6 and M9 bookings: number of customers, contract length, payment terms, discount vs list, and go-live status.", "Tests whether quarter-end deals were pulled forward or discounted.", "High"),
-    ("ARR definition", "Y5 Q4 signed only 9 new customers (average ACV $88k). Pipeline gap, a shift to larger deals, or seasonality? What is the weighted Y6 Q1 pipeline?", "Weakest new-logo quarter since Y1.", "Medium"),
-    ("ARR definition", "Explain revenue recognition. Why was Y5 Q4 BL2 revenue up 68% when subscription MRR grew 7%? Any one-off revenue?", "Q4 revenue should not be annualised until this is clear.", "Medium"),
-    ("Business lines", "What are Business Line 1 and 2? Is BL1 being sunset, and what is the plan for its remaining customers?", "BL1 revenue is down 52% from peak; BL2 was 81% of Y5 Q4 revenue.", "High"),
-    ("Business lines", "Provide gross margin, churn and CAC by business line.", "If churn sits mainly in BL1, the BL2 story is healthier than the blended numbers.", "Medium"),
-    ("Go-to-market", "Reconcile S&M cost on the KPI tab ($5.9M) with the S&M line in the Summary MIS ($2.3M). Share S&M headcount, quota reps and attainment.", "CAC is $97k or $38k depending on the basis.", "High"),
-    ("Go-to-market", "What discounts were given on quarter-end deals, and how does first-year price compare with renewal price?", "A price step-up at renewal would explain anniversary churn.", "Medium"),
-    ("Go-to-market", "How much of S&M spend goes to retention and account management vs new-logo acquisition?", "CAC currently treats all of it as acquisition.", "Low"),
-    ("Cost base", "People cost per FTE is $87-109k. Where is the team based, how much is ESOP and contractors? What was the one-off in Y5 Q2?", "Y5 Q2 people cost dipped by c.$0.5M and then recovered.", "Medium"),
-    ("Cost base", "Rent rose 19% while headcount fell 24%. What are the lease commitments and break options?", "Obvious place for the next round of savings.", "Medium"),
-    ("Cost base", "Explain Y5 Q1 non-people costs of $1.9M vs $1.3M in Y4 Q4, and why S&M and G&A are identical to the cent.", "Either a one-off or a reporting error.", "Medium"),
-    ("Cost base", "G&A is 41% of revenue and 'Others' is 17%. Break down 'Others' and share a plan to bring G&A under 20%.", "Non-people opex rose to $6.6M on $5.9M of revenue.", "Medium"),
-    ("Cost base", "Define COGS. Are any engineering or delivery salaries in COGS, or are they all in people cost?", "Changes how the 77% gross margin should be read.", "Low"),
-    ("Cash & funding", "Share a monthly Y6 cash forecast with deferred revenue modelled under two cases: Y5 retention repeats, and GRR improves to 75%.", "Runway is 14-19 months and depends on renewals.", "High"),
-    ("Cash & funding", "Deferred revenue is 74% of ARR (47% a year ago). What are billing terms? Were multi-year prepayments discounted?", "Prepayments flattered Y5 cash burn by c.$3M.", "High"),
-    ("Cash & funding", "What sits in other non-current assets ($2.6M, up $1.5M) and short-term loans & advances ($1.4M)? Is any of it cash-like?", "Affects true liquidity.", "Medium"),
-    ("Cash & funding", "Explain the $1.08M fall in cash and reserves outside the P&L. If FX, share INR-basis P&L and KPIs.", "USD trends may be partly currency.", "Medium"),
-    ("Cash & funding", "Fundraising plan: amount, timing, target investors, and the metrics the company expects to show. Is an insider bridge needed?", "Process needs to start in Y6 Q1 at the latest.", "High"),
-    ("Reporting", "Explain the Y4 revenue gap ($212k) between MIS and audit, and the 1,473k adjustment in both Y5 expense lines. Any audit management-letter points?", "Confidence in the numbers the board receives.", "Medium"),
-    ("Reporting", "Fix the MIS: correct the EBITDA and GM% formulas; add GRR/NRR, cohorts, ARR by business line, billings, a cash flow statement and headcount by function.", "The board should not receive the current file again.", "High"),
+    ("Retention", "Please share how much of each quarter's new customers' ARR is still there after 12 and 24 months, split by business line.", "Only 56% of ARR was kept in Y5. We need to see if newer customers stay longer.", "High"),
+    ("Retention", "Who were the 10 biggest customers lost in Y5, and why did they leave? Y5 Q1 alone lost 16 customers and $1.2M.", "Y5 Q1 was half of the year's losses. Was it a one-off clean-up or a product problem?", "High"),
+    ("Retention", "Q2 to Q4 of Y5 kept about 70% of ARR on a yearly basis. What changed, and will it last?", "If it lasts, the picture is much better than the full-year 56%.", "High"),
+    ("Retention", "Which Y6 renewals are coming up each month, especially the big Y5 M6 ($1.04M) and M9 ($1.03M) deals? How healthy are they?", "These two months were half of Y5 new ARR.", "High"),
+    ("Retention", "Most customers leave in month 12 or month 1. Are contracts one year long and lined up to the calendar year?", "Helps tell whether first-year customers are not renewing.", "Medium"),
+    ("Retention", "Which customers grew their spend by $609k in Y5? Can this be repeated?", "Upsells are the one retention number that is improving.", "Medium"),
+    ("ARR", "How do you define contracted ARR and subscription ARR? What explains the 6-18% gap?", "The board needs one clear ARR number.", "High"),
+    ("ARR", "For the big M6 and M9 deals: contract length, payment terms, any discount, and are they live?", "Helps judge how solid these deals are.", "Medium"),
+    ("ARR", "Y5 Q4 added only 9 new customers (average $88k each). Was that a pipeline gap or a shift to bigger deals? What does Y6 Q1 look like?", "Fewest new customers in a quarter since Y1.", "Medium"),
+    ("ARR", "Why did Y3 Q4 and Y5 Q4 revenue jump far more than subscription revenue? Was any of it one-off?", "So we know what the real run-rate is.", "Medium"),
+    ("Business lines", "What are Business Line 1 and 2? Is BL1 being closed down, and what happens to its customers?", "BL1 revenue is down 52% from its peak.", "High"),
+    ("Business lines", "Please give margin, customer losses and cost to win a customer for each business line.", "BL2 may be healthier than the combined numbers show.", "Medium"),
+    ("Sales", "Please explain the two sales and marketing figures ($5.9M and $2.3M). How many sales reps, and how many hit target?", "Cost to win a customer is $38k or $97k depending on the figure.", "High"),
+    ("Sales", "How does the first-year price compare with the renewal price?", "A big price rise at renewal could explain customers leaving.", "Medium"),
+    ("Costs", "Which teams did the headcount cuts come from (102 to 88 in Y5)? Was customer success cut?", "Cutting customer success could make losses worse.", "High"),
+    ("Costs", "Rent and G&A went up about 20% while headcount fell. What are the lease terms?", "Next place to save money.", "Medium"),
+    ("Costs", "Why did non-people costs jump to $1.9M in Y5 Q1, and why are S&M and G&A the same to the cent?", "Either a one-off or a reporting error.", "Medium"),
+    ("Cash", "Please share a monthly Y6 cash plan in two cases: Y5 retention repeats, and retention reaches 70%.", "Underlying runway is about 13 months.", "High"),
+    ("Cash", "What is the 1,473 added to both Y5 expense lines in the audited accounts?", "If counted twice, the loss is overstated.", "High"),
+    ("Cash", "What explains the $1.08M fall in cash and reserves that is not in the P&L?", "Could be currency, an adjustment or ESOP.", "Medium"),
+    ("Cash", "What is in other non-current assets ($2.6M) and loans and advances ($1.4M)? Is any of it cash?", "Changes how much money is really available.", "Medium"),
+    ("Cash", "What is the fundraising plan: amount, timing and investors?", "With about 13 months of cash, the raise needs to start in Y6 Q1.", "High"),
+    ("Reporting", "Please fix the MIS errors listed in the Data Issues tab and add retention, cohorts, ARR by business line and a cash flow statement.", "The board needs numbers it can rely on.", "High"),
 ]
 r = 5
 header_row(bq, r, ["#", "Area", "Question", "Why we are asking", "Priority"]); r += 1
@@ -482,48 +548,56 @@ for n, (area, qq, why, pr) in enumerate(QS, 1):
 
 # ================================================================== Insights
 ins = wb.create_sheet("Insights", 0)
-setup(ins, "Key Takeaways & Analysis", "Review of the MIS and balance sheet. Figures refer to the Annual Summary, Quarterly KPIs and Cash & Runway tabs.",
+setup(ins, "Key Takeaways & Analysis", "Plain-language summary. Every number here is backed by the Annual Summary, Quarterly KPIs or Cash & Runway tabs.",
       {"B": 5, "C": 120})
 blocks = [
-    ("Summary view", [
-        "The company has c.$8.4M of contracted ARR and 135 customers, but has spent Y4 and Y5 running hard to stand still.",
-        "Headline ARR grew 26% in Y5 and headcount was cut 24%. Underneath, the business keeps only 53-57% of its ARR each year (NRR 60-65%), recognised revenue fell, and EBITDA burn is still c.$10M against $11.7M of cash.",
-        "Retention is the issue that matters for this board. Everything else (growth, efficiency, the next round) follows from it.",
+    ("Summary", [
+        "The company has $8.4M of yearly contract value (ARR) and 135 customers.",
+        "It wins customers well but loses too many. In Y5 it kept only 56% of the ARR it started the year with.",
+        "It still loses about $10M a year and has $11.7M of cash. Without customer prepayments, that is about 13 months of runway.",
+        "Y5 Q2 to Q4 were better: about 70% of ARR kept on a yearly basis. The Y6 renewals will show if this lasts.",
     ]),
-    ("Key takeaways", [
-        "1. Churn is the core problem. Churn plus downgrades removed $2.4M (Y3), $2.8M (Y4) and $3.0M (Y5) of ARR, i.e. 43-47% of opening ARR every year. The company needs c.$3.7M of new ARR a year just to stay flat.",
-        "2. Y4 was a lost year and Y5 is a partial recovery. ARR grew 13% in Y4 at a burn multiple of 17x. Y5 added $1.7M net new ARR on $10.2M of burn (5.9x). Good is below 2x.",
-        "3. Growth is bought at quarter-ends and lost at anniversaries. 72% of Y5 new ARR landed in the last month of a quarter, and two months (M6 and M9) gave half the year. Churn clusters in month 12 and month 1.",
-        "4. Revenue and ARR have decoupled. Contracted ARR is up 26% but audited revenue is down 2.5%. Business Line 1 has halved from its peak; Business Line 2 is 72% of Y5 revenue (81% in Y5 Q4) but grew only 12% in the year.",
-        "5. Unit economics do not work yet. Fully loaded CAC is c.$97k against a $67k new-customer ACV; payback is 23 months against an implied customer life of 27-33 months. LTV/CAC is 1.2-1.6x.",
-        "6. Cost cuts were people-only. People cost fell 31% in Y5 while G&A (+21%), rent (+19%) and Others (+19%) all rose. G&A alone is 41% of revenue.",
-        "7. Runway is 14-19 months and leans on prepayments. Deferred revenue doubled to $6.2M (74% of ARR) and cushioned Y5 cash burn by c.$3M. No equity was raised in Y5.",
-        "8. The MIS needs rework before it goes to the board again. Y4 Q4 EBITDA was overstated by $1.3M through a formula error, two GM% cells were wrong, and Y4 MIS revenue does not tie to the audit (see Data Issues).",
+    ("1. Key takeaways", [
+        "Customer losses are the main problem. Cancellations and downgrades took away $3.0M of ARR in Y5. The company needs about $3.7M of new ARR a year just to stand still.",
+        "One bad quarter. Y5 Q1 lost $1.4M of ARR, about half of the year's losses. The rest of Y5 was much better.",
+        "Growth costs too much. In Y5 the company lost $5.9 for every $1 of ARR it added (Y4: $17). Healthy is under $2.",
+        "Revenue fell while ARR grew. ARR rose 26% but revenue fell 6% (audited: 2.5%). Business Line 1 is shrinking; Business Line 2 grew 12%.",
+        "Winning a customer costs about $97k. A new customer pays about $67k a year and stays about 27 months, so it barely pays back.",
+        "Cash is tighter than it looks. $3.1M of Y5 cash came from customers paying upfront and $1.2M from interest. Neither is certain next year.",
+        "The MIS has many errors. Nine cells in the company file were wrong and have been corrected; ten more items need answers (see Data Issues).",
     ]),
-    ("Financial & operating trends", [
-        "Revenue: $0.1M (Y1) to $6.3M (Y4), then $5.9M in Y5. Quarterly revenue has been flat at $1.3-1.6M for seven quarters before a Y5 Q4 jump to $1.85M that subscription MRR (+7%) does not support.",
-        "Mix: BL1 peaked at $737k a quarter (Y3 Q4) and is now $351k. BL2 was flat for five quarters before Y5 Q4.",
-        "Gross margin: steady at 72-87% once the formula errors are fixed (Y5: 77%).",
-        "Burn: EBITDA loss peaked at c.$4.0M in Y3 Q3 and was $2.0-3.1M a quarter in Y5. Cumulative EBITDA burn over five years is c.$41M.",
-        "Team: FTE peaked at 116 (Y4 Q3) and ended Y5 at 88. ARR per FTE rose from $65k to $95k, mostly because of the cuts. Efficient SaaS at this scale runs at $150-250k.",
+    ("2. Trends", [
+        "Revenue grew fast to $6.3M in Y4, then fell to $5.9M in Y5.",
+        "Gross margin is steady at 75-80%.",
+        "Losses peaked at $4.0M in Y3 Q3 and were $2.0-3.1M a quarter in Y5. Quarterly costs are down 25% from their peak.",
+        "Headcount peaked at 116 (Y4 Q3) and ended Y5 at 88 (down 14% in Y5). ARR per employee rose from $65k to $95k.",
     ]),
-    ("Performance drivers", [
-        "Positive: expansion ARR tripled to $609k; average new-customer ACV is rising ($58k to $67k); customers are willing to prepay; Y5 H2 bookings were the strongest in the company's history.",
-        "Negative: anniversary churn of larger accounts (churned ARR per lost customer doubled to $63k); dependence on a few quarter-end months; a shrinking legacy business line; non-people overheads that did not follow headcount down.",
+    ("2. What is working", [
+        "Upsells to existing customers grew 53% to $609k.",
+        "New deals are getting bigger: $67k average in Y5, and $88k in Y5 Q4.",
+        "Y5 Q2 and Q3 brought $2.8M of new ARR, the best two quarters the company has had.",
+        "Losses fell 21% in Y5 while ARR grew.",
     ]),
-    ("Areas of concern / key risks", [
-        "Renewal risk: the Y5 M6 and M9 cohorts ($2.1M of ARR) come up for renewal in Y6. If they behave like earlier cohorts, ARR falls and deferred revenue unwinds.",
-        "Funding risk: 12-15 months of realistic runway. The raise needs to start in Y6 Q1 and will be priced on retention, not the ARR headline.",
-        "Quality of revenue: two ARR definitions, a 6-18% gap between them, and revenue that does not track MRR quarter to quarter.",
-        "Reporting risk: formula errors, allocated rather than booked costs, and unreconciled MIS-to-audit differences.",
-        "Currency: a $1.08M movement outside the P&L suggests INR translation losses on cash; USD trends may be partly FX.",
+    ("2. What is not working", [
+        "Too many customers leave, mostly at the one-year mark.",
+        "Lost accounts are getting bigger: $33k each in Y3, $63k in Y5.",
+        "72% of new ARR is signed in the last month of a quarter, which makes results lumpy.",
+        "Only 9 new customers in Y5 Q4.",
+        "Rent, G&A and other costs went up about 20% while headcount fell.",
     ]),
-    ("Suggested board priorities", [
-        "1. Make retention the operating plan: a GRR target (75% within four quarters, 85% within eight) with named owners.",
-        "2. Decide on Business Line 1: sunset with a migration plan, or fund it to stabilise.",
-        "3. Start the fundraise in Y6 Q1 and agree with co-investors what a bridge would look like if H1 retention does not improve.",
-        "4. Take a further $1.5-2M out of non-people costs (rent, G&A, Others).",
-        "5. Fix the MIS before the next meeting (see Board Questions #27).",
+    ("2. Key risks", [
+        "Y6 renewals: the big Y5 M6 and M9 deals ($2.1M of ARR) may not renew.",
+        "Cash: about 13 months of underlying runway. The raise must start soon.",
+        "Next round: likely flat or down at today's retention. An insider bridge may be needed.",
+        "Reporting: the board cannot fully rely on the MIS until the errors are fixed.",
+        "Sales: few new customers in Q4 and a high cost to win each one.",
+    ]),
+    ("Decisions for the board", [
+        "Plan Y6 assuming Y5 retention repeats, not a recovery.",
+        "Cut yearly burn toward $6M, with a hard trigger if runway falls to 12 months.",
+        "Start fundraising in Y6 Q1 and agree backup bridge terms with existing investors.",
+        "Ask management for a renewal list, retention by customer group, and a monthly cash plan before the next meeting.",
+        "Fix the MIS.",
     ]),
 ]
 r = 5
@@ -556,13 +630,13 @@ tiles = [
     ("Closing ARR (Y5)", f"={A_}!H{AR['Closing ARR']}/1000000", '$0.0"M"', f"={A_}!H{AR['ARR growth']}", "YoY"),
     ("Revenue (Y5)", f"={A_}!H{AR['Revenue']}/1000000", '$0.0"M"', f"={A_}!H{AR['Revenue'] + 1}", "YoY"),
     ("EBITDA (Y5)", f"={A_}!H{AR['EBITDA']}/1000000", '$0.0"M";($0.0"M")', f"={A_}!H{AR['EBITDA margin']}", "margin"),
-    ("Gross revenue retention", f"={A_}!H{AR['Gross revenue retention (GRR)']}", '0%', f"={A_}!H{AR['Net revenue retention (NRR)']}", "NRR"),
-    ("Burn multiple (Y5)", f"={A_}!H{AR['Burn multiple (EBITDA burn / net new ARR)']}", '0.0"x"', f"={A_}!G{AR['Burn multiple (EBITDA burn / net new ARR)']}", "Y4"),
-    ("Cash, end Y5", "='Balance Sheet as per FS'!D29/1000", '$0.0"M"', f"='Cash & Runway'!E{RUNWAY_ROWS[1]}", "months runway"),
-    ("Customers", f"={A_}!H{AR['Closing customers']}", '#,##0', f"={A_}!H{AR['Logo churn, % of opening']}", "logo churn"),
-    ("LTV / CAC (Y5)", f"={A_}!H{AR['LTV / CAC']}", '0.0"x"', f"={A_}!H{AR['CAC payback (months, gross-margin adjusted)']}", "mth payback"),
+    ("Gross retention (Y5)", f"={A_}!H{AR['Gross revenue retention (GRR)']}", '0%', f"={A_}!H{AR['Gross retention, second half annualised']}", "in H2, annualised"),
+    ("Burn multiple (Y5)", f"={A_}!H{AR['Burn multiple (EBITDA burn / net new ARR)']}", '0.0"x"', f"={A_}!G{AR['Burn multiple (EBITDA burn / net new ARR)']}", "in Y4"),
+    ("Cash, end Y5", "='Balance Sheet as per FS'!D29/1000", '$0.0"M"', f"='Cash & Runway'!E{RUNWAY_ROWS[1]}", "months underlying runway"),
+    ("Customers (Y5)", f"={A_}!H{AR['Closing customers']}", '#,##0', f"={A_}!H{AR['Logo churn, % of opening']}", "logo churn"),
+    ("LTV / CAC (Y5)", f"={A_}!H{AR['LTV / CAC']}", '0.0"x"', f"={A_}!H{AR['CAC payback (months, gross-margin adjusted)']}", "months payback"),
 ]
-sub_fmt = {"YoY": '+0%;-0%', "margin": '0%', "NRR": '0%', "Y4": '0.0"x"', "months runway": '0', "logo churn": '0%', "mth payback": '0'}
+sub_fmt = {"YoY": '+0%;-0%', "margin": '0%;(0%)', "in H2, annualised": '0%', "in Y4": '0.0"x"', "months underlying runway": '0', "logo churn": '0%', "months payback": '0'}
 for k, (lab, val, fmt, sub, sublab) in enumerate(tiles):
     col = 2 + (k % 4) * 3 + (k % 4)
     row = 5 + (k // 4) * 5
@@ -676,7 +750,7 @@ ch5.series[0].tx = SeriesLabel(v="Gross revenue retention")
 ch5.series[1].tx = SeriesLabel(v="Net revenue retention")
 ch5.set_categories(yr_cats); style(ch5, "Annual ARR retention (benchmark: GRR 85-90%, NRR 100%+)")
 ch5.y_axis.number_format = '0%'; ch5.y_axis.scaling.min = 0; ch5.y_axis.scaling.max = 1.2
-ch5.dataLabels = DataLabelList(); ch5.dataLabels.showVal = True
+ch5.dataLabels = DataLabelList(); ch5.dataLabels.showVal = True; ch5.dataLabels.showSerName = False; ch5.dataLabels.showCatName = False; ch5.dataLabels.showLegendKey = False
 color(ch5, ["1F3864", "8EA9DB"])
 db.add_chart(ch5, "B48")
 
@@ -687,9 +761,50 @@ color(ch6, ["1F3864"])
 for sr in ch6.series: sr.smooth = False
 db.add_chart(ch6, "J48")
 
+gl = wb.create_sheet("Glossary")
+setup(gl, "Glossary", "Simple meanings of the terms used in this workbook.", {"B": 30, "C": 90})
+TERMS = [
+    ("ARR", "Annual recurring revenue. The yearly value of all signed subscription contracts."),
+    ("Contracted vs subscription ARR", "Contracted ARR is what is signed. Subscription ARR is monthly billing x 12. The company does not explain the gap."),
+    ("ACV", "Average yearly value of one customer's contract."),
+    ("Churn", "Customers or ARR lost through cancellations."),
+    ("Downgrade", "ARR lost when a customer stays but pays less."),
+    ("Expansion", "Extra ARR from existing customers buying more."),
+    ("Gross retention (GRR)", "Share of last year's ARR still kept, not counting upsells."),
+    ("Net retention (NRR)", "Same as gross retention, but counting upsells."),
+    ("Logo churn", "Share of customers lost, by count."),
+    ("CAC", "Sales and marketing cost of winning one new customer."),
+    ("CAC payback", "Months of gross profit from a customer needed to cover its CAC."),
+    ("LTV", "Total gross profit a customer brings in before it leaves."),
+    ("Magic number", "New ARR won for each $1 of sales and marketing spend."),
+    ("Burn multiple", "Loss for each $1 of ARR added. Under 2x is good."),
+    ("SaaS quick ratio", "ARR gained divided by ARR lost. 4x or more is healthy."),
+    ("Rule of 40", "Revenue growth % plus profit margin %. 40 or more is healthy."),
+    ("Deferred revenue", "Cash received from customers for service not yet delivered."),
+    ("Runway", "Months until cash runs out at the current rate of loss."),
+    ("n.m.", "Not meaningful. Usually the first year, which has no opening balance to compare with."),
+]
+r = 5
+header_row(gl, r, ["Term", "Meaning"]); r += 1
+for term, meaning in TERMS:
+    gl.cell(row=r, column=2, value=term).font = f_bold
+    x = gl.cell(row=r, column=3, value=meaning); x.font = f_norm; x.alignment = Alignment(wrap_text=True, vertical="top")
+    r += 1
+
+db.page_setup.orientation = "landscape"
+db.page_setup.fitToWidth = 1
+db.page_setup.fitToHeight = 1
+db.sheet_properties.pageSetUpPr.fitToPage = True
+db.print_area = "B2:V62"
+for ws in wb.worksheets:
+    ws.oddFooter.left.text = "Confidential. Draft for board discussion."
+    ws.oddFooter.left.size = 8
+    ws.oddFooter.right.text = "&A, page &P of &N"
+    ws.oddFooter.right.size = 8
+
 # order sheets
 order = ["Dashboard", "Insights", "Annual Summary", "Quarterly KPIs", "Cash & Runway", "Board Questions", "Data Issues",
-         "Summary MIS", "KPIs", "P&L as per FS", "Balance Sheet as per FS"]
+         "Glossary", "Summary MIS", "KPIs", "P&L as per FS", "Balance Sheet as per FS"]
 wb._sheets = [wb[n] for n in order]
 wb.active = 0
 for ws in wb.worksheets:
