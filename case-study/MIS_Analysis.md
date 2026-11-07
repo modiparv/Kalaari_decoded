@@ -105,7 +105,7 @@ Cumulative EBITDA burn over five years is ~$41M against $9.8M of equity left on 
 
 **Two S&M numbers.** The KPI sheet's "Total Sales & Mkt cost" is consistently 2.5-3x the Summary MIS "Sales & Marketing" line. The difference (~$0.9M a quarter) is almost certainly S&M headcount cost sitting inside "People Cost" in the Summary MIS, which would put 35-45% of all people cost in sales and marketing. Nothing in the workbook states this. CAC is $97k or $38k depending on which line is used; the analysis above uses the fully-loaded KPI basis because that is the money actually spent to win customers.
 
-**Reading.** Even on gross magic number (ignoring churn) the company gets $0.70 of new ARR per S&M dollar; on a net basis $0.29. Y5 Q4 closed only 9 new logos at $33k average ACV, the weakest logo quarter since Y1 and half the ACV of the installed base, which raises the question of whether the Q2 and Q3 pushes pulled demand forward.
+**Reading.** Even on gross magic number (ignoring churn) the company gets $0.70 of new ARR per S&M dollar; on a net basis $0.29. Y5 Q4 closed only 9 new logos, the weakest logo quarter since Y1, at an average ACV of $88k (above the $62k installed base; the KPI sheet shows $33k because its formula divides by new customers plus 15). The issue is logo count, not deal size, which raises the question of whether the Q2 and Q3 pushes pulled demand forward.
 
 ### 4.4 Cost structure and burn
 
@@ -212,6 +212,7 @@ The workbook, read at face value, supports a set of conclusions that do not surv
 | Summary MIS vs FS, Y4 | MIS revenue $6,290k vs audited $6,078k; other costs $142k lower than audit | MIS flatters Y4 by ~$0.35M at EBITDA |
 | P&L as per FS, Y5 | `=6664+1473+11` and `=6453+1473-11` | Same $1,473k adjustment appears in two lines; unexplained |
 | KPIs row 58 vs Summary row 12 | S&M cost 2.5-3x the Summary S&M line, no definition | CAC and sales efficiency depend on an unstated basis |
+| KPIs cell CD14 (Y5 Q4 new-customer ACV) | Formula divides by new customers + 15 | Shows $33k instead of $88k |
 | KPIs row 51 | Customer lifetime 36 months hard-coded, referenced by nothing | LTV never computed; assumption unsupported |
 | KPIs row 40 | "# Dropped customers*" is all zeros with an asterisk and no footnote | A distinction is defined but not tracked |
 | KPIs rows 45-46 | Churn and growth shown as quarterly rates, never annualised; no GRR/NRR, no cohorts, no ARR by business line | The most important SaaS metrics are absent |
@@ -235,7 +236,7 @@ Ordered by importance. Each one says what a good answer looks like.
 
 7. Define contracted ARR versus subscription ARR, and the 6-18% gap between them. Does contracted ARR include pilots, ramps counted at full value, multi-year TCV annualised, services, or usage components?
 8. For the Y5 M6 and M9 bookings: number of customers, segment, contract length, payment terms, discount versus list, and go-live status today. Were any of them pulled forward from the next quarter?
-9. Y5 Q4 signed 9 logos at $33k average, half the installed-base ACV. Was this a pipeline gap after the Q2/Q3 pushes, a deliberate move down-market, or seasonal? What is the Y6 Q1 pipeline, weighted?
+9. Y5 Q4 signed only 9 logos (average ACV $88k). Was this a pipeline gap after the Q2/Q3 pushes, a shift to larger deals, or seasonal? What is the Y6 Q1 pipeline, weighted?
 10. Explain the revenue-recognition policy. Why was Y5 Q3 revenue 73% of the quarter's subscription MRR, and Y5 Q4 BL2 revenue up 68% when MRR grew 7%? Is there catch-up or one-time revenue in Y5 Q4?
 
 **C. The two business lines**

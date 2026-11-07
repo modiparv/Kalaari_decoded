@@ -76,57 +76,84 @@ footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);paddin
 @media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.takeaways{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:420px){.kpi .v{font-size:22px}.q{grid-template-columns:26px minmax(0,1fr)}.q .pill{grid-column:2}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+ul.pts{margin:0;padding-left:18px;display:grid;gap:6px}
+ul.pts li{padding-left:2px}
+ul.pts li::marker{color:var(--muted)}
+.plus li::marker{color:var(--good)} .minus li::marker{color:var(--neg)}
+.panel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.who{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:6px;align-content:start;min-width:0}
+.who .role{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.who .vd{font-weight:600;font-size:13px}
+.who .dec{font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:6px}
+.who .dec b{color:var(--ink);font-weight:600}
+.consensus{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+td.tw{white-space:normal;text-align:left;min-width:200px}
+.small{font-size:12.5px;color:var(--ink-2)}
+@media (max-width:1000px){.panel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.cols2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){.panel{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="wrap">
 <header>
-  <div class="eyebrow">Portfolio review · Early-stage B2B SaaS · Y1 to Y5</div>
+  <div class="eyebrow">Board pre-read · Early-stage B2B SaaS · Y1 to Y5 · USD</div>
   <h1>MIS &amp; Balance Sheet Review</h1>
-  <p class="sub">Prepared for the Investment Partner ahead of the next board meeting. All figures in USD, rebuilt from the company's MIS and audited financial statements, with three formula errors in the MIS corrected.</p>
-  <nav aria-label="Sections"><a href="#kpis">Headline numbers</a><a href="#trends">Trends</a><a href="#findings">Key takeaways</a><a href="#annual">Annual table</a><a href="#questions">Board questions</a><a href="#issues">Data issues</a></nav>
+  <p class="sub">Reviewed by Kalaari's IC (three members) and two board directors. Figures rebuilt from the MIS and audited accounts, with four sheet formula errors corrected.</p>
+  <nav aria-label="Sections"><a href="#takeaways">1 · Takeaways</a><a href="#analysis">2 · Analysis &amp; risks</a><a href="#questions">3 · Questions</a><a href="#panel">IC &amp; board view</a><a href="#issues">Data issues</a></nav>
 </header>
 
 <div class="verdict" role="note">
   <div class="eyebrow">Verdict</div>
-  <p><strong>Running hard to stand still.</strong> Contracted ARR grew 26% in Y5 to $8.4M and headcount was cut 24%. Underneath, the company keeps only 56% of its ARR each year, recognised revenue fell, and EBITDA burn of $10.2M sits against $11.7M of cash. Retention is the issue for this board; the next round will be priced on it.</p>
+  <p><strong>Burning cash to replace ARR, not grow it.</strong> ARR +26% to $8.4M, but about 45% of the base leaks out every year, burn is $10M against $11.7M of cash, and underlying runway is about 13 months. Y5 Q2-Q4 retention improved to a ~70% run-rate. The Y6 renewals decide the path.</p>
 </div>
 
-<section id="kpis" aria-label="Headline numbers"><div class="kpis" id="kpiGrid"></div></section>
+<section aria-label="Headline numbers"><div class="kpis" id="kpiGrid"></div></section>
 
-<section id="trends">
-  <div class="sechead"><h2>Trends</h2><span class="eyebrow">Quarterly, Y1 Q1 to Y5 Q4</span></div>
+<section id="takeaways">
+  <div class="sechead"><h2>1 · Key takeaways</h2><span class="eyebrow">MIS and balance sheet</span></div>
+  <div class="box"><ul class="pts" id="tkList"></ul></div>
+</section>
+
+<section id="analysis">
+  <div class="sechead"><h2>2 · Analysis: trends, drivers, risks</h2><span class="eyebrow">Quarterly, Y1 Q1 to Y5 Q4</span></div>
   <div class="grid2">
-    <div class="card"><h3>Revenue by business line</h3><p class="cap">Business Line 1 has halved since Y3 Q4. Revenue was flat for seven quarters before the Y5 Q4 jump.</p><div class="legend" id="lg-rev"></div><div class="chart" id="c-rev"></div></div>
-    <div class="card"><h3>Closing contracted ARR</h3><p class="cap">Growth stalled in Y4 and ARR fell 13% in Y5 Q1 before two big booking quarters.</p><div class="legend" id="lg-arr"></div><div class="chart" id="c-arr"></div></div>
-    <div class="card"><h3>ARR movements</h3><p class="cap">Churn and downgrades remove 43-47% of opening ARR every year from Y3.</p><div class="legend" id="lg-mov"></div><div class="chart" id="c-mov"></div></div>
-    <div class="card"><h3>EBITDA (corrected)</h3><p class="cap">The MIS showed Y4 Q4 at -$1.6M; the true figure is -$2.9M.</p><div class="chart" id="c-ebitda"></div></div>
-    <div class="card"><h3>Annual ARR retention</h3><p class="cap">Gross and net retention against a 100% line. B2B SaaS benchmark: 85-90% gross, 100%+ net.</p><div class="legend" id="lg-ret"></div><div class="chart" id="c-ret"></div></div>
-    <div class="card"><h3>Headcount and ARR per FTE</h3><p class="cap">FTE peaked at 116 in Y4 Q3. ARR per head rose mostly because of the cuts.</p><div class="legend" id="lg-fte"></div><div class="chart" id="c-fte"></div></div>
+    <div class="card"><h3>Revenue by business line</h3><p class="cap">BL1 halved since Y3 Q4. BL2 carries the business.</p><div class="legend" id="lg-rev"></div><div class="chart" id="c-rev"></div></div>
+    <div class="card"><h3>ARR movements</h3><p class="cap">Y5 Q1 lost $1.4M; Q2-Q3 bookings recovered it.</p><div class="legend" id="lg-mov"></div><div class="chart" id="c-mov"></div></div>
+    <div class="card"><h3>Closing contracted ARR</h3><p class="cap">Flat through Y4, dip in Y5 Q1, then up.</p><div class="legend" id="lg-arr"></div><div class="chart" id="c-arr"></div></div>
+    <div class="card"><h3>EBITDA (corrected)</h3><p class="cap">Burn peaked in Y3 Q3. Still $2-3M a quarter.</p><div class="chart" id="c-ebitda"></div></div>
   </div>
-</section>
-
-<section id="findings">
-  <div class="sechead"><h2>Key takeaways</h2><span class="eyebrow">From the MIS and balance sheet</span></div>
-  <div class="takeaways" id="tk"></div>
-</section>
-
-<section id="annual">
-  <div class="sechead"><h2>Annual table</h2><span class="eyebrow">USD</span></div>
-  <div class="tablewrap"><table id="annualTable"></table></div>
+  <div class="cols2">
+    <div class="box"><h3>Performance drivers: working</h3><ul class="pts plus" id="drvPlus"></ul></div>
+    <div class="box"><h3>Performance drivers: not working</h3><ul class="pts minus" id="drvMinus"></ul></div>
+  </div>
+  <div class="tablewrap"><table id="riskTable"></table></div>
 </section>
 
 <section id="questions">
-  <div class="sechead"><h2>Questions for founders &amp; management</h2><span class="eyebrow" id="qcount"></span></div>
+  <div class="sechead"><h2>3 · Questions &amp; follow-ups for the Investment Partner</h2><span class="eyebrow">Before the next board</span></div>
+  <div class="cols2">
+    <div class="box"><h3>Three deliverables to ask for</h3><ul class="pts" id="asks"></ul></div>
+    <div class="box"><h3>Decisions for this meeting</h3><ul class="pts" id="decisions"></ul></div>
+  </div>
   <div class="filters" id="qfilters" role="group" aria-label="Filter questions by area"></div>
   <ol class="qlist" id="qlist"></ol>
 </section>
 
+<section id="panel">
+  <div class="sechead"><h2>IC &amp; board view</h2><span class="eyebrow">Five reviewers, one line each</span></div>
+  <div class="panel" id="panelGrid"></div>
+  <div class="consensus"><h3>Where they disagreed, and the resolution</h3><ul class="pts" id="debates"></ul></div>
+</section>
+
 <section id="issues">
-  <div class="sechead"><h2>Data issues in the MIS</h2><span class="eyebrow">Three corrected, the rest open</span></div>
+  <div class="sechead"><h2>Data issues in the MIS</h2><span class="eyebrow">Four corrected, rest open</span></div>
   <div class="tablewrap"><table id="issueTable"></table></div>
 </section>
 
-<footer>Source: company MIS (Summary MIS and KPIs tabs), audited P&amp;L and balance sheet for Y4 and Y5. Metrics rebuilt from input rows; cash bridge derived from the two balance sheets. Benchmarks are typical B2B SaaS ranges, not company data.</footer>
+<footer>Source: company MIS (Summary MIS and KPIs tabs), audited P&amp;L and balance sheet for Y4 and Y5. Q2-Q4 run-rate retention is annualised from those three quarters. Benchmarks are typical B2B SaaS ranges.</footer>
 </div>
 
 <script>
@@ -137,17 +164,17 @@ const fmtM = v => (v<0?'-':'')+'$'+(Math.abs(v)/1e6).toFixed(1)+'M';
 const fmtK = v => (v<0?'-':'')+'$'+Math.round(Math.abs(v)/1e3).toLocaleString()+'k';
 const fmtAx = v => Math.abs(v)>=1e6 ? fmtM(v).replace('.0M','M') : (v===0?'$0':fmtK(v));
 const pct = v => Math.round(v*100)+'%';
-
+const li = arr => arr.map(x=>`<li>${x}</li>`).join('');
 // ---------- KPI tiles
 const y5=4,y4=3;
 const tiles=[
   {l:'Closing ARR, Y5',v:fmtM(a['Closing ARR'][y5]),d:'+'+pct(a['Closing ARR'][y5]/a['Closing ARR'][y4]-1)+' vs Y4',s:['warn','Growth, not yet efficient']},
   {l:'Revenue, Y5',v:fmtM(a['Revenue'][y5]),d:pct(a['Revenue'][y5]/a['Revenue'][y4]-1)+' vs Y4',s:['crit','Declining']},
-  {l:'Gross revenue retention',v:pct(a['Gross revenue retention (GRR)'][y5]),d:'Net retention '+pct(a['Net revenue retention (NRR)'][y5]),s:['crit','Benchmark 85-90%']},
+  {l:'Gross retention, Y5',v:pct(a['Gross revenue retention (GRR)'][y5]),d:'Q2-Q4 run-rate ~70%. Net '+pct(a['Net revenue retention (NRR)'][y5]),s:['crit','Benchmark 85-90%']},
   {l:'EBITDA, Y5',v:fmtM(a['EBITDA'][y5]),d:'Margin '+pct(a['EBITDA'][y5]/a['Revenue'][y5]),s:['warn','Burn down 21%']},
   {l:'Burn multiple, Y5',v:a['Burn multiple (EBITDA burn / net new ARR)'][y5].toFixed(1)+'x',d:'Y4 was '+a['Burn multiple (EBITDA burn / net new ARR)'][y4].toFixed(1)+'x',s:['crit','Good is under 2x']},
-  {l:'Cash, end Y5',v:'$11.7M',d:'14-19 months runway',s:['warn','Raise in Y6 Q1']},
-  {l:'LTV / CAC, Y5',v:a['LTV / CAC'][y5].toFixed(1)+'x',d:'CAC '+fmtK(a['CAC per new customer'][y5])+', payback '+Math.round(a['CAC payback (months, gross-margin adjusted)'][y5])+' mo',s:['crit','Benchmark 3x+']},
+  {l:'Cash, end Y5',v:'$11.7M',d:'~13 months underlying runway',s:['crit','Decide path now']},
+  {l:'LTV / CAC, Y5',v:a['LTV / CAC'][y5].toFixed(1)+'x',d:'CAC $97k, payback 23 mo',s:['crit','Benchmark 3x+']},
   {l:'Customers, end Y5',v:a['Closing customers'][y5],d:'Logo churn '+pct(a['Logo churn, % of opening'][y5])+' a year',s:['warn','Big accounts leaving']},
 ];
 document.getElementById('kpiGrid').innerHTML=tiles.map(t=>`<div class="kpi"><div class="eyebrow">${t.l}</div><div class="v num">${t.v}</div><div class="d">${t.d}</div><span class="pill ${t.s[0]}">${t.s[1]}</span></div>`).join('');
@@ -192,93 +219,111 @@ function chart(id, opt){
 }
 
 function draw(){
-  const C={a:css('--accent'),a2:css('--accent-2'),n:css('--neg'),n2:css('--neg-2'),w:css('--warn')};
+  const C={a:css('--accent'),a2:css('--accent-2'),n:css('--neg'),n2:css('--neg-2')};
   chart('c-rev',{label:'Quarterly revenue by business line',kind:'stack',cats:Q,every:2,legend:'lg-rev',series:[{n:'Business Line 1',v:q['Business Line 1'],c:C.a},{n:'Business Line 2',v:q['Business Line 2'],c:C.a2}],labels:[[11,fmtM(q.Revenue[11]),q.Revenue[11]],[19,fmtM(q.Revenue[19]),q.Revenue[19]]]});
   chart('c-arr',{label:'Closing ARR',kind:'line',cats:Q,every:2,legend:'lg-arr',series:[{n:'Contracted ARR',v:q['Closing ARR'],c:C.a},{n:'Subscription ARR',v:q['Subscription ARR (closing MRR x 12)'],c:C.a2}],labels:[[15,fmtM(q['Closing ARR'][15]),q['Closing ARR'][15],-10],[16,fmtM(q['Closing ARR'][16]),q['Closing ARR'][16],18],[19,fmtM(q['Closing ARR'][19]),q['Closing ARR'][19],-10]]});
   chart('c-mov',{label:'ARR movements',kind:'stack',cats:Q,every:2,legend:'lg-mov',series:[{n:'New',v:q['New ARR'],c:C.a},{n:'Expansion',v:q['Expansion'],c:C.a2},{n:'Downgrade',v:q['Downgrade'],c:C.n2},{n:'Churn',v:q['Churn'],c:C.n}]});
-  chart('c-ebitda',{label:'Quarterly EBITDA',kind:'group',cats:Q,every:2,series:[{n:'EBITDA',v:q['EBITDA'],c:C.n}],tipfmt:fmtM,labels:[[10,fmtM(q.EBITDA[10]),q.EBITDA[10],14],[15,'-$2.9M',q.EBITDA[15],14],[19,fmtM(q.EBITDA[19]),q.EBITDA[19],14]]});
-  const g=a['Gross revenue retention (GRR)'].slice(2),nr=a['Net revenue retention (NRR)'].slice(2);
-  chart('c-ret',{label:'Annual retention',kind:'group',cats:['Y3','Y4','Y5'],legend:'lg-ret',max:1.1,hline:1,fmt:v=>Math.round(v*100)+'%',tipfmt:pct,series:[{n:'Gross retention',v:g,c:C.a},{n:'Net retention',v:nr,c:C.a2}]});
-  chart('c-fte',{label:'Headcount',kind:'line',cats:Q,every:2,legend:'lg-fte',fmt:v=>Math.round(v),tipfmt:v=>Math.round(v),series:[{n:'FTE',v:q['FTE (quarter end)'],c:C.a}],labels:[[14,'116',116,-10],[19,'88',88,-10]]});
-  document.getElementById('lg-fte').insertAdjacentHTML('beforeend',`<span>ARR per FTE: ${fmtK(a['ARR per FTE (year end)'][3])} (Y4) to ${fmtK(a['ARR per FTE (year end)'][4])} (Y5)</span>`);
+  chart('c-ebitda',{label:'Quarterly EBITDA',kind:'group',cats:Q,every:2,series:[{n:'EBITDA',v:q['EBITDA'],c:C.n}],tipfmt:fmtM,labels:[[19,fmtM(q.EBITDA[19]),q.EBITDA[19],14]]});
 }
 draw();
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
 new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 
-// ---------- takeaways
-const TK=[
- ['Churn is the core problem','crit','Churn plus downgrades removed $2.4M, $2.8M and $3.0M of ARR in Y3-Y5: 43-47% of opening ARR each year. The company needs about $3.7M of new ARR a year just to stay flat.'],
- ['Y4 lost, Y5 a partial recovery','warn','ARR grew 13% in Y4 at a 17x burn multiple. Y5 added $1.7M of net new ARR on $10.2M of burn (5.9x).'],
- ['Growth bought at quarter-ends','warn','72% of Y5 new ARR landed in the last month of a quarter; two months gave half the year. Churn peaks in month 12 and month 1, a year after the big booking months.'],
- ['Revenue and ARR have decoupled','warn','ARR is up 26% but audited revenue is down 2.5%. Business Line 1 has halved from its peak; Business Line 2 grew only 12% in Y5.'],
- ['Unit economics do not work yet','crit','Fully loaded CAC of about $97k against a $67k ACV. Payback of 23 months is close to the 27-month customer life that churn implies. LTV/CAC 1.2x.'],
- ['Cost cuts were people only','warn','People cost fell 31% in Y5. G&A (+21%), rent (+19%) and other costs (+19%) all rose; G&A alone is 41% of revenue.'],
- ['Runway leans on prepayments','warn','Deferred revenue doubled to $6.2M (74% of ARR) and cushioned Y5 cash burn by about $3M. No equity raised in Y5. Realistic runway 12-15 months.'],
- ['The MIS needs rework','crit','Y4 Q4 EBITDA overstated by $1.3M through a formula error, two gross-margin cells wrong, and Y4 MIS revenue $212k above the audited figure.'],
+document.getElementById('tkList').innerHTML=li([
+ '<b>Retention is the business.</b> Gross retention 56% in Y5 (benchmark 85-90%). About $3.7M of new ARR a year is needed just to stay flat.',
+ '<b>Q2-Q4 Y5 was better.</b> Annualised gross retention ~70%, net ~81%. Y5 Q1 alone lost $1.4M, half the year\'s churn.',
+ '<b>Growth is expensive.</b> Burn multiple 17x in Y4, 5.9x in Y5 (good is under 2x). LTV/CAC 1.2x.',
+ '<b>Revenue lags ARR.</b> ARR +26%, audited revenue -2.5%. BL1 down 52% from peak; BL2 now 81% of Q4 revenue.',
+ '<b>Runway is ~13 months underlying.</b> $11.7M cash, but $3.1M of Y5 cash came from prepayments and $1.2M from interest.',
+ '<b>The MIS is not board-grade.</b> Four formula errors, a $212k Y4 revenue gap to the audit, and $1.08M of unexplained cash and reserves movement.',
+]);
+document.getElementById('drvPlus').innerHTML=li([
+ 'Expansion ARR tripled to $609k in Y5',
+ 'New-deal size rising: Y5 Q4 averaged $88k vs $62k installed base',
+ 'Gross margin steady at 75-80%',
+ 'Y5 H2 bookings the strongest ever ($2.2M)',
+ 'Headcount cut 24%; ARR per FTE $65k to $95k',
+]);
+document.getElementById('drvMinus').innerHTML=li([
+ 'Larger accounts leaving: churned ARR per lost logo $33k to $63k',
+ '72% of new ARR booked in quarter-end months',
+ 'Only 9 new logos in Y5 Q4; CAC about $97k fully loaded',
+ 'G&A, rent and other costs up ~20% while people cost fell 31%',
+ 'Business Line 1 in decline with no stated plan',
+]);
+const RISKS=[
+ ['Y6 renewals of the Y5 M6 and M9 deals fail','$2.1M of ARR; churn peaks at anniversaries','Critical'],
+ ['Cash runs out before retention proof exists','~13 months underlying runway; interest income falls with cash','Critical'],
+ ['Next round is flat or down, or needs an insider bridge','~$45M raised vs $8.4M ARR at 56% retention','Critical'],
+ ['Numbers the board relies on are wrong','4 formula errors; $1,473k adjustment in two Y5 expense lines','High'],
+ ['New-logo engine stalls','9 logos in Y5 Q4; net magic number 0.3x','High'],
+ ['Cost cuts hit the wrong teams','24% headcount cut; no split by function given','Medium'],
 ];
-const lab={crit:'Critical',warn:'Watch',good:'Positive'};
-document.getElementById('tk').innerHTML=TK.map(([h,s,p])=>`<div class="tk"><div class="row"><h3>${h}</h3><span class="pill ${s}">${lab[s]}</span></div><p>${p}</p></div>`).join('')
- +`<div class="tk"><div class="row"><h3>What is working</h3><span class="pill good">Positive</span></div><p>Expansion ARR tripled to $609k, new-customer ACV rose from $58k to $67k, gross margin holds at 77%, and Y5 H2 bookings were the strongest ever.</p></div>`
- +`<div class="tk"><div class="row"><h3>Board priorities</h3><span class="pill warn">Action</span></div><p>Set a retention target (75% gross in four quarters), decide on Business Line 1, start the raise in Y6 Q1, cut a further $1.5-2M of non-people cost, and fix the MIS.</p></div>`;
+document.getElementById('riskTable').innerHTML='<thead><tr><th scope="col">Key risk</th><th scope="col" style="text-align:left">Signal in the numbers</th><th scope="col">Severity</th></tr></thead><tbody>'+RISKS.map(([r,s,v])=>`<tr><td class="tw"><b>${r}</b></td><td class="tw">${s}</td><td><span class="pill ${v==='Critical'?'crit':'warn'}">${v}</span></td></tr>`).join('')+'</tbody>';
 
-// ---------- annual table
-const AT=[['Revenue','Revenue','m'],['Closing ARR','Closing ARR','m'],['Net new ARR','Net new ARR','m'],['EBITDA','EBITDA','m'],['Gross margin','Gross margin %','p'],['Gross retention','Gross revenue retention (GRR)','p',.85],['Net retention','Net revenue retention (NRR)','p',1],['Customers','Closing customers','n'],['Logo churn','Logo churn, % of opening','p'],['Average new ACV','Average ACV, new customers','k'],['CAC','CAC per new customer','k'],['Burn multiple','Burn multiple (EBITDA burn / net new ARR)','x'],['LTV / CAC','LTV / CAC','x'],['FTE','FTE (year end)','n'],['ARR per FTE','ARR per FTE (year end)','k']];
-const fv=(v,t)=>typeof v==='string'?'n.m.':t==='m'?fmtM(v):t==='k'?fmtK(v):t==='p'?pct(v):t==='x'?v.toFixed(1)+'x':Math.round(v).toLocaleString();
-document.getElementById('annualTable').innerHTML='<thead><tr><th scope="col">Metric</th>'+['Y1','Y2','Y3','Y4','Y5'].map(y=>`<th scope="col">${y}</th>`).join('')+'</tr></thead><tbody>'+AT.map(([l,k,t,th])=>`<tr><td>${l}</td>`+a[k].map(v=>{let bad=false;if(typeof v==='number'){if(th!=null&&v<th)bad=true;if(k.startsWith('Burn')&&v>3)bad=true;if(k==='LTV / CAC'&&v<3)bad=true;if(k==='EBITDA')bad=false}return`<td class="num${bad?' bad':''}">${fv(v,t)}</td>`}).join('')+'</tr>').join('')+'</tbody>';
+document.getElementById('asks').innerHTML=li([
+ '<b>Renewal list for Y6:</b> every account with ARR, renewal month, health score and owner. Plus the reasons behind the top 10 Y5 losses.',
+ '<b>Cohort retention</b> by signing quarter and business line. Is BL2 above 80% at 12 months?',
+ '<b>Monthly Y6 cash plan</b> owned by the CFO and tied to the ledger, run under two cases (Y5 retention, 70%), with cash-out dates.',
+]);
+document.getElementById('decisions').innerHTML=li([
+ 'Budget Y6 on Y5 retention repeating, not on a recovery.',
+ 'Cut burn toward $6M a year (24 months of runway) with a hard trigger at 12 months of runway.',
+ 'Hold Kalaari follow-on reserves until cohort data is in.',
+ 'Run two tracks: prepare the raise and agree bridge terms with co-investors, and quietly test strategic interest.',
+ 'Fix the MIS before the next meeting.',
+]);
 
-// ---------- questions
 const QS=[
- ['Retention','Share ARR cohort retention by signing quarter at 12 and 24 months, split by business line.','Gross retention of 53-57% is the main issue. Are recent cohorts better?','High'],
- ['Retention','Who were the top 10 churned accounts in Y5 (ACV, tenure, reason)? Y5 Q1 alone lost 16 customers and $1.2M of ARR.','Churned ARR per lost customer has doubled to $63k.','High'],
- ['Retention','What ARR renews each month of Y6, especially the Y5 M6 ($1.04M) and M9 ($1.03M) cohorts? What is their health today?','Those two months gave half of Y5 new ARR.','High'],
- ['Retention','Churn peaks in month 12 and month 1 every year. Are contracts annual and calendar-aligned? How much is first-year deals not renewing?','Points to quarter-end deals that do not stick.','High'],
- ['Retention','Which accounts drove the $609k of expansion in Y5? Is the upsell motion repeatable?','Expansion is the one retention lever that is improving.','Medium'],
- ['Retention','What drove downgrades of $494k (Y4) and $313k (Y5)?','Separates product issues from commercial ones.','Medium'],
- ['ARR definition','Define contracted ARR vs subscription ARR. Does it include pilots, ramps at full value, services or multi-year TCV?','The two differ by 6-18%.','High'],
- ['ARR definition','For the Y5 M6 and M9 bookings: customers, contract length, payment terms, discount vs list, go-live status.','Tests for pulled-forward or discounted deals.','High'],
- ['ARR definition','Y5 Q4 signed 9 customers at $33k average ACV. Pipeline gap, move down-market or seasonality? Weighted Y6 Q1 pipeline?','Weakest new-logo quarter since Y1.','Medium'],
- ['ARR definition','Why was Y5 Q4 Business Line 2 revenue up 68% when subscription MRR grew 7%? Any one-off revenue?','Q4 revenue should not be annualised until this is clear.','Medium'],
- ['Business lines','What are Business Line 1 and 2? Is BL1 being sunset, and what happens to its customers?','BL1 revenue is down 52% from peak.','High'],
- ['Business lines','Provide gross margin, churn and CAC by business line.','If churn sits in BL1, the BL2 story is healthier than the blend.','Medium'],
- ['Go-to-market','Reconcile S&M on the KPI tab ($5.9M) with the S&M line in the Summary MIS ($2.3M). Share quota reps and attainment.','CAC is $97k or $38k depending on the basis.','High'],
- ['Go-to-market','What discounts were given on quarter-end deals? How does first-year price compare with renewal price?','A renewal step-up would explain anniversary churn.','Medium'],
- ['Cost base','People cost per FTE is $87-109k. Where is the team, how much is ESOP and contractors? What was the Y5 Q2 one-off?','People cost dipped about $0.5M in Y5 Q2, then recovered.','Medium'],
- ['Cost base','Rent rose 19% while headcount fell 24%. What are the lease terms and break options?','Next obvious saving.','Medium'],
- ['Cost base','Explain Y5 Q1 non-people costs of $1.9M vs $1.3M in Y4 Q4, and why S&M and G&A match to the cent.','A one-off or a reporting error.','Medium'],
- ['Cost base','G&A is 41% of revenue. Break down "Others" and share a plan to get G&A under 20%.','Non-people opex is $6.6M on $5.9M of revenue.','Medium'],
- ['Cash & funding','Share a monthly Y6 cash forecast under two cases: Y5 retention repeats, and gross retention reaches 75%.','Runway depends on renewals.','High'],
- ['Cash & funding','Deferred revenue is 74% of ARR (47% a year ago). What are billing terms? Were prepayments discounted?','Prepayments flattered Y5 burn by about $3M.','High'],
- ['Cash & funding','What is in other non-current assets ($2.6M) and short-term loans & advances ($1.4M)? Any of it cash-like?','Affects true liquidity.','Medium'],
- ['Cash & funding','Explain the $1.08M fall in cash and reserves outside the P&L. If FX, share INR-basis numbers.','USD trends may be partly currency.','Medium'],
- ['Cash & funding','Fundraising plan: amount, timing, target investors, and the metrics the company expects to show.','The process needs to start in Y6 Q1.','High'],
- ['Reporting','Explain the $212k Y4 revenue gap to the audit and the 1,473k adjustment in both Y5 expense lines.','Confidence in the board numbers.','Medium'],
- ['Reporting','Fix the MIS: correct formulas; add retention, cohorts, ARR by business line, billings, cash flow and headcount by function.','The current file should not go to the board again.','High'],
+ ['Retention','Who were the top 10 churned accounts in Y5? Why did Y5 Q1 lose 16 logos and $1.2M?','High'],
+ ['Retention','What is the health today of the Y5 M6 and M9 accounts ($2.1M) that renew in Y6?','High'],
+ ['Retention','Was Y5 Q1 churn a planned BL1 exit or product failure?','High'],
+ ['Growth','Were quarter-end deals discounted? How does first-year price compare with renewal price?','Medium'],
+ ['Growth','Why only 9 new logos in Y5 Q4? What is the weighted Y6 Q1 pipeline?','Medium'],
+ ['Growth','Reconcile the two S&M figures ($5.9M vs $2.3M). What is quota attainment?','Medium'],
+ ['Cost','Which functions did the 24% headcount cut hit? Was customer success reduced?','High'],
+ ['Cost','Why did rent and G&A rise 20% while headcount fell? What are lease break dates?','Medium'],
+ ['Cash','What is the $1,473k in both Y5 expense lines: ESOP, reclass, or a double count?','High'],
+ ['Cash','What is the $1.08M reserves debit outside the P&L? Share the statement of changes in equity.','High'],
+ ['Cash','What is in the $2.6M of other non-current assets? Deposits, maturities, any lien?','Medium'],
+ ['Cash','Deferred revenue is all current. Is any of it multi-year prepaid?','Medium'],
 ];
 const areas=['All',...new Set(QS.map(x=>x[0]))];let cur='All';
-try{const s=localStorage.getItem('mis-qarea');if(s&&areas.includes(s))cur=s}catch(e){}
+try{const s=localStorage.getItem('mis-qarea2');if(s&&areas.includes(s))cur=s}catch(e){}
 function renderQ(){
   const list=QS.map((x,i)=>[i+1,...x]).filter(x=>cur==='All'||x[1]===cur);
-  document.getElementById('qlist').innerHTML=list.map(([n,ar,t,w,p])=>`<li class="q"><span class="n">${String(n).padStart(2,'0')}</span><span class="t">${t}</span><span class="pill ${p==='High'?'crit':'warn'}">${p}</span><span class="w">${w}</span><span class="area">${ar}</span></li>`).join('');
-  document.getElementById('qcount').textContent=list.length+' of '+QS.length+' questions';
+  document.getElementById('qlist').innerHTML=list.map(([n,ar,t,p])=>`<li class="q"><span class="n">${String(n).padStart(2,'0')}</span><span class="t">${t}</span><span class="pill ${p==='High'?'crit':'warn'}">${p}</span><span class="area">${ar}</span></li>`).join('');
   document.querySelectorAll('#qfilters button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.a===cur));
 }
-document.getElementById('qfilters').innerHTML=areas.map(x=>`<button type="button" id="qf-${x.replace(/\W+/g,'-')}" data-a="${x}">${x}</button>`).join('');
-document.getElementById('qfilters').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.a;try{localStorage.setItem('mis-qarea',cur)}catch(_){}renderQ()});
+document.getElementById('qfilters').innerHTML=areas.map(x=>`<button type="button" id="qf2-${x}" data-a="${x}">${x}</button>`).join('');
+document.getElementById('qfilters').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.a;try{localStorage.setItem('mis-qarea2',cur)}catch(_){}renderQ()});
 renderQ();
 
-// ---------- issues
+const PANEL=[
+ ['Kalaari IC','Managing Partner','Manage for outcome, not a follow-on candidate.','Hold reserves; cohort data and a 24-month budget within 60 days.'],
+ ['Kalaari IC','Finance Partner','Numbers are directionally right, not board-grade. Real runway ~13 months.','CFO-owned cash forecast; cost-cut trigger at 12 months.'],
+ ['Kalaari IC','Devil\'s advocate','Y5 Q1 was a one-off clean-out; Q2-Q4 ran at ~70% retention.','Raise in Y6 Q1; gate any bridge on BL2 cohort data.'],
+ ['Board','Independent director','Sales adds logos; half the ARR leaves in a year.','Budget on Y5 retention; agree bridge terms now.'],
+ ['Board','Co-investor director','Not fundable externally at 56% retention. Plan for flat, down or a sale.','Dual track: cut burn below $0.5M a month and test buyers.'],
+];
+document.getElementById('panelGrid').innerHTML=PANEL.map(([g,r,v,d])=>`<div class="who"><span class="role">${g}</span><h3>${r}</h3><div class="vd">${v}</div><div class="dec"><b>Wants:</b> ${d}</div></div>`).join('');
+document.getElementById('debates').innerHTML=li([
+ '<b>How bad is retention?</b> Full year 56%, Q2-Q4 run-rate ~70%. <i>Resolution:</i> both get reported; Y6 is budgeted on 56% until cohorts prove otherwise.',
+ '<b>Raise or bridge?</b> The devil\'s advocate wants to raise in Y6 Q1; the co-investor expects no outside price. <i>Resolution:</i> run both tracks and agree bridge terms before the meeting.',
+ '<b>Were quarter-end deals discounted?</b> Not proven: M6 and M9 deal sizes ($74k, $94k) are above average. <i>Resolution:</i> ask, do not accuse.',
+ '<b>Prepayments: risk or comfort?</b> All $6.2M of deferred revenue is current, so it is not multi-year. <i>Resolution:</i> it unwinds if renewals slip; treat as a risk.',
+ '<b>How deep to cut?</b> $1.5-2M of overhead is not enough. <i>Resolution:</i> target burn near $6M a year, including S&M, and protect customer success.',
+]);
+
 const IS=[
- ['Y4 Q4 EBITDA formula','Subtracts only People Cost from gross margin.','Burn understated by $1.3M','Corrected'],
- ['Y4 Q1 gross margin %','Divides COGS by revenue.','Showed 19% instead of 81%','Corrected'],
- ['Y5 Q2 gross margin %','Same error.','Showed 25% instead of 75%','Corrected'],
- ['Y5 Q1 S&M and G&A','Both exactly $682,053.99.','One line is wrong','Open'],
- ['Y2 Rent vs Others','Equal to the cent for three quarters.','Costs allocated, not booked','Open'],
- ['Y4 MIS vs audit','Revenue $212k higher, costs $142k lower than audited.','MIS flatters Y4 by about $0.35M','Open'],
- ['Y5 audited expenses','Same 1,473k added to two expense lines.','Possible double count','Open'],
- ['Two S&M figures','KPI tab S&M is 2.5-3x the Summary MIS line.','CAC basis unclear','Open'],
- ['36-month lifetime','Hard-coded, used by no formula.','LTV never computed','Open'],
- ['Missing metrics','No retention, cohorts, ARR by business line or cash flow.','Key SaaS metrics absent','Open'],
+ ['Y4 Q4 EBITDA','Formula leaves out four cost lines','Burn understated by $1.3M','Corrected'],
+ ['Y4 Q1, Y5 Q2 gross margin %','COGS divided by revenue','Showed 19% and 25%, not 81% and 75%','Corrected'],
+ ['Y5 Q4 new-customer ACV','Divides by new customers + 15','Showed $33k; true figure $88k','Corrected'],
+ ['Y5 Q1 S&M and G&A','Identical to the cent','One line is wrong','Open'],
+ ['Y4 MIS vs audit','Revenue $212k higher than audited','Flatters Y4','Open'],
+ ['Y5 audited expenses','Same $1,473k added to two lines','Possible double count','Open'],
+ ['Two S&M figures','KPI tab 2.5-3x the Summary MIS line','CAC basis unclear','Open'],
+ ['Missing metrics','No retention, cohorts, ARR by line, cash flow','Key SaaS metrics absent','Open'],
 ];
 document.getElementById('issueTable').innerHTML='<thead><tr><th scope="col">Where</th><th scope="col" style="text-align:left">Issue</th><th scope="col" style="text-align:left">Impact</th><th scope="col">Status</th></tr></thead><tbody>'+IS.map(([w,i,m,s])=>`<tr><td>${w}</td><td class="tw">${i}</td><td class="tw">${m}</td><td><span class="pill ${s==='Corrected'?'good':'warn'}">${s}</span></td></tr>`).join('')+'</tbody>';
 </script>
