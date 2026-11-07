@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="440" viewBox="0 0 960 440" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+<rect width="960" height="440" fill="#fcfcfb"/>
+<text x="70" y="28" font-size="17" font-weight="600" fill="#0b0b0b">Quarterly product revenue by business line</text>
+<text x="70" y="48" font-size="12.5" fill="#52514e">Business Line 1 has halved since its Y3 Q4 peak; Business Line 2 is now 81% of revenue. USD.</text>
+<line x1="70" y1="384.0" x2="936" y2="384.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="62" y="388.0" font-size="11" text-anchor="end" fill="#898781">$0</text>
+<line x1="70" y1="306.0" x2="936" y2="306.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="310.0" font-size="11" text-anchor="end" fill="#898781">$500k</text>
+<line x1="70" y1="228.0" x2="936" y2="228.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="232.0" font-size="11" text-anchor="end" fill="#898781">$1M</text>
+<line x1="70" y1="150.0" x2="936" y2="150.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="154.0" font-size="11" text-anchor="end" fill="#898781">$1.5M</text>
+<line x1="70" y1="72.0" x2="936" y2="72.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62" y="76.0" font-size="11" text-anchor="end" fill="#898781">$2M</text>
+<text x="91.7" y="402" font-size="11" text-anchor="middle" fill="#898781">Y1 Q1</text>
+<text x="134.9" y="402" font-size="11" text-anchor="middle" fill="#898781">Y1 Q2</text>
+<text x="178.2" y="402" font-size="11" text-anchor="middle" fill="#898781">Y1 Q3</text>
+<text x="221.6" y="402" font-size="11" text-anchor="middle" fill="#898781">Y1 Q4</text>
+<text x="264.9" y="402" font-size="11" text-anchor="middle" fill="#898781">Y2 Q1</text>
+<text x="308.1" y="402" font-size="11" text-anchor="middle" fill="#898781">Y2 Q2</text>
+<text x="351.4" y="402" font-size="11" text-anchor="middle" fill="#898781">Y2 Q3</text>
+<text x="394.8" y="402" font-size="11" text-anchor="middle" fill="#898781">Y2 Q4</text>
+<text x="438.1" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3 Q1</text>
+<text x="481.4" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3 Q2</text>
+<text x="524.6" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3 Q3</text>
+<text x="568.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y3 Q4</text>
+<text x="611.2" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4 Q1</text>
+<text x="654.5" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4 Q2</text>
+<text x="697.9" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4 Q3</text>
+<text x="741.1" y="402" font-size="11" text-anchor="middle" fill="#898781">Y4 Q4</text>
+<text x="784.5" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5 Q1</text>
+<text x="827.8" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5 Q2</text>
+<text x="871.0" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5 Q3</text>
+<text x="914.4" y="402" font-size="11" text-anchor="middle" fill="#898781">Y5 Q4</text>
+<rect x="79.2" y="385.0" width="24.8" height="0.5" rx="2" fill="#2a78d6"/>
+<rect x="122.5" y="384.1" width="24.8" height="0.5" rx="2" fill="#2a78d6"/>
+<rect x="165.8" y="380.8" width="24.8" height="2.2" rx="2" fill="#2a78d6"/>
+<rect x="165.8" y="380.5" width="24.8" height="0.5" rx="2" fill="#eb6834"/>
+<rect x="209.1" y="372.6" width="24.8" height="10.4" rx="2" fill="#2a78d6"/>
+<rect x="209.1" y="370.4" width="24.8" height="0.5" rx="2" fill="#eb6834"/>
+<rect x="252.4" y="364.6" width="24.8" height="18.4" rx="2" fill="#2a78d6"/>
+<rect x="252.4" y="358.9" width="24.8" height="3.7" rx="2" fill="#eb6834"/>
+<rect x="295.7" y="351.1" width="24.8" height="31.9" rx="2" fill="#2a78d6"/>
+<rect x="295.7" y="337.9" width="24.8" height="11.2" rx="2" fill="#eb6834"/>
+<rect x="339.0" y="338.2" width="24.8" height="44.8" rx="2" fill="#2a78d6"/>
+<rect x="339.0" y="314.1" width="24.8" height="22.1" rx="2" fill="#eb6834"/>
+<rect x="382.3" y="331.5" width="24.8" height="51.5" rx="2" fill="#2a78d6"/>
+<rect x="382.3" y="298.7" width="24.8" height="30.8" rx="2" fill="#eb6834"/>
+<rect x="425.6" y="315.5" width="24.8" height="67.5" rx="2" fill="#2a78d6"/>
+<rect x="425.6" y="265.1" width="24.8" height="48.4" rx="2" fill="#eb6834"/>
+<rect x="468.9" y="307.3" width="24.8" height="75.7" rx="2" fill="#2a78d6"/>
+<rect x="468.9" y="243.8" width="24.8" height="61.5" rx="2" fill="#eb6834"/>
+<rect x="512.2" y="303.1" width="24.8" height="79.9" rx="2" fill="#2a78d6"/>
+<rect x="512.2" y="227.5" width="24.8" height="73.6" rx="2" fill="#eb6834"/>
+<rect x="555.5" y="270.0" width="24.8" height="113.0" rx="2" fill="#2a78d6"/>
+<rect x="555.5" y="135.0" width="24.8" height="133.0" rx="2" fill="#eb6834"/>
+<rect x="598.8" y="277.8" width="24.8" height="105.2" rx="2" fill="#2a78d6"/>
+<rect x="598.8" y="141.4" width="24.8" height="134.4" rx="2" fill="#eb6834"/>
+<rect x="642.1" y="283.6" width="24.8" height="99.4" rx="2" fill="#2a78d6"/>
+<rect x="642.1" y="137.6" width="24.8" height="144.0" rx="2" fill="#eb6834"/>
+<rect x="685.4" y="290.3" width="24.8" height="92.7" rx="2" fill="#2a78d6"/>
+<rect x="685.4" y="129.0" width="24.8" height="159.3" rx="2" fill="#eb6834"/>
+<rect x="728.7" y="303.1" width="24.8" height="79.9" rx="2" fill="#2a78d6"/>
+<rect x="728.7" y="150.9" width="24.8" height="150.2" rx="2" fill="#eb6834"/>
+<rect x="772.0" y="308.9" width="24.8" height="74.1" rx="2" fill="#2a78d6"/>
+<rect x="772.0" y="154.3" width="24.8" height="152.6" rx="2" fill="#eb6834"/>
+<rect x="815.3" y="321.1" width="24.8" height="61.9" rx="2" fill="#2a78d6"/>
+<rect x="815.3" y="178.9" width="24.8" height="140.2" rx="2" fill="#eb6834"/>
+<rect x="858.6" y="325.3" width="24.8" height="57.7" rx="2" fill="#2a78d6"/>
+<rect x="858.6" y="185.9" width="24.8" height="137.4" rx="2" fill="#eb6834"/>
+<rect x="901.9" y="330.2" width="24.8" height="52.8" rx="2" fill="#2a78d6"/>
+<rect x="901.9" y="96.6" width="24.8" height="231.6" rx="2" fill="#eb6834"/>
+<text x="568.0" y="128.0" font-size="11" text-anchor="middle" fill="#52514e">$1.6M</text>
+<text x="914.4" y="89.6" font-size="11" text-anchor="middle" fill="#52514e">$1.8M</text>
+<text x="697.9" y="122.0" font-size="11" text-anchor="middle" fill="#52514e">$1.6M</text>
+<rect x="70" y="422" width="10" height="10" rx="2" fill="#2a78d6"/>
+<text x="85" y="431" font-size="11.5" fill="#52514e">Business Line 1</text>
+<rect x="211.0" y="422" width="10" height="10" rx="2" fill="#eb6834"/>
+<text x="226.0" y="431" font-size="11.5" fill="#52514e">Business Line 2</text>
+</svg>

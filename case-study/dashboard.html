@@ -1,0 +1,343 @@
+<title>SaaS Portfolio Board Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: board-pack page. Verdict band, KPI strip, 2-up chart grid, then findings, questions and data issues. */
+:root{
+  --bg:#f6f7f9; --panel:#ffffff; --ink:#14202e; --ink-2:#4a5566; --muted:#7b8696; --line:#e2e6ec; --grid:#eceff3;
+  --accent:#1d3a5f; --accent-2:#7f9cc2; --neg:#b4312f; --neg-2:#e7a39b; --warn:#a96800; --warn-bg:#fbf0dc; --crit-bg:#f8e3e1; --good:#2d7a3e; --good-bg:#e2f1e5;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#10151c; --panel:#171e27; --ink:#e8ecf1; --ink-2:#b3bcc8; --muted:#8692a2; --line:#28323f; --grid:#222b36;
+  --accent:#8fb3e3; --accent-2:#456b9c; --neg:#ef7b72; --neg-2:#8a3a34; --warn:#f0b04a; --warn-bg:#3a2c12; --crit-bg:#3d1d1b; --good:#6fc483; --good-bg:#16301d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#10151c; --panel:#171e27; --ink:#e8ecf1; --ink-2:#b3bcc8; --muted:#8692a2; --line:#28323f; --grid:#222b36;
+  --accent:#8fb3e3; --accent-2:#456b9c; --neg:#ef7b72; --neg-2:#8a3a34; --warn:#f0b04a; --warn-bg:#3a2c12; --crit-bg:#3d1d1b; --good:#6fc483; --good-bg:#16301d; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:28px}
+h1,h2,h3{margin:0;text-wrap:balance}
+h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:17px;font-weight:600}
+h3{font-size:13px;font-weight:600}
+.eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sub{color:var(--ink-2);max-width:70ch}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+header{display:grid;gap:8px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--muted);font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:6px}
+nav a{color:var(--ink-2);text-decoration:none;font-size:12.5px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
+nav a:hover,nav a:focus-visible{color:var(--accent);border-color:var(--accent);outline:none}
+.verdict{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--neg);border-radius:6px;padding:18px 20px;display:grid;gap:8px}
+.verdict p{margin:0;max-width:95ch}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.kpi .v{font-size:26px;font-weight:600;line-height:1.15;font-family:var(--sans)}
+.kpi .d{font-size:12px;color:var(--ink-2)}
+.pill{justify-self:start;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;letter-spacing:.02em}
+.pill.crit{background:var(--crit-bg);color:var(--neg)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:16px 16px 12px;display:grid;gap:8px;min-width:0}
+.card .cap{font-size:12.5px;color:var(--ink-2);margin:0}
+.chart{position:relative;width:100%}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-2)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:4px;white-space:nowrap;transform:translate(-50%,-100%);margin-top:-8px;opacity:0;transition:opacity .1s}
+.tip b{font-weight:600}
+section{display:grid;gap:14px}
+.sechead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{padding:8px 12px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;background:var(--bg)}
+tbody tr:last-child td{border-bottom:0}
+td.bad{color:var(--neg);font-weight:600}
+.takeaways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tk{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:6px;min-width:0}
+.tk p{margin:0;color:var(--ink-2)}
+.tk .row{display:flex;gap:10px;align-items:baseline;justify-content:space-between}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{font:inherit;font-size:12.5px;padding:5px 11px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
+.filters button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.qlist{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.q{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:4px 12px;align-items:start}
+.q .n{color:var(--muted);font-family:var(--mono);font-size:12px;padding-top:2px}
+.q .t{font-weight:500}
+.q .w{grid-column:2;color:var(--ink-2);font-size:12.5px}
+.q .area{grid-column:2;font-size:11px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+td.tw{white-space:normal;text-align:left;min-width:220px}
+footer{color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.takeaways{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){.kpi .v{font-size:22px}.q{grid-template-columns:26px minmax(0,1fr)}.q .pill{grid-column:2}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.cols2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:8px;align-content:start;min-width:0}
+ul.pts{margin:0;padding-left:18px;display:grid;gap:6px}
+ul.pts li{padding-left:2px}
+ul.pts li::marker{color:var(--muted)}
+.plus li::marker{color:var(--good)} .minus li::marker{color:var(--neg)}
+.panel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.who{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:grid;gap:6px;align-content:start;min-width:0}
+.who .role{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.who .vd{font-weight:600;font-size:13px}
+.who .dec{font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:6px}
+.who .dec b{color:var(--ink);font-weight:600}
+.consensus{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:6px;padding:14px 16px;display:grid;gap:8px}
+td.tw{white-space:normal;text-align:left;min-width:200px}
+.small{font-size:12.5px;color:var(--ink-2)}
+@media (max-width:1000px){.panel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.cols2{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:420px){.panel{grid-template-columns:minmax(0,1fr)}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Board pre-read · Early-stage B2B SaaS · Y1 to Y5 · USD</div>
+  <h1>MIS &amp; Balance Sheet Review</h1>
+  <p class="sub">Reviewed by Kalaari's IC (three members) and two board directors. Figures rebuilt from the MIS and audited accounts. Nine wrong cells in the company file were corrected.</p>
+  <nav aria-label="Sections"><a href="#takeaways">1 · Takeaways</a><a href="#analysis">2 · Analysis &amp; risks</a><a href="#questions">3 · Questions</a><a href="#panel">IC &amp; board view</a><a href="#issues">Data issues</a><a href="#terms">Terms</a></nav>
+</header>
+
+<div class="verdict" role="note">
+  <div class="eyebrow">Verdict</div>
+  <p><strong>The company wins customers but loses too many.</strong> ARR grew 26% to $8.4M, but only 56% of the starting ARR was kept in Y5. It loses about $10M a year and has $11.7M of cash, so about 13 months of runway. Q2 to Q4 of Y5 were better (about 70% kept). The Y6 renewals will decide what happens next.</p>
+</div>
+
+<section aria-label="Headline numbers"><div class="kpis" id="kpiGrid"></div></section>
+
+<section id="takeaways">
+  <div class="sechead"><h2>1 · Key takeaways</h2><span class="eyebrow">MIS and balance sheet</span></div>
+  <div class="box"><ul class="pts" id="tkList"></ul></div>
+</section>
+
+<section id="analysis">
+  <div class="sechead"><h2>2 · Analysis: trends, drivers, risks</h2><span class="eyebrow">Quarterly, Y1 Q1 to Y5 Q4</span></div>
+  <div class="grid2">
+    <div class="card"><h3>Revenue by business line</h3><p class="cap">BL1 halved since Y3 Q4. BL2 carries the business.</p><div class="legend" id="lg-rev"></div><div class="chart" id="c-rev"></div></div>
+    <div class="card"><h3>ARR movements</h3><p class="cap">Y5 Q1 lost $1.4M; Q2-Q3 bookings recovered it.</p><div class="legend" id="lg-mov"></div><div class="chart" id="c-mov"></div></div>
+    <div class="card"><h3>Closing contracted ARR</h3><p class="cap">Flat through Y4, dip in Y5 Q1, then up.</p><div class="legend" id="lg-arr"></div><div class="chart" id="c-arr"></div></div>
+    <div class="card"><h3>EBITDA (corrected)</h3><p class="cap">Burn peaked in Y3 Q3. Still $2-3M a quarter.</p><div class="chart" id="c-ebitda"></div></div>
+  </div>
+  <div class="cols2">
+    <div class="box"><h3>Performance drivers: working</h3><ul class="pts plus" id="drvPlus"></ul></div>
+    <div class="box"><h3>Performance drivers: not working</h3><ul class="pts minus" id="drvMinus"></ul></div>
+  </div>
+  <div class="tablewrap"><table id="riskTable"></table></div>
+</section>
+
+<section id="questions">
+  <div class="sechead"><h2>3 · Questions &amp; follow-ups for the Investment Partner</h2><span class="eyebrow">Before the next board</span></div>
+  <div class="cols2">
+    <div class="box"><h3>Three deliverables to ask for</h3><ul class="pts" id="asks"></ul></div>
+    <div class="box"><h3>Decisions for this meeting</h3><ul class="pts" id="decisions"></ul></div>
+  </div>
+  <div class="filters" id="qfilters" role="group" aria-label="Filter questions by area"></div>
+  <ol class="qlist" id="qlist"></ol>
+</section>
+
+<section id="panel">
+  <div class="sechead"><h2>IC &amp; board view</h2><span class="eyebrow">Five reviewers, one line each</span></div>
+  <div class="panel" id="panelGrid"></div>
+  <div class="consensus"><h3>Where they disagreed, and the resolution</h3><ul class="pts" id="debates"></ul></div>
+</section>
+
+<section id="issues">
+  <div class="sechead"><h2>Data issues in the MIS</h2><span class="eyebrow">Nine corrected, rest open</span></div>
+  <div class="tablewrap"><table id="issueTable"></table></div>
+</section>
+
+<section id="terms">
+  <div class="sechead"><h2>Terms used</h2></div>
+  <div class="box small"><ul class="pts">
+    <li><b>ARR:</b> yearly value of all signed subscription contracts.</li>
+    <li><b>Gross retention:</b> share of last year's ARR still kept, not counting upsells. Net retention counts upsells.</li>
+    <li><b>Burn multiple:</b> loss for each $1 of ARR added. Under 2x is healthy.</li>
+    <li><b>CAC:</b> cost to win one new customer. <b>LTV/CAC:</b> lifetime gross profit of a customer divided by CAC. 3x or more is healthy.</li>
+    <li><b>Runway:</b> months until cash runs out. "Underlying" leaves out customer prepayments.</li>
+  </ul></div>
+</section>
+
+<footer>Source: company MIS (Summary MIS and KPIs tabs), audited P&amp;L and balance sheet for Y4 and Y5. Q2-Q4 run-rate retention is annualised from those three quarters. Benchmarks are typical B2B SaaS ranges.</footer>
+</div>
+
+<script>
+const D = {"quarters":["Y1 Q1","Y1 Q2","Y1 Q3","Y1 Q4","Y2 Q1","Y2 Q2","Y2 Q3","Y2 Q4","Y3 Q1","Y3 Q2","Y3 Q3","Y3 Q4","Y4 Q1","Y4 Q2","Y4 Q3","Y4 Q4","Y5 Q1","Y5 Q2","Y5 Q3","Y5 Q4"],"q":{"Revenue":[120.2851,5488.2679,29058.3653,93335.1064,167456.9578,301884.8666,454551.5609,553221.9249,768631.507,905092.4893,1009351.9517,1602341.0787,1561542.7182,1585934.8705,1641299.9061,1500872.2155,1478700.2175,1320932.2742,1276480.0762,1848811.7886],"Business Line 1":[120.2851,5488.2679,26733.7,79334.84,130616.43,217357.1,300004.03,342997.59,445806.27,497800.87,524863.01,737076.9,687078.8,650233.3,607280.97,525305.28,487971.07,409489,382944.02,351274.24],"Business Line 2":[0,0,2324.6653,14000.2664,36840.5278,84527.7666,154547.5309,210224.3349,322825.237,407291.6193,484488.9417,865264.1787,874463.9182,935701.5705,1034018.9361,975566.9355,990729.1475,911443.2742,893536.0562,1497537.5486],"EBITDA":[-455492.73,-406524.6833,-503547.2573,-779808.9237,-902793.1157,-923329.6444,-1173264.6788,-1439648.2183,-1573878.4223,-2445767.2695,-3965670.267,-3277216.46,-3716919.0949,-3230000.7431,-3099541.8419,-2876147.6518,-3115530.5524,-2006905.2281,-2788644.6927,-2249614.1043],"Gross margin %":[-65.23,-0.472,0.3859,0.3823,0.717,0.8137,0.8327,0.8123,0.7591,0.789,0.7934,0.8661,0.8143,0.7481,0.7314,0.7222,0.7611,0.7517,0.7464,0.8087],"New ARR":[7098.2601,54890.9475,173557.1427,385104.975,337847.5932,671180.6075,763774.5949,1206472.6715,669838.6289,794792.9815,674235.9092,1788992.3082,946732.2413,612734.16,916895.8015,648250.6051,475663.9723,1357698.0293,1444698.4703,793767.0281],"Expansion":[0,0,0,0,0,5354.2789,25739.3288,18968.9201,17571.6002,18953.9606,54845.8017,24009.1888,54158.9909,79184.9908,53403.7326,211035.3544,49203.9527,159917.7179,324230.6765,75346.8309],"Downgrade":[0,0,0,0,0,0,0,0,-67359.4922,-2184.3541,0,-53333.8515,-105354.9521,0,-92997.3988,-296082.6957,-234632.3976,-46650.0519,-17923.6294,-14215.0301],"Churn":[0,0,-5943.2743,-4363.4718,0,-36262.6404,-182399.2399,-134329.527,-66630.8495,-249988.3562,-254603.4286,-725965.882,-495998.5171,-632070.9039,-331846.4183,-816807.7413,-1175004.5697,-357518.9317,-403961.0127,-706292.7086],"Closing ARR":[7098.2601,61989.2075,229603.076,610344.5792,948192.1724,1588464.4185,2195579.1023,3286691.1669,3840111.0542,4401685.286,4876163.5684,5909865.3319,6309403.0949,6369251.3418,6914707.0589,6661102.5815,5776333.5392,6889780.3028,8236824.8075,8385430.9278],"Subscription ARR (closing MRR x 12)":[0,38150.5259,209127.2501,511058.4993,807716.1914,1373865.244,1880683.3906,2736449.8227,3312485.5391,3951473.1687,4495558.2268,4816377.9372,5916100.7037,5882869.6237,6160720.4363,6063517.1503,5357092.022,5681379.2745,7197186.2004,7679939.3808],"FTE (quarter end)":[19,24,27,30,42,56,71,71,90,105,106,109,103,113,116,102,101,96,91,88],"Closing customers":[2,7,17,29,40,58,74,88,97,107,112,117,122,122,121,116,115,127,138,135],"New customers":[2,5,11,13,11,20,23,19,14,16,16,22,17,11,12,12,15,18,19,9],"Churned customers":[0,0,-1,-1,0,-2,-7,-5,-5,-6,-11,-17,-12,-11,-13,-17,-16,-6,-8,-12],"ARR per FTE":[373.5926,2582.8836,8503.8176,20344.8193,22576.0041,28365.436,30923.6493,46291.4249,42667.9006,41920.8122,46001.5431,54218.948,61256.3407,56365.0561,59609.5436,65304.9273,57191.4212,71768.5448,90514.5583,95288.9878]},"a":{"Revenue":[128002.0246,1477115.3103,4285417.0268,6289649.7103,5924924.3565],"Closing ARR":[610344.5792,3286691.1669,5909865.3319,6661102.5815,8385430.9278],"Net new ARR":[610344.5792,2676346.5877,2623174.165,751237.2495,1724328.3464],"EBITDA":[-2145373.5943,-4439035.6572,-11262532.4189,-12922609.3318,-10160694.5776],"Gross margin %":[0.2848,0.8081,0.8135,0.754,0.7707],"Gross revenue retention (GRR)":["n.m.",0.4217,0.5679,0.5311,0.5562],"Net revenue retention (NRR)":["n.m.",0.5037,0.603,0.5984,0.6476],"Closing customers":[29,88,117,116,135],"Logo churn, % of opening":["n.m.",0.4828,0.4432,0.453,0.3621],"Average ACV, new customers":[20021.0105,40811.9927,57762.6445,60088.7078,66751.2705],"CAC per new customer":[21011.8776,29714.2088,75929.4,124968.4114,96741.3786],"CAC payback (months, gross-margin adjusted)":[44.2145,10.812,19.3907,33.0991,22.5652],"Burn multiple (EBITDA burn / net new ARR)":[3.515,1.6586,4.2935,17.2018,5.8926],"LTV / CAC":["n.m.",1.9191,1.4323,0.7732,1.1983],"FTE (year end)":[30,71,109,102,88],"ARR per FTE (year end)":[20344.8193,46291.4249,54218.948,65304.9273,95288.9878],"Total operating expenses":[2181833.2299,5632658.876,14748655.2818,17665023.8173,14727133.634],"People cost":[1309099.938,3548575.0918,9586625.9332,11816000,8148000]}};
+const Q = D.quarters, q = D.q, a = D.a;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmtM = v => (v<0?'-':'')+'$'+(Math.abs(v)/1e6).toFixed(1)+'M';
+const fmtK = v => (v<0?'-':'')+'$'+Math.round(Math.abs(v)/1e3).toLocaleString()+'k';
+const fmtAx = v => Math.abs(v)>=1e6 ? fmtM(v).replace('.0M','M') : (v===0?'$0':fmtK(v));
+const pct = v => Math.round(v*100)+'%';
+const li = arr => arr.map(x=>`<li>${x}</li>`).join('');
+// ---------- KPI tiles
+const y5=4,y4=3;
+const tiles=[
+  {l:'Closing ARR, Y5',v:fmtM(a['Closing ARR'][y5]),d:'+'+pct(a['Closing ARR'][y5]/a['Closing ARR'][y4]-1)+' vs Y4',s:['warn','Growth, not yet efficient']},
+  {l:'Revenue, Y5',v:fmtM(a['Revenue'][y5]),d:pct(a['Revenue'][y5]/a['Revenue'][y4]-1)+' vs Y4',s:['crit','Declining']},
+  {l:'Gross retention, Y5',v:pct(a['Gross revenue retention (GRR)'][y5]),d:'Q2-Q4 run-rate ~70%. Net '+pct(a['Net revenue retention (NRR)'][y5]),s:['crit','Benchmark 85-90%']},
+  {l:'EBITDA, Y5',v:fmtM(a['EBITDA'][y5]),d:'Margin '+pct(a['EBITDA'][y5]/a['Revenue'][y5]),s:['warn','Burn down 21%']},
+  {l:'Burn multiple, Y5',v:a['Burn multiple (EBITDA burn / net new ARR)'][y5].toFixed(1)+'x',d:'Y4 was '+a['Burn multiple (EBITDA burn / net new ARR)'][y4].toFixed(1)+'x',s:['crit','Good is under 2x']},
+  {l:'Cash, end Y5',v:'$11.7M',d:'~13 months underlying runway',s:['crit','Decide path now']},
+  {l:'LTV / CAC, Y5',v:a['LTV / CAC'][y5].toFixed(1)+'x',d:'CAC $97k, payback 23 mo',s:['crit','Benchmark 3x+']},
+  {l:'Customers, end Y5',v:a['Closing customers'][y5],d:'Logo churn '+pct(a['Logo churn, % of opening'][y5])+' a year',s:['warn','Big accounts leaving']},
+];
+document.getElementById('kpiGrid').innerHTML=tiles.map(t=>`<div class="kpi"><div class="eyebrow">${t.l}</div><div class="v num">${t.v}</div><div class="d">${t.d}</div><span class="pill ${t.s[0]}">${t.s[1]}</span></div>`).join('');
+
+// ---------- chart engine (SVG)
+function chart(id, opt){
+  const el=document.getElementById(id); el.innerHTML='';
+  const W=560,H=opt.h||250,ml=54,mr=10,mt=12,mb=34,pw=W-ml-mr,ph=H-mt-mb;
+  const cats=opt.cats, n=cats.length, series=opt.series;
+  let lo=0,hi=0;
+  for(let i=0;i<n;i++){
+    if(opt.kind==='stack'){let p=0,m=0;series.forEach(s=>{const v=s.v[i];v>=0?p+=v:m+=v});hi=Math.max(hi,p);lo=Math.min(lo,m)}
+    else series.forEach(s=>{hi=Math.max(hi,s.v[i]);lo=Math.min(lo,s.v[i])});
+  }
+  if(opt.max!=null)hi=Math.max(hi,opt.max);
+  const span=hi-lo, raw=span/5, mag=Math.pow(10,Math.floor(Math.log10(raw)));
+  const step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>span/s<=6);
+  lo=Math.floor(lo/step)*step; hi=Math.ceil(hi/step)*step;
+  const Y=v=>mt+ph-(v-lo)/(hi-lo)*ph, X=i=>ml+(i+.5)*pw/n, fmt=opt.fmt||fmtAx;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${opt.label}">`;
+  for(let t=lo;t<=hi+1e-9;t+=step){const y=Y(t);s+=`<line x1="${ml}" x2="${W-mr}" y1="${y}" y2="${y}" stroke="${Math.abs(t)<1e-9?css('--muted'):css('--grid')}" stroke-width="1"/><text x="${ml-6}" y="${y+4}" font-size="10.5" text-anchor="end" fill="${css('--muted')}" font-family="${css('--mono')}">${fmt(t)}</text>`}
+  const every=opt.every||1;
+  cats.forEach((c,i)=>{if(i%every===0)s+=`<text x="${X(i)}" y="${H-mb+16}" font-size="10.5" text-anchor="middle" fill="${css('--muted')}">${c.replace(' ',' ')}</text>`});
+  const slot=pw/n;
+  if(opt.kind==='stack'||opt.kind==='group'){
+    const ns=opt.kind==='stack'?1:series.length, bw=slot*.64/ns;
+    for(let i=0;i<n;i++){let p=0,m=0;series.forEach((se,k)=>{const v=se.v[i];if(!v)return;let y0,y1,x0;
+      if(opt.kind==='stack'){x0=X(i)-bw/2;if(v>0){y0=Y(p+v);y1=Y(p);p+=v}else{y0=Y(m);y1=Y(m+v);m+=v}}
+      else{x0=X(i)-ns*bw/2+k*bw;y0=v>0?Y(v):Y(0);y1=v>0?Y(Math.max(lo,0)):Y(v)}
+      s+=`<rect x="${x0+1}" y="${y0}" width="${Math.max(bw-2,1)}" height="${Math.max(y1-y0-1,0.5)}" rx="1.5" fill="${se.c}"/>`;});}
+  }
+  if(opt.kind==='line'){series.forEach(se=>{s+=`<polyline fill="none" stroke="${se.c}" stroke-width="2" stroke-linejoin="round" points="${se.v.map((v,i)=>X(i)+','+Y(v)).join(' ')}"/>`;const L=n-1;s+=`<circle cx="${X(L)}" cy="${Y(se.v[L])}" r="4" fill="${se.c}" stroke="${css('--panel')}" stroke-width="2"/>`})}
+  if(opt.hline!=null){const y=Y(opt.hline);s+=`<line x1="${ml}" x2="${W-mr}" y1="${y}" y2="${y}" stroke="${css('--ink-2')}" stroke-width="1"/>`}
+  (opt.labels||[]).forEach(([i,txt,v,dy])=>{s+=`<text x="${X(i)}" y="${Y(v)+(dy||-6)}" font-size="10.5" text-anchor="middle" fill="${css('--ink-2')}" font-weight="600">${txt}</text>`});
+  s+=`<rect class="hit" x="${ml}" y="${mt}" width="${pw}" height="${ph}" fill="transparent"/></svg>`;
+  el.innerHTML=s+'<div class="tip"></div>';
+  const svg=el.querySelector('svg'), tip=el.querySelector('.tip'), vf=opt.tipfmt||fmtK;
+  svg.addEventListener('pointermove',e=>{const r=svg.getBoundingClientRect(),sx=(e.clientX-r.left)*W/r.width;const i=Math.min(n-1,Math.max(0,Math.floor((sx-ml)/slot)));
+    tip.innerHTML=`<b>${cats[i]}</b><br>`+series.map(se=>`${se.n}: ${vf(se.v[i])}`).join('<br>');tip.style.left=(X(i)*r.width/W)+'px';tip.style.top=(mt*r.height/H+10)+'px';tip.style.opacity=1});
+  svg.addEventListener('pointerleave',()=>tip.style.opacity=0);
+  if(opt.legend){document.getElementById(opt.legend).innerHTML=series.map(se=>`<span><i style="background:${se.c}"></i>${se.n}</span>`).join('')}
+}
+
+function draw(){
+  const C={a:css('--accent'),a2:css('--accent-2'),n:css('--neg'),n2:css('--neg-2')};
+  chart('c-rev',{label:'Quarterly revenue by business line',kind:'stack',cats:Q,every:2,legend:'lg-rev',series:[{n:'Business Line 1',v:q['Business Line 1'],c:C.a},{n:'Business Line 2',v:q['Business Line 2'],c:C.a2}],labels:[[11,fmtM(q.Revenue[11]),q.Revenue[11]],[19,fmtM(q.Revenue[19]),q.Revenue[19]]]});
+  chart('c-arr',{label:'Closing ARR',kind:'line',cats:Q,every:2,legend:'lg-arr',series:[{n:'Contracted ARR',v:q['Closing ARR'],c:C.a},{n:'Subscription ARR',v:q['Subscription ARR (closing MRR x 12)'],c:C.a2}],labels:[[15,fmtM(q['Closing ARR'][15]),q['Closing ARR'][15],-10],[16,fmtM(q['Closing ARR'][16]),q['Closing ARR'][16],18],[19,fmtM(q['Closing ARR'][19]),q['Closing ARR'][19],-10]]});
+  chart('c-mov',{label:'ARR movements',kind:'stack',cats:Q,every:2,legend:'lg-mov',series:[{n:'New',v:q['New ARR'],c:C.a},{n:'Expansion',v:q['Expansion'],c:C.a2},{n:'Downgrade',v:q['Downgrade'],c:C.n2},{n:'Churn',v:q['Churn'],c:C.n}]});
+  chart('c-ebitda',{label:'Quarterly EBITDA',kind:'group',cats:Q,every:2,series:[{n:'EBITDA',v:q['EBITDA'],c:C.n}],tipfmt:fmtM,labels:[[19,fmtM(q.EBITDA[19]),q.EBITDA[19],14]]});
+}
+draw();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+
+document.getElementById('tkList').innerHTML=li([
+ '<b>Customer losses are the main problem.</b> Only 56% of ARR kept in Y5 (healthy is 85-90%). About $3.7M of new ARR a year is needed just to stand still.',
+ '<b>One bad quarter.</b> Y5 Q1 alone lost $1.4M, half the year\'s losses. Q2 to Q4 kept about 70% on a yearly basis.',
+ '<b>Growth costs too much.</b> In Y5 the company lost $5.9 for every $1 of ARR added ($17 in Y4). Healthy is under $2. ARR gained was only 1.6x ARR lost.',
+ '<b>Revenue fell while ARR grew.</b> ARR up 26%, audited revenue down 2.5%. Business Line 1 is shrinking; Business Line 2 grew 12%.',
+ '<b>Cash is tighter than it looks.</b> $3.1M of Y5 cash came from customers paying upfront and $1.2M from interest. Without them, runway is about 13 months.',
+ '<b>The MIS has many errors.</b> Nine cells were wrong and are now corrected. Ten more items need answers, including $1.08M of unexplained cash movement.',
+]);
+document.getElementById('drvPlus').innerHTML=li([
+ 'Upsells to existing customers up 53% to $609k',
+ 'New deals getting bigger: $88k average in Y5 Q4',
+ 'Gross margin steady at 75-80%',
+ 'Y5 Q2 and Q3: best two quarters ever ($2.8M new ARR)',
+ 'Headcount down 14% in Y5; ARR per employee $65k to $95k',
+]);
+document.getElementById('drvMinus').innerHTML=li([
+ 'Lost accounts getting bigger: $33k each in Y3, $63k in Y5',
+ '72% of new ARR booked in quarter-end months',
+ 'Only 9 new customers in Y5 Q4; winning one costs about $97k',
+ 'G&A, rent and other costs up ~20% while people cost fell 31%',
+ 'Business Line 1 shrinking with no stated plan',
+]);
+const RISKS=[
+ ['Y6 renewals of the Y5 M6 and M9 deals fail','$2.1M of ARR; churn peaks at anniversaries','Critical'],
+ ['Cash runs out before retention proof exists','~13 months underlying runway; interest income falls with cash','Critical'],
+ ['Next round is flat or down, or needs a bridge from existing investors','About $45M raised vs $8.4M ARR at 56% retention','Critical'],
+ ['The board cannot fully trust the numbers','9 wrong cells; 1,473 added to two Y5 expense lines','High'],
+ ['New customer wins slow down','9 new customers in Y5 Q4; $0.29 of net ARR per $1 of sales spend','High'],
+ ['Cost cuts hit the wrong teams','Headcount 102 to 88 in Y5; no split by team given','Medium'],
+];
+document.getElementById('riskTable').innerHTML='<thead><tr><th scope="col">Key risk</th><th scope="col" style="text-align:left">Signal in the numbers</th><th scope="col">Severity</th></tr></thead><tbody>'+RISKS.map(([r,s,v])=>`<tr><td class="tw"><b>${r}</b></td><td class="tw">${s}</td><td><span class="pill ${v==='Critical'?'crit':'warn'}">${v}</span></td></tr>`).join('')+'</tbody>';
+
+document.getElementById('asks').innerHTML=li([
+ '<b>Renewal list for Y6:</b> every account with ARR, renewal month, health score and owner. Plus the reasons behind the top 10 Y5 losses.',
+ '<b>Cohort retention</b> by signing quarter and business line. Is BL2 above 80% at 12 months?',
+ '<b>Monthly Y6 cash plan</b> owned by the CFO and tied to the ledger, run under two cases (Y5 retention, 70%), with cash-out dates.',
+]);
+document.getElementById('decisions').innerHTML=li([
+ 'Budget Y6 on Y5 retention repeating, not on a recovery.',
+ 'Cut burn toward $6M a year (24 months of runway) with a hard trigger at 12 months of runway.',
+ 'Hold Kalaari follow-on reserves until cohort data is in.',
+ 'Run two tracks: prepare the raise and agree bridge terms with co-investors, and quietly test strategic interest.',
+ 'Fix the MIS before the next meeting.',
+]);
+
+const QS=[
+ ['Retention','Who were the top 10 churned accounts in Y5? Why did Y5 Q1 lose 16 logos and $1.2M?','High'],
+ ['Retention','What is the health today of the Y5 M6 and M9 accounts ($2.1M) that renew in Y6?','High'],
+ ['Retention','Was the Y5 Q1 loss a planned Business Line 1 exit or a product problem? Will the Q2-Q4 improvement last?','High'],
+ ['Growth','How does the first-year price compare with the renewal price?','Medium'],
+ ['Growth','Why only 9 new logos in Y5 Q4? What is the weighted Y6 Q1 pipeline?','Medium'],
+ ['Growth','Reconcile the two S&M figures ($5.9M vs $2.3M). What is quota attainment?','Medium'],
+ ['Cost','Which teams did the cuts come from (102 to 88 people in Y5)? Was customer success cut?','High'],
+ ['Cost','Why did rent and G&A rise 20% while headcount fell? What are lease break dates?','Medium'],
+ ['Cash','What is the $1,473k in both Y5 expense lines: ESOP, reclass, or a double count?','High'],
+ ['Cash','What is the $1.08M reserves debit outside the P&L? Share the statement of changes in equity.','High'],
+ ['Cash','What is in the $2.6M of other non-current assets? Deposits, maturities, any lien?','Medium'],
+ ['Cash','Deferred revenue is all current. Is any of it multi-year prepaid?','Medium'],
+];
+const areas=['All',...new Set(QS.map(x=>x[0]))];let cur='All';
+try{const s=localStorage.getItem('mis-qarea2');if(s&&areas.includes(s))cur=s}catch(e){}
+function renderQ(){
+  const list=QS.map((x,i)=>[i+1,...x]).filter(x=>cur==='All'||x[1]===cur);
+  document.getElementById('qlist').innerHTML=list.map(([n,ar,t,p])=>`<li class="q"><span class="n">${String(n).padStart(2,'0')}</span><span class="t">${t}</span><span class="pill ${p==='High'?'crit':'warn'}">${p}</span><span class="area">${ar}</span></li>`).join('');
+  document.querySelectorAll('#qfilters button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.a===cur));
+}
+document.getElementById('qfilters').innerHTML=areas.map(x=>`<button type="button" id="qf2-${x}" data-a="${x}">${x}</button>`).join('');
+document.getElementById('qfilters').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.a;try{localStorage.setItem('mis-qarea2',cur)}catch(_){}renderQ()});
+renderQ();
+
+const PANEL=[
+ ['Kalaari IC','Managing Partner','Manage for outcome, not a follow-on candidate.','Hold reserves; cohort data and a 24-month budget within 60 days.'],
+ ['Kalaari IC','Finance Partner','Numbers are directionally right, not board-grade. Real runway ~13 months.','CFO-owned cash forecast; cost-cut trigger at 12 months.'],
+ ['Kalaari IC','Devil\'s advocate','Y5 Q1 was a one-off clean-out; Q2-Q4 ran at ~70% retention.','Raise in Y6 Q1; gate any bridge on BL2 cohort data.'],
+ ['Board','Independent director','Sales adds logos; half the ARR leaves in a year.','Budget on Y5 retention; agree bridge terms now.'],
+ ['Board','Co-investor director','Not fundable externally at 56% retention. Plan for flat, down or a sale.','Dual track: cut burn below $0.5M a month and test buyers.'],
+];
+document.getElementById('panelGrid').innerHTML=PANEL.map(([g,r,v,d])=>`<div class="who"><span class="role">${g}</span><h3>${r}</h3><div class="vd">${v}</div><div class="dec"><b>Wants:</b> ${d}</div></div>`).join('');
+document.getElementById('debates').innerHTML=li([
+ '<b>How bad is retention?</b> Full year 56%, Q2-Q4 run-rate ~70%. <i>Resolution:</i> both get reported; Y6 is budgeted on 56% until cohorts prove otherwise.',
+ '<b>Raise or bridge?</b> The devil\'s advocate wants to raise in Y6 Q1; the co-investor expects no outside price. <i>Resolution:</i> run both tracks and agree bridge terms before the meeting.',
+ '<b>Were quarter-end deals discounted?</b> Not proven: M6 and M9 deal sizes ($74k, $94k) are above average. <i>Resolution:</i> ask, do not accuse.',
+ '<b>Prepayments: risk or comfort?</b> All $6.2M of deferred revenue is current, so it is not multi-year. <i>Resolution:</i> it unwinds if renewals slip; treat as a risk.',
+ '<b>How deep to cut?</b> $1.5-2M of overhead is not enough. <i>Resolution:</i> target burn near $6M a year, including S&M, and protect customer success.',
+]);
+
+const IS=[
+ ['Y4 Q4 EBITDA','Formula leaves out four cost lines','Burn understated by $1.3M','Corrected'],
+ ['Y4 Q1, Y5 Q2 gross margin %','COGS divided by revenue','Showed 19% and 25%, not 81% and 75%','Corrected'],
+ ['Y5 Q4 new-customer ACV','Divides by new customers + 15','Showed $33k; true figure $88k','Corrected'],
+ ['Y5 M12, M6 and Q2 deal size','Formula altered or typed over','Understated deal size by $30-50k','Corrected'],
+ ['Y4 M4-M6 ARR growth','Typed over','Showed a fake -4.8% month','Corrected'],
+ ['Y3 Q4 revenue','Up 59% while subscription revenue rose 10%','Possible one-off revenue','Open'],
+ ['Y5 Q1 S&M and G&A','Identical to the cent','One line is wrong','Open'],
+ ['Y4 MIS vs audit','Revenue $212k higher than audited','Flatters Y4','Open'],
+ ['Y5 audited expenses','Same $1,473k added to two lines','Possible double count','Open'],
+ ['Two S&M figures','KPI tab 2.5-3x the Summary MIS line','CAC basis unclear','Open'],
+ ['Missing metrics','No retention, cohorts, ARR by line, cash flow','Key SaaS metrics absent','Open'],
+];
+document.getElementById('issueTable').innerHTML='<thead><tr><th scope="col">Where</th><th scope="col" style="text-align:left">Issue</th><th scope="col" style="text-align:left">Impact</th><th scope="col">Status</th></tr></thead><tbody>'+IS.map(([w,i,m,s])=>`<tr><td>${w}</td><td class="tw">${i}</td><td class="tw">${m}</td><td><span class="pill ${s==='Corrected'?'good':'warn'}">${s}</span></td></tr>`).join('')+'</tbody>';
+</script>
